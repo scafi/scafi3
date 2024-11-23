@@ -2,8 +2,9 @@ package it.unibo.field4s.implementations
 
 import it.unibo.field4s.abstractions.boundaries.Bounded
 
-/** Provides common boundaries for the most common types.
-  */
+/**
+ * Provides common boundaries for the most common types.
+ */
 object CommonBoundaries:
 
   given Bounded[Double] with

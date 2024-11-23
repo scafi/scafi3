@@ -1,14 +1,14 @@
 package it.unibo.field4s.collections
 
-import it.unibo.field4s.abstractions.boundaries.{LowerBounded, UpperBounded}
+import it.unibo.field4s.abstractions.boundaries.{ LowerBounded, UpperBounded }
 
-/** A safe iterable is an iterable that provides only safe operations. Safe
-  * operations are those that do not throw exceptions when the iterable is
-  * empty. For example, the `head` method of the [[Iterable]] trait throws an
-  * exception when the iterable is empty.
-  * @tparam A
-  *   the type of the elements of the iterable
-  */
+/**
+ * A safe iterable is an iterable that provides only safe operations. Safe operations are those that do not throw
+ * exceptions when the iterable is empty. For example, the `head` method of the [[Iterable]] trait throws an exception
+ * when the iterable is empty.
+ * @tparam A
+ *   the type of the elements of the iterable
+ */
 trait SafeIterable[+A]:
 
   private val iterable: Iterable[A] = new Iterable[A]:
@@ -16,39 +16,40 @@ trait SafeIterable[+A]:
 
   protected def iterator: Iterator[A]
 
-  /** Converts this safe iterable to an iterable.
-    * @return
-    *   an iterable
-    */
+  /**
+   * Converts this safe iterable to an iterable.
+   * @return
+   *   an iterable
+   */
   def toIterable: Iterable[A] = iterable
 
   override def toString: String = iterable.toString()
 
   override def hashCode(): Int = iterable.hashCode()
 
-  /** Returns the minimum element of this iterable, according to the ordering of
-    * the elements. If the iterable is empty, returns the upper bound of the
-    * type of the elements.
-    * @see
-    *   [[UpperBounded]]
-    * @tparam B
-    *   the type of the elements
-    * @return
-    *   the minimum element of this iterable
-    */
+  /**
+   * Returns the minimum element of this iterable, according to the ordering of the elements. If the iterable is empty,
+   * returns the upper bound of the type of the elements.
+   * @see
+   *   [[UpperBounded]]
+   * @tparam B
+   *   the type of the elements
+   * @return
+   *   the minimum element of this iterable
+   */
   def min[B >: A: Ordering: UpperBounded]: B =
     minOption.getOrElse(summon[UpperBounded[B]].upperBound)
 
-  /** Returns the maximum element of this iterable, according to the ordering of
-    * the elements. If the iterable is empty, returns the lower bound of the
-    * type of the elements.
-    * @see
-    *   [[LowerBounded]]
-    * @tparam B
-    *   the type of the elements
-    * @return
-    *   the maximum element of this iterable
-    */
+  /**
+   * Returns the maximum element of this iterable, according to the ordering of the elements. If the iterable is empty,
+   * returns the lower bound of the type of the elements.
+   * @see
+   *   [[LowerBounded]]
+   * @tparam B
+   *   the type of the elements
+   * @return
+   *   the maximum element of this iterable
+   */
   def max[B >: A: Ordering: LowerBounded]: B =
     maxOption.getOrElse(summon[LowerBounded[B]].lowerBound)
 
@@ -89,7 +90,7 @@ trait SafeIterable[+A]:
     toSeq,
     toSet,
     toVector,
-    view
+    view,
   }
 end SafeIterable
 

@@ -2,22 +2,21 @@ package it.unibo.field4s.collections
 
 import scala.annotation.targetName
 import scala.annotation.unchecked.uncheckedVariance
-import scala.collection.{Iterable, MapView}
+import scala.collection.{ Iterable, MapView }
 
-/** A map with a default value for missing keys. Implements [[Function1]][K, V]
-  * and [[Iterable]][(K, V)].
-  * @param underlying
-  *   the underlying map that implements [[PartialFunction]][K, V]
-  * @param default
-  *   the default value for missing keys
-  * @tparam K
-  *   the key type
-  * @tparam V
-  *   the value type
-  */
-class MapWithDefault[K, +V](underlying: Map[K, V], val default: V)
-    extends Iterable[(K, V)]
-    with Function[K, V] derives CanEqual:
+/**
+ * A map with a default value for missing keys. Implements [[Function1]][K, V] and [[Iterable]][(K, V)].
+ * @param underlying
+ *   the underlying map that implements [[PartialFunction]][K, V]
+ * @param default
+ *   the default value for missing keys
+ * @tparam K
+ *   the key type
+ * @tparam V
+ *   the value type
+ */
+class MapWithDefault[K, +V](underlying: Map[K, V], val default: V) extends Iterable[(K, V)] with Function[K, V]
+    derives CanEqual:
 
   private val inner: Map[K, V] = underlying.withDefaultValue(default)
 
@@ -66,7 +65,7 @@ class MapWithDefault[K, +V](underlying: Map[K, V], val default: V)
     new MapWithDefault(inner.filterNot(p), default)
 
   def flatMap[K2 <: K](
-      f: ((K, V)) => IterableOnce[(K2, V @uncheckedVariance)]
+      f: ((K, V)) => IterableOnce[(K2, V @uncheckedVariance)],
   ): MapWithDefault[K2, V] =
     new MapWithDefault(inner.flatMap(f), default)
 
@@ -81,7 +80,7 @@ class MapWithDefault[K, +V](underlying: Map[K, V], val default: V)
     new MapWithDefault(inner.map((k, v) => (f(k), v)), default)
 
   override def partition(
-      p: ((K, V)) => Boolean
+      p: ((K, V)) => Boolean,
   ): (MapWithDefault[K, V], MapWithDefault[K, V]) =
     val (l, r) = inner.partition(p)
     (new MapWithDefault(l, default), new MapWithDefault(r, default))
@@ -104,7 +103,7 @@ class MapWithDefault[K, +V](underlying: Map[K, V], val default: V)
   def updatedWith[V1 >: V](key: K)(f: V1 => Option[V1]): MapWithDefault[K, V1] =
     new MapWithDefault(
       inner.updatedWith(key)(v => f(v.getOrElse(default))),
-      default
+      default,
     )
 
   def withDefault[V1 >: V](d: V1): MapWithDefault[K, V1] =
@@ -125,10 +124,11 @@ class MapWithDefault[K, +V](underlying: Map[K, V], val default: V)
     keyStepper,
     values,
     valuesIterator,
-    valueStepper
+    valueStepper,
   }
 end MapWithDefault
 
 object MapWithDefault:
+
   def empty[K, V](default: V): MapWithDefault[K, V] =
     MapWithDefault(Map.empty, default)
