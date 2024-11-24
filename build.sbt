@@ -49,6 +49,7 @@ ThisBuild / scalacOptions ++= Seq(
 ThisBuild / coverageEnabled := true
 
 lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
+  .crossType(CrossType.Pure)
   .in(file("core"))
   .configs()
     .nativeSettings(
