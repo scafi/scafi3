@@ -21,15 +21,32 @@ ThisBuild / developers := List(
     "Gianluca Aguzzi",
     "gianluca.aguzzi@unibo.it",
     url("https://github.com/cric96")
+  ),
+  Developer(
+    "davidedomini",
+    "Danide Domini",
+    "davide.domini@unibo.it",
+    url("https://github.com/davidedomini")
   )
 )
 ThisBuild / scalacOptions ++= Seq(
   "-Werror",
+  "-Wunused:all",
+  "-Wvalue-discard",
+  "-Wnonunit-statement",
+  "-Yexplicit-nulls",
+  "-Wsafe-init",
+  "-Ycheck-reentrant",
+  "-Xcheck-macros",
   "-rewrite",
   "-indent",
   "-unchecked",
   "-explain",
+  "-feature",
+  "-language:strictEquality",
+  "-language:implicitConversions",
 )
+ThisBuild / coverageEnabled := true
 
 lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .in(file("core"))
@@ -48,20 +65,16 @@ lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     )
   .settings(
     name := "core",
-    sonatypeProfileName := "it.nicolasfarabegoli",
-    libraryDependencies ++= Seq()
+    sonatypeProfileName := "it.unibo.field4s",
+    libraryDependencies ++= Seq(),
   )
 
-lazy val check = taskKey[Unit]("Runs all verification tasks like tests, linters, etc.")
-check := {
-  (core.jvm / Test / test).value
-  (core.jvm / Compile / scalafmtCheck).value
-
-  (core.js / Test / test).value
-  (core.js / Compile / scalafmtCheck).value
-
-  (core.native / Test / test).value
-  (core.native / Compile / scalafmtCheck).value
-}
-
-compile := (Compile / compile dependsOn check).value
+lazy val root = project
+  .in(file("."))
+  .enablePlugins(ScalaUnidocPlugin)
+  .aggregate(core.jvm, core.js, core.native)
+    .settings(
+        name := "field4s",
+        publish / skip := true,
+        publishArtifact := false,
+    )
