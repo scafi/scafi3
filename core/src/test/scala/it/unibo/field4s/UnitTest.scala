@@ -5,7 +5,7 @@ import scala.reflect.ClassTag
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers as ShouldMatchers
 import org.scalatest.prop.TableDrivenPropertyChecks
-import org.scalatest.{Inside, Inspectors, OptionValues}
+import org.scalatest.{ Inside, Inspectors, OptionValues }
 
 trait UnitTest
     extends AnyFlatSpec

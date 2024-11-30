@@ -1,7 +1,7 @@
 package it.unibo.field4s.abstractions
 
 import it.unibo.field4s.UnitTest
-import it.unibo.field4s.collections.{SafeIterable, SafeIterableTests}
+import it.unibo.field4s.collections.{ SafeIterable, SafeIterableTests }
 
 trait AggregateTests:
   this: UnitTest & SafeIterableTests =>

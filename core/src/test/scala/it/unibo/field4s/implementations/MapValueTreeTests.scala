@@ -1,7 +1,7 @@
 package it.unibo.field4s.implementations
 
 import it.unibo.field4s.UnitTest
-import it.unibo.field4s.collections.{ValueTreeFactoryTests, ValueTreeTests}
+import it.unibo.field4s.collections.{ ValueTreeFactoryTests, ValueTreeTests }
 import it.unibo.field4s.implementations.collections.MapValueTree
 
 class MapValueTreeTests extends UnitTest with ValueTreeTests with ValueTreeFactoryTests:
