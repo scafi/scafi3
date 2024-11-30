@@ -47,6 +47,8 @@ ThisBuild / scalacOptions ++= Seq(
   "-language:implicitConversions",
 )
 ThisBuild / coverageEnabled := true
+ThisBuild / semanticdbEnabled := true
+ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
 
 lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Pure)
