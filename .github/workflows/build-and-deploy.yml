@@ -22,7 +22,7 @@ jobs:
         with:
           should-run-codecov: ${{ runner.os == 'Linux' }}
           codecov-directory: "target/"
-          check-command: sbt +scalafmtCheckAll +scalafmtSbtCheck +test +coverageAggregate
+          check-command: sbt +scalafmtCheckAll +scalafmtSbtCheck '+scalafixAll --check' +test +coverageAggregate
           should-deploy: false
           maven-central-username: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           maven-central-password: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
