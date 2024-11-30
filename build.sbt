@@ -50,6 +50,21 @@ ThisBuild / coverageEnabled := true
 ThisBuild / semanticdbEnabled := true
 ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
 
+ThisBuild / libraryDependencies ++= Seq(
+  "org.scalatest" %%% "scalatest" % "3.2.19" % Test,
+)
+
+lazy val commonTestSettings = Seq(
+  Test / scalacOptions --= Seq(
+    "-Werror",
+    "-rewrite",
+    "-Wunused:all",
+    "-Wvalue-discard",
+    "-Wnonunit-statement",
+    "-Xcheck-macros",
+  ),
+)
+
 lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Pure)
   .in(file("core"))
@@ -69,7 +84,7 @@ lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .settings(
     name := "core",
     sonatypeProfileName := "it.unibo.field4s",
-    libraryDependencies ++= Seq(),
+    commonTestSettings,
   )
 
 lazy val root = project
