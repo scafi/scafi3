@@ -1,8 +1,8 @@
 package it.unibo.field4s.implementations.collections
 
-import it.unibo.field4s.collections.ValueTree
-
 import scala.annotation.targetName
+
+import it.unibo.field4s.collections.ValueTree
 
 case class MapValueTree[N, +V](underlying: Map[Seq[N], V]) extends ValueTree[N, V]:
   override def contains(seq: Seq[N]): Boolean = underlying.contains(seq)

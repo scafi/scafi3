@@ -1,8 +1,8 @@
 package it.unibo.field4s.collections
 
-import it.unibo.field4s.implementations.collections.MapValueTree
-
 import scala.annotation.targetName
+
+import it.unibo.field4s.implementations.collections.MapValueTree
 
 /**
  * A tree-like structure that maps sequences of nodes to values.
