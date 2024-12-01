@@ -20,7 +20,7 @@ object FieldCalculusLibrary:
    * @see
    *   [[FieldCalculusSyntax.nbr]]
    */
-  def nbr[A](using language: AggregateFoundation & FieldCalculusSyntax)(expr: A): language.AggregateValue[A] =
+  def nbr[A](expr: A)(using language: AggregateFoundation & FieldCalculusSyntax): language.AggregateValue[A] =
     language.nbr(expr)
 
   /**
@@ -37,7 +37,7 @@ object FieldCalculusLibrary:
    * @see
    *   [[FieldCalculusSyntax.rep]]
    */
-  def rep[A](using language: AggregateFoundation & FieldCalculusSyntax)(init: A)(f: A => A): A =
+  def rep[A](init: A)(f: A => A)(using language: AggregateFoundation & FieldCalculusSyntax): A =
     language.rep(init)(f)
 
   /**

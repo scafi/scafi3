@@ -40,7 +40,7 @@ object FoldhoodLibrary:
    * @return
    *   the distance from the neighbor
    */
-  def nbrRange[N, L <: AggregateFoundation & FieldCalculusSyntax & DistanceSensor[N]](using Numeric[N])(using
+  def nbrRange[N: Numeric, L <: AggregateFoundation & FieldCalculusSyntax & DistanceSensor[N]](using
       c: FoldhoodContext[L],
   ): N = c.current(senseDistance)
 

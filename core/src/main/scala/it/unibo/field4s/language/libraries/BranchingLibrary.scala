@@ -24,6 +24,6 @@ object BranchingLibrary:
    * @see
    *   [[BranchingSyntax.branch]]
    */
-  def branch[T](using language: BranchingSyntax)(cond: Boolean)(th: => T)(el: => T): T =
+  def branch[T](cond: Boolean)(th: => T)(el: => T)(using language: BranchingSyntax): T =
     language.branch(cond)(th)(el)
 end BranchingLibrary
