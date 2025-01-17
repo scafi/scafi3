@@ -1,3 +1,19 @@
+## [1.0.1](https://github.com/field4s/field4s/compare/v1.0.0...v1.0.1) (2025-01-17)
+
+### Dependency updates
+
+* **core-deps:** update dependency scala to v3.6.3 ([089e455](https://github.com/field4s/field4s/commit/089e4552e6e7a8684b0bd4708afbcb98bfe1fead))
+* **deps:** update dependency ch.epfl.scala:sbt-scalafix to v0.14.0 ([34fd93a](https://github.com/field4s/field4s/commit/34fd93a8dea3bf35ad1e01056933c176d706b437))
+* **deps:** update dependency com.github.sbt:sbt-ci-release to v1.9.2 ([dcccc04](https://github.com/field4s/field4s/commit/dcccc04bdae865e49bc891022f1ccc7ef0b1f6d7))
+* **deps:** update dependency org.scala-js:sbt-scalajs to v1.18.0 ([0c33886](https://github.com/field4s/field4s/commit/0c33886f433ded80080939c86bb3f44a5e2d411d))
+* **deps:** update dependency org.scala-js:sbt-scalajs to v1.18.1 ([e01f2a5](https://github.com/field4s/field4s/commit/e01f2a5016bf821a0e4fa17aa08bd411369c06d3))
+* **deps:** update dependency org.scoverage:sbt-scoverage to v2.3.0 ([39c83a2](https://github.com/field4s/field4s/commit/39c83a25f287daf5afc0e832d04c03ce5cf915e5))
+* **deps:** update dependency sbt/sbt to v1.10.7 ([7c65a8d](https://github.com/field4s/field4s/commit/7c65a8d0562c4ceefbd9359c0612bdda4437ba16))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.117 ([8b72f95](https://github.com/field4s/field4s/commit/8b72f95d4aa504ff0b4c5064d66e1d700fe847d1))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.118 ([7cb6073](https://github.com/field4s/field4s/commit/7cb6073872dc50a862afb7f5763098baaa249e3f))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.119 ([9b8906b](https://github.com/field4s/field4s/commit/9b8906b175f678e35cb85f346f03d7aaedfa3b36))
+* **deps:** update node.js to 22.13 ([5b65c18](https://github.com/field4s/field4s/commit/5b65c181fbdfdcf7e23b1fa2db0b8317589534fb))
+
 ## 1.0.0 (2024-12-10)
 
 ### Dependency updates
