@@ -4,7 +4,7 @@ package it.unibo.field4s.engine.context.common
  * Defines the basic operations to work with a type that wraps any object, useful to define a collection of values with
  * different types.
  */
-trait MessageSemantics:
+trait Message:
   /**
    * The type of the envelope that wraps all the values.
    */
@@ -32,14 +32,14 @@ trait MessageSemantics:
    */
   protected def close[T](a: T): Envelope
 
-end MessageSemantics
+end Message
 
-object MessageSemantics:
+object Message:
 
   /**
-   * A basic implementation of the [[MessageSemantics]] trait that wraps values into [[Any]].
+   * A basic implementation of the [[Message]] trait that wraps values into [[Any]].
    */
-  trait Basic extends MessageSemantics:
+  trait Basic extends Message:
     override type Envelope = Any
 
     override protected def open[T](a: Any): T = a match

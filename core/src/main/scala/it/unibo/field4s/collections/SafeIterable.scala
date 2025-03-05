@@ -37,7 +37,7 @@ trait SafeIterable[+A]:
    * @return
    *   the minimum element of this iterable
    */
-  def min[B >: A: Ordering: UpperBounded]: B =
+  def min[B >: A: {Ordering, UpperBounded}]: B =
     minOption.getOrElse(summon[UpperBounded[B]].upperBound)
 
   /**
@@ -50,7 +50,7 @@ trait SafeIterable[+A]:
    * @return
    *   the maximum element of this iterable
    */
-  def max[B >: A: Ordering: LowerBounded]: B =
+  def max[B >: A: {Ordering, LowerBounded}]: B =
     maxOption.getOrElse(summon[LowerBounded[B]].lowerBound)
 
   export iterable.{

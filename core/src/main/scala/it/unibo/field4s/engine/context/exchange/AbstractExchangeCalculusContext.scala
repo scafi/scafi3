@@ -25,10 +25,10 @@ abstract class AbstractExchangeCalculusContext[Id, Wrapper](
     with ExchangeCalculusSemantics
     with NeighboringValueSemantics
     with ConstructsSemantics
-    with StackSemantics
-    with MessageSemantics
-    with InboundMessagesSemantics
-    with OutboundMessagesSemantics:
+    with Stack
+    with Message
+    with InboundMessages
+    with OutboundMessage:
   override type DeviceId = Id
   override type Envelope = Wrapper
 end AbstractExchangeCalculusContext

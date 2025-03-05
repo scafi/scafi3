@@ -19,7 +19,7 @@ class BasicExchangeCalculusContext[Id](
     self: Id,
     inboundMessages: Import[Id, ExportValue],
 ) extends AbstractExchangeCalculusContext[Id, Any](self, inboundMessages)
-    with MessageSemantics.Basic
+    with Message.Basic
 
 object BasicExchangeCalculusContext:
   type ExportValue = AbstractExchangeCalculusContext.ExportValue[Any]

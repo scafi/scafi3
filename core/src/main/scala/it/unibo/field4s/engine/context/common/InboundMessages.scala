@@ -7,8 +7,8 @@ import it.unibo.field4s.engine.network.Import
 /**
  * Implements the semantics related to inbound messages coming from self and neighbours.
  */
-trait InboundMessagesSemantics:
-  this: StackSemantics & MessageSemantics & Context[DeviceId, ValueTree[InvocationCoordinate, Envelope]] =>
+trait InboundMessages:
+  this: Stack & Message & Context[DeviceId, ValueTree[InvocationCoordinate, Envelope]] =>
 
   /**
    * The type of device ids.
@@ -61,4 +61,4 @@ trait InboundMessagesSemantics:
    *   the device id of the current device
    */
   protected def self: DeviceId
-end InboundMessagesSemantics
+end InboundMessages

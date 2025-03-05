@@ -8,8 +8,8 @@ import it.unibo.field4s.engine.path.Path
  * Implements the semantics of tracing the location of function invocation with a stack and provides a current path for
  * aligning with inbound value trees.
  */
-trait StackSemantics:
-  this: MessageSemantics =>
+trait Stack:
+  this: Message =>
 
   private val trace: mutable.Map[Path[InvocationCoordinate], Int] =
     mutable.Map.empty[Path[InvocationCoordinate], Int]
@@ -41,4 +41,4 @@ trait StackSemantics:
     val _ = stack.pop()
     val _ = trace.put(stack.toList, next)
     result
-end StackSemantics
+end Stack
