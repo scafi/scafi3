@@ -10,10 +10,10 @@ import it.unibo.field4s.language.syntax.common.ReturnSending.returning
 trait FieldCalculusByExchangeSemantics extends FieldCalculusSyntax:
   this: ExchangeCalculusSemantics & ExchangeCalculusSyntax =>
 
-  override def nbr[V](expr: V): AggregateValue[V] =
+  override def neighborValues[V](expr: V): AggregateValue[V] =
     exchange(expr)(nv => returning(nv) send expr)
 
-  override def rep[A](init: A)(f: A => A): A =
+  override def evolve[A](init: A)(f: A => A): A =
     exchange[Option[A]](None)(nones =>
       val previousValue = nones(self).getOrElse(init)
       nones.set(self, Some(f(previousValue))),

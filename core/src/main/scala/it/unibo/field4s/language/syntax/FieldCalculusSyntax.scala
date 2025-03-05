@@ -9,12 +9,12 @@ trait FieldCalculusSyntax:
    * `nbr` sends a local value to <b>neighbours</b> and returns the aggregate value of the received messages.
    * @param expr
    *   the local value to send to neighbours
-   * @tparam A
+   * @tparam Value
    *   the type of the local value
    * @return
    *   the aggregate value of the received messages
    */
-  def nbr[A](expr: A): AggregateValue[A]
+  def neighborValues[Value](expr: Value): AggregateValue[Value]
 
   /**
    * `rep` <b>repeatedly</b> applies a function to an initial value for every execution round.
@@ -27,7 +27,7 @@ trait FieldCalculusSyntax:
    * @return
    *   the value after the last application of the function
    */
-  def rep[A](init: A)(f: A => A): A
+  def evolve[A](init: A)(f: A => A): A
 
   /**
    * `share` computes a value by repeatedly applying a function to an initial value while <b>sharing</b> the result with

@@ -26,14 +26,14 @@ trait ExchangeCalculusSyntax:
    * @param f
    *   the function that takes the initial/received aggregate value and returns a new aggregate value or two aggregate
    *   values, one to be sent and one to be returned
-   * @tparam T
+   * @tparam Value
    *   the type of the aggregate value
    * @return
    *   the new aggregate value
    * @see
    *   [[common.ReturnSending]]
    */
-  def exchange[T](initial: AggregateValue[T])(
-    f: AggregateValue[T] => ReturnSending[AggregateValue[T]],
-  ): AggregateValue[T]
+  def exchange[Value](initial: AggregateValue[Value])(
+    f: AggregateValue[Value] => ReturnSending[AggregateValue[Value]],
+  ): AggregateValue[Value]
 end ExchangeCalculusSyntax

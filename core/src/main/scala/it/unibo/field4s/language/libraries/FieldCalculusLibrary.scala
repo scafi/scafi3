@@ -18,10 +18,10 @@ object FieldCalculusLibrary:
    * @return
    *   the aggregate value of the received messages
    * @see
-   *   [[FieldCalculusSyntax.nbr]]
+   *   [[FieldCalculusSyntax.neighborValues]]
    */
   def nbr[A](using language: AggregateFoundation & FieldCalculusSyntax)(expr: A): language.AggregateValue[A] =
-    language.nbr(expr)
+    language.neighborValues(expr)
 
   /**
    * `rep` <b>repeatedly</b> applies a function to an initial value for every execution round.
@@ -35,10 +35,10 @@ object FieldCalculusLibrary:
    * @return
    *   the value after the last application of the function
    * @see
-   *   [[FieldCalculusSyntax.rep]]
+   *   [[FieldCalculusSyntax.evolve]]
    */
   def rep[A](using language: AggregateFoundation & FieldCalculusSyntax)(init: A)(f: A => A): A =
-    language.rep(init)(f)
+    language.evolve(init)(f)
 
   /**
    * `share` computes a value by repeatedly applying a function to an initial value while <b>sharing</b> the result with
