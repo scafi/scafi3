@@ -16,8 +16,8 @@ trait FoldingTests:
     var neighbouringFoldingResult: Long = 0
     def foldingProgram(using BasicExchangeCalculusContext[Int]): Unit =
       branch(self < 10) {
-        foldingResult = nbr(self).fold(1)(_ * _)
-        neighbouringFoldingResult = nbr(self).nfold(1)(_ * _)
+        foldingResult = neighborValues(self).fold(1)(_ * _)
+        neighbouringFoldingResult = neighborValues(self).nfold(1)(_ * _)
       } {}
 
     var exportProbe: Export[Int, BasicExchangeCalculusContext.ExportValue] = probe(

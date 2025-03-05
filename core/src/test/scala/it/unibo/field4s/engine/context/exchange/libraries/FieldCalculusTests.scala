@@ -15,7 +15,7 @@ trait FieldCalculusTests:
   def nbrSemantics(): Unit =
     var neighbours: Set[Int] = Set.empty
     def neighbouringProgram(using BasicExchangeCalculusContext[Int]): Unit =
-      neighbours = nbr(self + 5).toSet
+      neighbours = neighborValues(self + 5).toSet
 
     var exportProbe: Export[Int, BasicExchangeCalculusContext.ExportValue] = probe(
       localId = 66,
@@ -85,7 +85,7 @@ trait FieldCalculusTests:
   def repSemantics(): Unit =
     var last: Int = 0
     def repeatingProgram(using BasicExchangeCalculusContext[Int]): Unit =
-      last = rep(0)(_ + 2)
+      last = evolve(0)(_ + 2)
 
     var exportProbe: Export[Int, BasicExchangeCalculusContext.ExportValue] = probe(
       localId = 66,

@@ -13,11 +13,11 @@ trait FieldCalculusByExchangeSemantics extends FieldCalculusSyntax:
   override def neighborValues[V](expr: V): AggregateValue[V] =
     exchange(expr)(nv => returning(nv) send expr)
 
-  override def evolve[A](init: A)(f: A => A): A =
+  override def evolve[A](initial: A)(evolution: A => A): A =
     exchange[Option[A]](None)(nones =>
-      val previousValue = nones(self).getOrElse(init)
-      nones.set(self, Some(f(previousValue))),
+      val previousValue = nones(self).getOrElse(initial)
+      nones.set(self, Some(evolution(previousValue))),
     )(self).get
 
-  override def share[A](init: A)(f: AggregateValue[A] => A): A =
-    exchange(init)(nv => f(nv))(self)
+  override def share[A](initial: A)(shareAndReturning: AggregateValue[A] => A): A =
+    exchange(initial)(nv => shareAndReturning(nv))(self)

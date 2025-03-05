@@ -4,24 +4,26 @@ import it.unibo.field4s.language.foundation.AggregateFoundation
 import it.unibo.field4s.language.syntax.FieldCalculusSyntax
 
 /**
- * This library provides the field calculus primitives: `nbr`, `rep`, and `share`.
+ * This library provides the field calculus primitives: `neighborValues`, `rep`, and `share`.
  */
 object FieldCalculusLibrary:
 
   /**
-   * `nbr` sends a local value to <b>neighbours</b> and returns the aggregate value of the received messages.
+   * `neighborValues` sends a local value to <b>neighbours</b> and returns the aggregate value of the received messages.
    *
-   * @param expr
+   * @param value
    *   the local value to send to neighbours
-   * @tparam A
+   * @tparam Value
    *   the type of the local value
    * @return
    *   the aggregate value of the received messages
    * @see
    *   [[FieldCalculusSyntax.neighborValues]]
    */
-  def nbr[A](using language: AggregateFoundation & FieldCalculusSyntax)(expr: A): language.AggregateValue[A] =
-    language.neighborValues(expr)
+  def neighborValues[Value](using
+      language: AggregateFoundation & FieldCalculusSyntax,
+  )(value: Value): language.AggregateValue[Value] =
+    language.neighborValues(value)
 
   /**
    * `rep` <b>repeatedly</b> applies a function to an initial value for every execution round.
@@ -37,7 +39,7 @@ object FieldCalculusLibrary:
    * @see
    *   [[FieldCalculusSyntax.evolve]]
    */
-  def rep[A](using language: AggregateFoundation & FieldCalculusSyntax)(init: A)(f: A => A): A =
+  def evolve[A](using language: AggregateFoundation & FieldCalculusSyntax)(init: A)(f: A => A): A =
     language.evolve(init)(f)
 
   /**

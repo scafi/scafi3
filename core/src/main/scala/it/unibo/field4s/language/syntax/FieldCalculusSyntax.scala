@@ -18,28 +18,28 @@ trait FieldCalculusSyntax:
 
   /**
    * `rep` <b>repeatedly</b> applies a function to an initial value for every execution round.
-   * @param init
+   * @param initial
    *   the initial value
-   * @param f
+   * @param evolution
    *   the function to apply
    * @tparam A
    *   the type of the value
    * @return
    *   the value after the last application of the function
    */
-  def evolve[A](init: A)(f: A => A): A
+  def evolve[A](initial: A)(evolution: A => A): A
 
   /**
    * `share` computes a value by repeatedly applying a function to an initial value while <b>sharing</b> the result with
    * neighbours.
-   * @param init
+   * @param initial
    *   the initial value
-   * @param f
+   * @param shareAndReturning
    *   the function that returns the value to share and return
    * @tparam A
    *   the type of the value
    * @return
    *   the value after the last application of the function that has been shared with neighbours
    */
-  def share[A](init: A)(f: AggregateValue[A] => A): A
+  def share[A](initial: A)(shareAndReturning: AggregateValue[A] => A): A
 end FieldCalculusSyntax

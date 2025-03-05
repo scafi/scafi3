@@ -3,7 +3,7 @@ package it.unibo.field4s.language.libraries
 import it.unibo.field4s.language.foundation.AggregateFoundation
 import it.unibo.field4s.language.syntax.FieldCalculusSyntax
 
-import FieldCalculusLibrary.nbr
+import FieldCalculusLibrary.neighborValues
 import FoldingLibrary.nfold
 import Fractional.Implicits.*
 
@@ -25,7 +25,7 @@ object MathLibrary:
    *   the weighted average of the value
    */
   def average[N: Fractional](using language: AggregateFoundation & FieldCalculusSyntax)(weight: N, value: N): N =
-    val totW = nbr(weight).nfold(weight)(_ + _)
-    val totV = nbr(weight * value).nfold(weight * value)(_ + _)
+    val totW = neighborValues(weight).nfold(weight)(_ + _)
+    val totV = neighborValues(weight * value).nfold(weight * value)(_ + _)
     totV / totW
 end MathLibrary

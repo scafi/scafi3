@@ -7,7 +7,7 @@ import it.unibo.field4s.language.sensors.DistanceSensor
 
 import cats.syntax.all.*
 
-import FieldCalculusLibrary.nbr as fcNbr
+import FieldCalculusLibrary.neighborValues as fcNbr
 import FoldingLibrary.nfold
 
 object FoldhoodLibrary:
