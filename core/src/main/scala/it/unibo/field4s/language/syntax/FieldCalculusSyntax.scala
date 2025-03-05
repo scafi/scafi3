@@ -22,12 +22,12 @@ trait FieldCalculusSyntax:
    *   the initial value
    * @param evolution
    *   the function to apply
-   * @tparam A
+   * @tparam Value
    *   the type of the value
    * @return
    *   the value after the last application of the function
    */
-  def evolve[A](initial: A)(evolution: A => A): A
+  def evolve[Value](initial: Value)(evolution: Value => Value): Value
 
   /**
    * `share` computes a value by repeatedly applying a function to an initial value while <b>sharing</b> the result with
@@ -36,10 +36,10 @@ trait FieldCalculusSyntax:
    *   the initial value
    * @param shareAndReturning
    *   the function that returns the value to share and return
-   * @tparam A
+   * @tparam Value
    *   the type of the value
    * @return
    *   the value after the last application of the function that has been shared with neighbours
    */
-  def share[A](initial: A)(shareAndReturning: AggregateValue[A] => A): A
+  def share[Value](initial: Value)(shareAndReturning: AggregateValue[Value] => Value): Value
 end FieldCalculusSyntax

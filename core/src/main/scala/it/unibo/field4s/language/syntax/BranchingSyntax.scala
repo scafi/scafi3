@@ -11,16 +11,16 @@ trait BranchingSyntax:
 
   /**
    * This method is used to split the domain of the aggregate program into two branches.
-   * @param cond
+   * @param condition
    *   the condition to be evaluated
-   * @param th
+   * @param trueBranch
    *   the expression to be evaluated if the condition is true
-   * @param el
+   * @param falseBranch
    *   the expression to be evaluated if the condition is false
-   * @tparam T
+   * @tparam Value
    *   the type of the expression to be evaluated
    * @return
    *   the result of the expression that has been evaluated
    */
-  def branch[T](cond: Boolean)(th: => T)(el: => T): T
+  def branch[Value](condition: Boolean)(trueBranch: => Value)(falseBranch: => Value): Value
 end BranchingSyntax
