@@ -19,7 +19,7 @@ trait ExchangeCalculusTests:
     def exchangingProgram(using BasicExchangeCalculusContext[Int]): Unit =
       assert(exchange(self)(ids =>
         neighbours = ids.toSet
-        ret(ids.map(_ + 1)) send ids,
+        returning(ids.map(_ + 1)) send ids,
       ).toSet == neighbours.map(_ + 1)) // assert the ret/send semantics
     var exportProbe: Export[Int, BasicExchangeCalculusContext.ExportValue] = probe(
       localId = 142,

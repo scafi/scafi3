@@ -3,15 +3,15 @@ package it.unibo.field4s.language.syntax
 import it.unibo.field4s.language.foundation.AggregateFoundationMock
 import it.unibo.field4s.UnitTest
 import it.unibo.field4s.language.foundation.AggregateFoundation
-import it.unibo.field4s.language.syntax.common.RetSend
-import it.unibo.field4s.language.syntax.common.RetSend.*
+import it.unibo.field4s.language.syntax.common.ReturnSending
+import it.unibo.field4s.language.syntax.common.ReturnSending.*
 
 class ExchangeCalculusSyntaxCompilationTests extends UnitTest:
 
   val language: ExchangeCalculusSyntax & AggregateFoundation = new AggregateFoundationMock with ExchangeCalculusSyntax:
 
     override def exchange[T](initial: AggregateValue[T])(
-        f: AggregateValue[T] => RetSend[AggregateValue[T]],
+      f: AggregateValue[T] => ReturnSending[AggregateValue[T]],
     ): AggregateValue[T] = mock[AggregateValue[T]]
 
   "ExchangeCalculus Syntax" should "compile" in:

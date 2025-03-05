@@ -1,7 +1,7 @@
 package it.unibo.field4s.language.syntax
 
 import it.unibo.field4s.language.foundation.AggregateFoundation
-import it.unibo.field4s.language.syntax.common.RetSend
+import it.unibo.field4s.language.syntax.common.ReturnSending
 
 /**
  * This trait provides the syntax for the exchange calculus main construct: `exchange`.
@@ -20,6 +20,7 @@ trait ExchangeCalculusSyntax:
    * {{{exchange(0)(value => retsend(f(value)))}}} <h4>To send and return different values</h4>
    * {{{exchange(0)(value => (f(value), f2(value)))}}} {{{exchange(0)(value => ret (f(value)) send f2(value))}}}
    * {{{exchange(0)(value => ret(f(value)).send(f2(value)))}}} {{{exchange(0)(value => RetSend(f(value), f2(value)))}}}
+ *
    * @param initial
    *   the initial aggregate value
    * @param f
@@ -30,9 +31,9 @@ trait ExchangeCalculusSyntax:
    * @return
    *   the new aggregate value
    * @see
-   *   [[common.RetSend]]
+   *   [[common.ReturnSending]]
    */
   def exchange[T](initial: AggregateValue[T])(
-      f: AggregateValue[T] => RetSend[AggregateValue[T]],
+    f: AggregateValue[T] => ReturnSending[AggregateValue[T]],
   ): AggregateValue[T]
 end ExchangeCalculusSyntax

@@ -55,7 +55,9 @@ object FieldCalculusLibrary:
    * @see
    *   [[FieldCalculusSyntax.share]]
    */
-  def share[A](using language: AggregateFoundation & FieldCalculusSyntax)(init: A)(
+  def share[A](using
+      language: AggregateFoundation & FieldCalculusSyntax,
+  )(init: A)(
       f: language.AggregateValue[A] => A,
   ): A = language.share(init)(f)
 end FieldCalculusLibrary

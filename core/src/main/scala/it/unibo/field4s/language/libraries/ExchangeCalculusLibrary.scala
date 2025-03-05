@@ -2,13 +2,13 @@ package it.unibo.field4s.language.libraries
 
 import it.unibo.field4s.language.foundation.AggregateFoundation
 import it.unibo.field4s.language.syntax.ExchangeCalculusSyntax
-import it.unibo.field4s.language.syntax.common.RetSend
+import it.unibo.field4s.language.syntax.common.ReturnSending
 
 /**
  * This library provides the exchange calculus primitive, `exchange`.
  */
 object ExchangeCalculusLibrary:
-  export RetSend.{ *, given }
+  export ReturnSending.{ *, given }
 
   /**
    * This method is the main construct of the exchange calculus. It allows both to send and receive messages, and to
@@ -21,6 +21,7 @@ object ExchangeCalculusLibrary:
    * {{{exchange(0)(value => retsend(f(value)))}}} <h4>To send and return different values</h4>
    * {{{exchange(0)(value => (f(value), f2(value)))}}} {{{exchange(0)(value => ret (f(value)) send f2(value))}}}
    * {{{exchange(0)(value => ret(f(value)).send(f2(value)))}}} {{{exchange(0)(value => RetSend(f(value), f2(value)))}}}
+ *
    * @param initial
    *   the initial aggregate value
    * @param f
@@ -31,9 +32,9 @@ object ExchangeCalculusLibrary:
    * @return
    *   the new aggregate value
    * @see
-   *   [[RetSend]] [[ExchangeCalculusSyntax.exchange]]
+   * [[ReturnSending]] [[ExchangeCalculusSyntax.exchange]]
    */
   def exchange[T](using language: AggregateFoundation & ExchangeCalculusSyntax)(initial: language.AggregateValue[T])(
-      f: language.AggregateValue[T] => RetSend[language.AggregateValue[T]],
+    f: language.AggregateValue[T] => ReturnSending[language.AggregateValue[T]],
   ): language.AggregateValue[T] = language.exchange(initial)(f)
 end ExchangeCalculusLibrary
