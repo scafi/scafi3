@@ -20,12 +20,13 @@ trait ExchangeCalculusSemantics
 
   /**
    * Operations on NValues are provided by the ExchangeCalculusSemantics as extension methods.
+ *
    * @return
    *   an instance of NValuesOps
    * @see
-   *   [[NValuesOps]]
+   * [[NeighboringValue]]
    */
-  given nvalues: NValuesOps[AggregateValue, DeviceId]
+  given nvalues: NeighboringValue[AggregateValue, DeviceId]
 
   /**
    * Local values can be considered NValues.

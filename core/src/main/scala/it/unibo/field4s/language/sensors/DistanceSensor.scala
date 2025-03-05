@@ -5,10 +5,10 @@ import it.unibo.field4s.language.foundation.AggregateFoundation
 /**
  * If an aggregate foundation implements this trait, it provides a way to measure the distance from the neighbours and
  * encapsulate the result in an aggregate value.
- * @tparam N
+ * @tparam Distance
  *   the type of the distance measure
  */
-trait DistanceSensor[N: Numeric]:
+trait DistanceSensor[Distance: Numeric]:
   this: AggregateFoundation =>
 
   /**
@@ -16,7 +16,7 @@ trait DistanceSensor[N: Numeric]:
    * @return
    *   the aggregate value that encapsulates the distance measure
    */
-  def senseDistance: AggregateValue[N]
+  def senseDistance: AggregateValue[Distance]
 
 object DistanceSensor:
 
@@ -25,10 +25,12 @@ object DistanceSensor:
    * encapsulates the result in an aggregate value.
    * @param language
    *   the aggregate foundation that provides the distance measure
-   * @tparam N
+   * @tparam Distance
    *   the type of the distance measure
    * @return
    *   the aggregate value that encapsulates the distance measure
    */
-  def senseDistance[N: Numeric](using language: AggregateFoundation & DistanceSensor[N]): language.AggregateValue[N] =
+  def senseDistance[Distance: Numeric](using
+      language: AggregateFoundation & DistanceSensor[Distance],
+  ): language.AggregateValue[Distance] =
     language.senseDistance

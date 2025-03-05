@@ -4,7 +4,7 @@ import scala.collection.MapView
 
 import it.unibo.field4s.abstractions.Aggregate
 import it.unibo.field4s.collections.SafeIterable
-import it.unibo.field4s.language.semantics.exchange.{ ExchangeCalculusSemantics, NValuesOps }
+import it.unibo.field4s.language.semantics.exchange.{ ExchangeCalculusSemantics, NeighboringValue }
 
 import cats.Applicative
 
@@ -46,7 +46,7 @@ trait NValuesSemantics:
     override def toString: String = s"NValues($default, $unalignedValues)"
   end NValues
 
-  override given nvalues: NValuesOps[AggregateValue, DeviceId] = new NValuesOps[AggregateValue, DeviceId]:
+  override given nvalues: NeighboringValue[AggregateValue, DeviceId] = new NeighboringValue[AggregateValue, DeviceId]:
 
     extension [T](nv: AggregateValue[T])
       override def default: T = nv.default
