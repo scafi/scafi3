@@ -1,4 +1,4 @@
-package it.unibo.field4s.language.semantics.exchange.syntaxes
+package it.unibo.field4s.language.semantics.exchange.bindings
 
 import it.unibo.field4s.language.semantics.exchange.ExchangeCalculusSemantics
 import it.unibo.field4s.language.syntax.{ ExchangeCalculusSyntax, FieldCalculusSyntax }
@@ -7,7 +7,7 @@ import it.unibo.field4s.language.syntax.common.ReturnSending.returning
 /**
  * This trait witnesses the fact that the field calculus can be implemented by the exchange calculus.
  */
-trait FieldCalculusByExchangeSemantics extends FieldCalculusSyntax:
+trait FieldCalculusByExchangeBindings extends FieldCalculusSyntax:
   this: ExchangeCalculusSemantics & ExchangeCalculusSyntax =>
 
   override def neighborValues[V](expr: V): SharedData[V] =

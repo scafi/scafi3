@@ -60,6 +60,6 @@ object FieldCalculusLibrary:
   def share[A](using
       language: AggregateFoundation & FieldCalculusSyntax,
   )(init: A)(
-                f: language.SharedData[A] => A,
+      f: language.SharedData[A] => A,
   ): A = language.share(init)(f)
 end FieldCalculusLibrary

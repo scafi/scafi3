@@ -32,8 +32,8 @@ object GradientLibrary:
   def distanceEstimate[N: {Numeric, UpperBounded}](using
       language: AggregateFoundation,
   )(
-                                                    neighboursEstimates: language.SharedData[N],
-                                                    distances: language.SharedData[N],
+      neighboursEstimates: language.SharedData[N],
+      distances: language.SharedData[N],
   ): N = (neighboursEstimates, distances).mapN(_ + _).withoutSelf.min
 
   /**

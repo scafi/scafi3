@@ -2,10 +2,10 @@ package it.unibo.field4s.language.semantics.exchange
 
 import it.unibo.field4s.language.foundation.{ AggregateFoundation, DeviceAwareAggregateFoundation }
 import it.unibo.field4s.language.semantics.exchange
-import it.unibo.field4s.language.semantics.exchange.syntaxes.{
-  BranchingExchangeSemantics,
-  ExchangeSemantics,
-  FieldCalculusByExchangeSemantics,
+import it.unibo.field4s.language.semantics.exchange.bindings.{
+  BranchingExchangeBindings,
+  ExchangeBindings,
+  FieldCalculusByExchangeBindings,
 }
 
 /**
@@ -14,9 +14,9 @@ import it.unibo.field4s.language.semantics.exchange.syntaxes.{
 trait ExchangeCalculusSemantics
     extends AggregateFoundation
     with DeviceAwareAggregateFoundation
-    with ExchangeSemantics
-    with BranchingExchangeSemantics
-    with FieldCalculusByExchangeSemantics:
+    with ExchangeBindings
+    with BranchingExchangeBindings
+    with FieldCalculusByExchangeBindings:
 
   /**
    * Operations on NValues are provided by the ExchangeCalculusSemantics as extension methods.

@@ -1,4 +1,4 @@
-package it.unibo.field4s.language.semantics.exchange.syntaxes
+package it.unibo.field4s.language.semantics.exchange.bindings
 
 import it.unibo.field4s.language.semantics.exchange.ExchangeCalculusSemantics
 import it.unibo.field4s.language.syntax.ExchangeCalculusSyntax
@@ -7,7 +7,7 @@ import it.unibo.field4s.language.syntax.common.ReturnSending
 /**
  * This trait enables the exchange syntax for the exchange calculus semantics.
  */
-trait ExchangeSemantics extends ExchangeCalculusSyntax:
+trait ExchangeBindings extends ExchangeCalculusSyntax:
   self: ExchangeCalculusSemantics =>
 
   override def exchange[T](initial: SharedData[T])(
