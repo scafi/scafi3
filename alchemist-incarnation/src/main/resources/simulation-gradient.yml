@@ -1,0 +1,27 @@
+incarnation: exchange
+
+launcher:
+  parameters:
+    autoStart: false
+
+network-model:
+  type: ConnectWithinDistance
+  parameters: [5]
+
+_pool: &program
+  - time-distribution: 1
+    type: Event
+    actions:
+      - type: it.unibo.field4s.alchemist.actions.RunScafiProgram
+        parameters: [it.unibo.field4s.alchemist.main.TestProgram.myProgram2]
+
+deployments:
+  - type: Rectangle
+    parameters: [200, 0, 0, 20, 20]
+    programs:
+      - *program
+
+monitors:
+  type: SwingGUI
+  parameters:
+    graphics: alchemist-incarnation/src/main/resources/effect.json

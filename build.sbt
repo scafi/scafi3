@@ -87,10 +87,27 @@ lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     commonTestSettings,
   )
 
+
+val alchemistVersion = "30.1.11"
+lazy val `alchemist-incarnation` = project
+  .settings(
+    fork := true,
+    name := "alchemist-incarnation",
+    libraryDependencies ++= Seq(
+      "it.unibo.alchemist" % "alchemist" % alchemistVersion,
+      "it.unibo.alchemist" % "alchemist-swingui" % alchemistVersion,
+      "it.unibo.alchemist" % "alchemist-api" % alchemistVersion,
+      "it.unibo.alchemist" % "alchemist-test" % alchemistVersion,
+    ),
+    commonTestSettings,
+  )
+  .dependsOn(core.jvm)
+
+
 lazy val root = project
   .in(file("."))
   .enablePlugins(ScalaUnidocPlugin)
-  .aggregate(core.jvm, core.js, core.native)
+  .aggregate(core.jvm, core.js, core.native, `alchemist-incarnation`)
     .settings(
         name := "field4s",
         publish / skip := true,
