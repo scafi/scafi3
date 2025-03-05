@@ -22,7 +22,7 @@ object FieldCalculusLibrary:
    */
   def neighborValues[Value](using
       language: AggregateFoundation & FieldCalculusSyntax,
-  )(value: Value): language.AggregateValue[Value] =
+  )(value: Value): language.SharedData[Value] =
     language.neighborValues(value)
 
   /**
@@ -60,6 +60,6 @@ object FieldCalculusLibrary:
   def share[A](using
       language: AggregateFoundation & FieldCalculusSyntax,
   )(init: A)(
-      f: language.AggregateValue[A] => A,
+                f: language.SharedData[A] => A,
   ): A = language.share(init)(f)
 end FieldCalculusLibrary

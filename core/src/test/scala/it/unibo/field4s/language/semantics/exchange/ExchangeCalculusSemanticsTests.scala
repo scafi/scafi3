@@ -41,7 +41,7 @@ trait ExchangeCalculusSemanticsTests:
   ](using lang: C): Unit =
     it should "provide conversion from local values to nvalues using the default value" in:
       "val _: lang.AggregateValue[Int] = 10" should compile
-      val example: lang.AggregateValue[String] = "a"
+      val example: lang.SharedData[String] = "a"
       example(lang.self) shouldEqual "a"
       example(lang.unalignedDeviceId) shouldEqual "a"
     "NValues" should behave like nvalues[C]

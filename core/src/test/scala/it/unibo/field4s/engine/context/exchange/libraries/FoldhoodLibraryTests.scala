@@ -22,7 +22,7 @@ trait FoldhoodLibraryTests:
         inboundMessages: Import[Int, BasicExchangeCalculusContext.ExportValue],
     ) extends BasicExchangeCalculusContext[Int](self, inboundMessages)
         with DistanceSensor[Int]:
-      override def senseDistance: AggregateValue[Int] = device.map(id => if id == self then 0 else 1)
+      override def senseDistance: SharedData[Int] = device.map(id => if id == self then 0 else 1)
 
     val factory: ContextFactory[
       ValueTreeTestingNetwork[Int, InvocationCoordinate, Any],
@@ -35,12 +35,12 @@ trait FoldhoodLibraryTests:
     def sum(x: Int, y: Int): Int = x + y
 
     def foldhoodingPlusProgram(using BasicExchangeCalculusContextWithHopDistance): Unit =
-      val foldhoodResult = foldhoodPlus(0)(sum):
-        nbr(self) + nbr("3").toInt + nbrRange(using Numeric.IntIsIntegral)
+      val foldhoodResult = foldhoodWithoutSelf(0)(sum):
+        nbr(self) + nbr("3").toInt + distances(using Numeric.IntIsIntegral)
       results += (self -> foldhoodResult)
 
     def foldhoodingProgram(using BasicExchangeCalculusContextWithHopDistance): Unit =
-      val foldhoodResult = foldhood(0)(sum) { nbr(self) + nbr("3").toInt + nbrRange(using Numeric.IntIsIntegral) }
+      val foldhoodResult = foldhood(0)(sum) { nbr(self) + nbr("3").toInt + distances(using Numeric.IntIsIntegral) }
       results += (self -> foldhoodResult)
 
     var exportProbe: Export[Int, BasicExchangeCalculusContext.ExportValue] = probe(

@@ -21,7 +21,7 @@ trait GradientTests:
     class ContextWithDistanceSensor(self: Int, inboundMessages: Import[Int, BasicExchangeCalculusContext.ExportValue])
         extends BasicExchangeCalculusContext[Int](self, inboundMessages)
         with DistanceSensor[Double]:
-      override def senseDistance: AggregateValue[Double] = device.map(_.toDouble)
+      override def senseDistance: SharedData[Double] = device.map(_.toDouble)
 
     val factory: ContextFactory[ValueTreeTestingNetwork[Int, InvocationCoordinate, Any], ContextWithDistanceSensor] =
       n => new ContextWithDistanceSensor(n.localId, n.receive())

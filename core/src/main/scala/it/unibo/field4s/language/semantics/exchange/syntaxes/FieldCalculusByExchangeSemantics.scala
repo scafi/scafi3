@@ -10,7 +10,7 @@ import it.unibo.field4s.language.syntax.common.ReturnSending.returning
 trait FieldCalculusByExchangeSemantics extends FieldCalculusSyntax:
   this: ExchangeCalculusSemantics & ExchangeCalculusSyntax =>
 
-  override def neighborValues[V](expr: V): AggregateValue[V] =
+  override def neighborValues[V](expr: V): SharedData[V] =
     exchange(expr)(nv => returning(nv) send expr)
 
   override def evolve[A](initial: A)(evolution: A => A): A =
@@ -19,5 +19,5 @@ trait FieldCalculusByExchangeSemantics extends FieldCalculusSyntax:
       nones.set(self, Some(evolution(previousValue))),
     )(self).get
 
-  override def share[A](initial: A)(shareAndReturning: AggregateValue[A] => A): A =
+  override def share[A](initial: A)(shareAndReturning: SharedData[A] => A): A =
     exchange(initial)(nv => shareAndReturning(nv))(self)

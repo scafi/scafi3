@@ -16,7 +16,7 @@ trait DistanceSensor[Distance: Numeric]:
    * @return
    *   the aggregate value that encapsulates the distance measure
    */
-  def senseDistance: AggregateValue[Distance]
+  def senseDistance: SharedData[Distance]
 
 object DistanceSensor:
 
@@ -32,5 +32,5 @@ object DistanceSensor:
    */
   def senseDistance[Distance: Numeric](using
       language: AggregateFoundation & DistanceSensor[Distance],
-  ): language.AggregateValue[Distance] =
+  ): language.SharedData[Distance] =
     language.senseDistance

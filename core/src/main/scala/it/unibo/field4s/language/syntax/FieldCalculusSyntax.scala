@@ -14,7 +14,7 @@ trait FieldCalculusSyntax:
    * @return
    *   the aggregate value of the received messages
    */
-  def neighborValues[Value](expr: Value): AggregateValue[Value]
+  def neighborValues[Value](expr: Value): SharedData[Value]
 
   /**
    * `rep` <b>repeatedly</b> applies a function to an initial value for every execution round.
@@ -41,5 +41,5 @@ trait FieldCalculusSyntax:
    * @return
    *   the value after the last application of the function that has been shared with neighbours
    */
-  def share[Value](initial: Value)(shareAndReturning: AggregateValue[Value] => Value): Value
+  def share[Value](initial: Value)(shareAndReturning: SharedData[Value] => Value): Value
 end FieldCalculusSyntax

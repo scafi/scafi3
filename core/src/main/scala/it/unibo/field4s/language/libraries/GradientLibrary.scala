@@ -32,8 +32,8 @@ object GradientLibrary:
   def distanceEstimate[N: {Numeric, UpperBounded}](using
       language: AggregateFoundation,
   )(
-      neighboursEstimates: language.AggregateValue[N],
-      distances: language.AggregateValue[N],
+                                                    neighboursEstimates: language.SharedData[N],
+                                                    distances: language.SharedData[N],
   ): N = (neighboursEstimates, distances).mapN(_ + _).withoutSelf.min
 
   /**
@@ -50,7 +50,7 @@ object GradientLibrary:
    */
   def distanceTo[N: {Numeric as numeric, UpperBounded as bound}](using
       language: AggregateFoundation & FieldCalculusSyntax,
-  )(source: Boolean, distances: language.AggregateValue[N]): N =
+  )(source: Boolean, distances: language.SharedData[N]): N =
     share[N](bound.upperBound)(av => mux(source)(numeric.zero)(distanceEstimate(av, distances)))
 
   /**
@@ -67,7 +67,7 @@ object GradientLibrary:
    */
   def sensorDistanceEstimate[N: {Numeric, UpperBounded}](using
       language: AggregateFoundation & DistanceSensor[N],
-  )(neighboursEstimates: language.AggregateValue[N]): N =
+  )(neighboursEstimates: language.SharedData[N]): N =
     distanceEstimate(neighboursEstimates, senseDistance[N])
 
   /**

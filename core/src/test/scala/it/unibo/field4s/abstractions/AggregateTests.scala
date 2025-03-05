@@ -6,7 +6,7 @@ import it.unibo.field4s.collections.{ SafeIterable, SafeIterableTests }
 trait AggregateTests:
   this: UnitTest & SafeIterableTests =>
 
-  def aggregate[A, F[X] <: SafeIterable[X]: Aggregate](agg: F[A])(using CanEqual[A, A]): Unit =
+  def aggregate[A, F[X] <: SafeIterable[X]: SharedDataOps](agg: F[A])(using CanEqual[A, A]): Unit =
     it should behave like safeIterable(agg)
     it should "provide an iterable without self as extension" in:
       agg.withoutSelf.toSet should contain theSameElementsAs agg.toSet - agg.onlySelf

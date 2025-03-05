@@ -4,7 +4,7 @@ import it.unibo.field4s.language.foundation.AggregateFoundation
 
 object FoldingLibrary:
 
-  extension [T](using language: AggregateFoundation)(av: language.AggregateValue[T])
+  extension [T](using language: AggregateFoundation)(av: language.SharedData[T])
 
     /**
      * Fold (accumulate) the aggregate values using the given function, including the value for self (if present).

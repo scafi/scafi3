@@ -33,7 +33,7 @@ trait ExchangeCalculusSyntax:
    * @see
    *   [[common.ReturnSending]]
    */
-  def exchange[Value](initial: AggregateValue[Value])(
-    f: AggregateValue[Value] => ReturnSending[AggregateValue[Value]],
-  ): AggregateValue[Value]
+  def exchange[Value](initial: SharedData[Value])(
+    f: SharedData[Value] => ReturnSending[SharedData[Value]],
+  ): SharedData[Value]
 end ExchangeCalculusSyntax

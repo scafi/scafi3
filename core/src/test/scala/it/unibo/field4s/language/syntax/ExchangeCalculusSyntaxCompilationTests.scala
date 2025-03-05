@@ -10,13 +10,13 @@ class ExchangeCalculusSyntaxCompilationTests extends UnitTest:
 
   val language: ExchangeCalculusSyntax & AggregateFoundation = new AggregateFoundationMock with ExchangeCalculusSyntax:
 
-    override def exchange[T](initial: AggregateValue[T])(
-      f: AggregateValue[T] => ReturnSending[AggregateValue[T]],
-    ): AggregateValue[T] = mock[AggregateValue[T]]
+    override def exchange[T](initial: SharedData[T])(
+      f: SharedData[T] => ReturnSending[SharedData[T]],
+    ): SharedData[T] = mock[SharedData[T]]
 
   "ExchangeCalculus Syntax" should "compile" in:
-    val field: language.AggregateValue[Boolean] = mock[language.AggregateValue[Boolean]]
-    val intField = mock[language.AggregateValue[Int]]
+    val field: language.SharedData[Boolean] = mock[language.SharedData[Boolean]]
+    val intField = mock[language.SharedData[Int]]
     "val _: language.AggregateValue[Boolean] = language.exchange(field)(x => x)" should compile
     "val _: language.AggregateValue[Int] = language.exchange(intField)(x => ret (x) send x)" should compile
     "val _: language.AggregateValue[Boolean] = language.exchange(field)(x => (x, x))" should compile

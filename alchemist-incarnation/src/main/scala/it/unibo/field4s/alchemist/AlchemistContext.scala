@@ -26,7 +26,7 @@ class AlchemistContext[Position <: AlchemistPosition[Position]](
   override def update[Value](name: String, value: Value): Unit =
     environment.getNodeByID(deviceId).nn.setConcentration(SimpleMolecule(name), value)
 
-  override def senseDistance: AggregateValue[Double] =
+  override def senseDistance: SharedData[Double] =
     val myPosition = environment.getPosition(me).nn
     val distances = environment
       .getNeighborhood(me)

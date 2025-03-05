@@ -8,7 +8,7 @@ import it.unibo.field4s.collections.SafeIterable
  * @tparam F
  *   the type of the collection
  */
-trait Aggregate[F[A] <: SafeIterable[A]]:
+trait SharedDataOps[F[A] <: SafeIterable[A]]:
 
   extension [A](a: F[A])
     /**

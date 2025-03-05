@@ -39,5 +39,5 @@ object CommonLibrary:
    */
   def device(using
       language: AggregateFoundation & DeviceAwareAggregateFoundation,
-  ): language.AggregateValue[language.DeviceId] = language.device
+  ): language.SharedData[language.DeviceId] = language.device
 end CommonLibrary

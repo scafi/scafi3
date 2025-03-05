@@ -4,7 +4,7 @@ import it.unibo.field4s.UnitTest
 import it.unibo.field4s.abstractions.AggregateTests
 import it.unibo.field4s.collections.SafeIterableTests
 
-class AggregateFoundationMockTest
+class SharedDataOpsFoundationMockTest
     extends UnitTest
     with SafeIterableTests
     with DeviceAwareAggregateFoundationTests

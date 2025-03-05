@@ -2,18 +2,18 @@ package it.unibo.field4s.engine.context.exchange
 
 import scala.collection.MapView
 
-import it.unibo.field4s.abstractions.Aggregate
+import it.unibo.field4s.abstractions.SharedDataOps
 import it.unibo.field4s.collections.SafeIterable
-import it.unibo.field4s.language.semantics.exchange.{ ExchangeCalculusSemantics, NeighboringValue }
+import it.unibo.field4s.language.semantics.exchange.{ ExchangeCalculusSemantics, NeighboringValueOps }
 
 import cats.Applicative
 
 /**
  * Implements the foundational semantics for the NValues of the exchange calculus.
  */
-trait NValuesSemantics:
+trait NeighboringValueSemantics:
   this: ExchangeCalculusSemantics =>
-  override type AggregateValue[T] = NValues[T]
+  override type SharedData[T] = NValues[T]
 
   /**
    * A NValues is a mapping from device ids to values of type T. For devices not aligned with the current device, the
@@ -46,18 +46,18 @@ trait NValuesSemantics:
     override def toString: String = s"NValues($default, $unalignedValues)"
   end NValues
 
-  override given nvalues: NeighboringValue[AggregateValue, DeviceId] = new NeighboringValue[AggregateValue, DeviceId]:
+  override given neighboringValue: NeighboringValueOps[SharedData, DeviceId] = new NeighboringValueOps[SharedData, DeviceId]:
 
-    extension [T](nv: AggregateValue[T])
+    extension [T](nv: SharedData[T])
       override def default: T = nv.default
       override def values: MapView[DeviceId, T] = nv.alignedValues
 
-      override def set(id: DeviceId, value: T): AggregateValue[T] = NValues[T](
+      override def set(id: DeviceId, value: T): SharedData[T] = NValues[T](
         nv.default,
         nv.unalignedValues + (id -> value),
       )
 
-  override given liftable: Applicative[AggregateValue] = new Applicative[AggregateValue]:
+  override given liftable: Applicative[SharedData] = new Applicative[SharedData]:
     override def pure[A](x: A): NValues[A] = NValues(x, Map.empty)
 
     override def ap[A, B](ff: NValues[A => B])(fa: NValues[A]): NValues[B] = NValues(
@@ -72,22 +72,22 @@ trait NValuesSemantics:
       fa.unalignedValues.view.mapValues(f).toMap,
     )
 
-  override given aggregate: Aggregate[AggregateValue] = new Aggregate[AggregateValue]:
+  override given aggregate: SharedDataOps[SharedData] = new SharedDataOps[SharedData]:
 
-    extension [A](a: AggregateValue[A])
+    extension [A](a: SharedData[A])
 
       override def withoutSelf: SafeIterable[A] =
         val filtered = a.alignedValues.filterKeys(_ != self).values
         SafeIterable(filtered)
       override def onlySelf: A = a(self)
 
-  override given convert[T]: Conversion[T, AggregateValue[T]] = NValues[T](_)
+  override given convert[T]: Conversion[T, SharedData[T]] = NValues[T](_)
 
-  override def device: AggregateValue[DeviceId] = NValues[DeviceId](self, alignedDevices.map(id => (id, id)).toMap)
+  override def device: SharedData[DeviceId] = NValues[DeviceId](self, alignedDevices.map(id => (id, id)).toMap)
 
   /**
    * @return
    *   the set of device ids that are aligned with the current device
    */
   protected def alignedDevices: Set[DeviceId]
-end NValuesSemantics
+end NeighboringValueSemantics

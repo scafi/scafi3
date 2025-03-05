@@ -1,6 +1,6 @@
 package it.unibo.field4s.language.foundation
 
-import it.unibo.field4s.abstractions.Aggregate
+import it.unibo.field4s.abstractions.SharedDataOps
 import it.unibo.field4s.collections.SafeIterable
 
 import cats.Applicative
@@ -11,12 +11,12 @@ class AggregateFoundationMock
     with DeviceAwareAggregateFoundation
     with FieldMock
     with DeviceMock:
-  override type AggregateValue[T] = MockAggregate[T]
+  override type SharedData[T] = MockAggregate[T]
 
   case class MockAggregate[T](mockedValues: Iterable[T] = Seq()) extends SafeIterable[T]:
     override protected def iterator: Iterator[T] = mockedValues.iterator
 
-  override given aggregate: Aggregate[MockAggregate] = new Aggregate[MockAggregate]:
+  override given aggregate: SharedDataOps[MockAggregate] = new SharedDataOps[MockAggregate]:
     extension [A](a: MockAggregate[A])
       override def withoutSelf: SafeIterable[A] = MockAggregate(a.mockedValues.tail)
       override def onlySelf: A = a.mockedValues.head

@@ -12,7 +12,7 @@ trait AggregateFoundationTests:
   val lang: A
 
   def aggregateFoundation(): Unit =
-    val field: lang.AggregateValue[String] = lang.mockField(List("a", "b", "c"))
+    val field: lang.SharedData[String] = lang.mockField(List("a", "b", "c"))
     it should "provide foldable fields" in:
       field.fold("")(_ + _) should be("abc")
     it should "provide fields that have a local value" in:
@@ -23,9 +23,9 @@ trait AggregateFoundationTests:
       field.map(_.length).fold(0)(_ + _) should be(3)
     it should "provide a way to combine fields" in:
       (field, field).mapN(_ + _).fold("")(_ + _) should be("aabbcc")
-    val intField: lang.AggregateValue[Int] = lang.mockField(List(1, 2, 3))
-    val intField2: lang.AggregateValue[Int] = lang.mockField(List(4, 5, 6))
-    val intField3: lang.AggregateValue[Int] = lang.mockField(List(7, 8, 9))
+    val intField: lang.SharedData[Int] = lang.mockField(List(1, 2, 3))
+    val intField2: lang.SharedData[Int] = lang.mockField(List(4, 5, 6))
+    val intField3: lang.SharedData[Int] = lang.mockField(List(7, 8, 9))
     it should behave like aggregate(field)
   end aggregateFoundation
 end AggregateFoundationTests

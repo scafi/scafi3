@@ -24,9 +24,9 @@ trait ExchangeCalculusSemantics
    * @return
    *   an instance of NValuesOps
    * @see
-   * [[NeighboringValue]]
+   * [[NeighboringValueOps]]
    */
-  given nvalues: NeighboringValue[AggregateValue, DeviceId]
+  given neighboringValue: NeighboringValueOps[SharedData, DeviceId]
 
   /**
    * Local values can be considered NValues.
@@ -34,7 +34,7 @@ trait ExchangeCalculusSemantics
    * @tparam T
    *   can be any local value
    */
-  given convert[T]: Conversion[T, AggregateValue[T]]
+  given convert[T]: Conversion[T, SharedData[T]]
 
   /**
    * This operator branches the computation into `th` or `el` according to `cond`.
@@ -53,7 +53,7 @@ trait ExchangeCalculusSemantics
    * @return
    *   the neighbouring value providing for the next local state
    */
-  protected def xc[T](init: AggregateValue[T])(
-      f: AggregateValue[T] => (AggregateValue[T], AggregateValue[T]),
-  ): AggregateValue[T]
+  protected def xc[T](init: SharedData[T])(
+    f: SharedData[T] => (SharedData[T], SharedData[T]),
+  ): SharedData[T]
 end ExchangeCalculusSemantics

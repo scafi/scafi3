@@ -23,6 +23,6 @@ trait DeviceAwareAggregateFoundation:
    * @return
    *   the aggregate value of device identifiers of aligned devices (including the current device)
    */
-  def device: AggregateValue[DeviceId]
+  def device: SharedData[DeviceId]
 
 end DeviceAwareAggregateFoundation

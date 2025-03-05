@@ -1,19 +1,19 @@
 package it.unibo.field4s.language.foundation
 
-import it.unibo.field4s.abstractions.Aggregate
+import it.unibo.field4s.abstractions.SharedDataOps
 import it.unibo.field4s.collections.SafeIterable
 
 import cats.Applicative
 
 trait AggregateFoundation:
-  type AggregateValue[T] <: SafeIterable[T]
+  type SharedData[T] <: SafeIterable[T]
 
   /**
    * Aggregate values can be iterated also by ignoring the self value.
    */
-  given aggregate: Aggregate[AggregateValue]
+  given aggregate: SharedDataOps[SharedData]
 
   /**
    * Aggregate values can be composed and mapped.
    */
-  given liftable: Applicative[AggregateValue]
+  given liftable: Applicative[SharedData]

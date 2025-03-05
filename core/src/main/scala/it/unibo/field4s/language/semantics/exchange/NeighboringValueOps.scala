@@ -6,14 +6,14 @@ import it.unibo.field4s.language.semantics.exchange
 
 /**
  * This trait defines the operations that can be performed on NValues.
- * @tparam NV
+ * @tparam NeighboringValue
  *   the type of the NeighboringValue
  * @tparam DeviceId
  *   the type of the device id
  */
-trait NeighboringValue[NV[_], DeviceId]:
+trait NeighboringValueOps[NeighboringValue[_], DeviceId]:
 
-  extension [Value](neighboringValues: NV[Value])
+  extension [Value](neighboringValues: NeighboringValue[Value])
 
     /**
      * @return
@@ -36,7 +36,7 @@ trait NeighboringValue[NV[_], DeviceId]:
      * @return
      *   the new NValues
      */
-    def set(id: DeviceId, value: Value): NV[Value]
+    def set(id: DeviceId, value: Value): NeighboringValue[Value]
 
     /**
      * @param id
@@ -55,4 +55,4 @@ trait NeighboringValue[NV[_], DeviceId]:
      */
     def apply(id: DeviceId): Value = neighboringValues.get(id)
   end extension
-end NeighboringValue
+end NeighboringValueOps

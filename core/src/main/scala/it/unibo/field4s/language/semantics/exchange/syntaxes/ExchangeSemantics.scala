@@ -10,7 +10,7 @@ import it.unibo.field4s.language.syntax.common.ReturnSending
 trait ExchangeSemantics extends ExchangeCalculusSyntax:
   self: ExchangeCalculusSemantics =>
 
-  override def exchange[T](initial: AggregateValue[T])(
-    f: AggregateValue[T] => ReturnSending[AggregateValue[T]],
-  ): AggregateValue[T] =
+  override def exchange[T](initial: SharedData[T])(
+    f: SharedData[T] => ReturnSending[SharedData[T]],
+  ): SharedData[T] =
     xc(initial)(f.andThen(rs => (rs.returning, rs.sending)))
