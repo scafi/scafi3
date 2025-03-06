@@ -8,6 +8,8 @@ import it.unibo.field4s.engine.network.Import
 import it.unibo.field4s.engine.context.exchange.BasicExchangeCalculusContext
 import it.unibo.field4s.language.sensors.DistanceSensor
 
+import it.unibo.field4s.language.semantics.exchange
+
 class AlchemistContext[Position <: AlchemistPosition[Position]](
     environment: Environment[Any, Position],
     deviceId: Int,
@@ -15,7 +17,8 @@ class AlchemistContext[Position <: AlchemistPosition[Position]](
 ) extends BasicExchangeCalculusContext[Int](deviceId, inbox)
     with DistanceSensor[Double]
     with AlchemistActuators
-    with AlchemistSensors:
+    with AlchemistSensors
+    with exchange.Binding:
 
   private def me: Node[Any] = environment.getNodeByID(deviceId).nn
 

@@ -36,8 +36,8 @@ class Engine[
 ):
 
   private def round(): AggregateResult =
-    given context: C = factory.create(network)
-    val result: Result = program
+    val context: C = factory.create(network)
+    val result: Result = program(using context)
     val outMessages = context.outboundMessages
     network.send(outMessages)
     AggregateResult(result, context.inboundMessages, outMessages)
