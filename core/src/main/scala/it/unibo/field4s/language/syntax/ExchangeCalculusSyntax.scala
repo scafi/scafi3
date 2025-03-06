@@ -20,7 +20,7 @@ trait ExchangeCalculusSyntax:
    * {{{exchange(0)(value => retsend(f(value)))}}} <h4>To send and return different values</h4>
    * {{{exchange(0)(value => (f(value), f2(value)))}}} {{{exchange(0)(value => ret (f(value)) send f2(value))}}}
    * {{{exchange(0)(value => ret(f(value)).send(f2(value)))}}} {{{exchange(0)(value => RetSend(f(value), f2(value)))}}}
- *
+   *
    * @param initial
    *   the initial aggregate value
    * @param f
@@ -34,6 +34,6 @@ trait ExchangeCalculusSyntax:
    *   [[common.ReturnSending]]
    */
   def exchange[Value](initial: SharedData[Value])(
-    f: SharedData[Value] => ReturnSending[SharedData[Value]],
+      f: SharedData[Value] => ReturnSending[SharedData[Value]],
   ): SharedData[Value]
 end ExchangeCalculusSyntax

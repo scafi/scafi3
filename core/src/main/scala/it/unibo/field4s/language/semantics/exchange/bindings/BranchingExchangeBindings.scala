@@ -8,4 +8,6 @@ import it.unibo.field4s.language.syntax.BranchingSyntax
  */
 trait BranchingExchangeBindings extends BranchingSyntax:
   self: ExchangeCalculusSemantics =>
-  override def branch[T](condition: Boolean)(trueBranch: => T)(falseBranch: => T): T = br(condition)(trueBranch)(falseBranch)
+
+  override def branch[T](condition: Boolean)(trueBranch: => T)(falseBranch: => T): T =
+    br(condition)(trueBranch)(falseBranch)

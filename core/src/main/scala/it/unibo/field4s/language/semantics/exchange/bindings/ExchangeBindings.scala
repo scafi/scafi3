@@ -11,6 +11,6 @@ trait ExchangeBindings extends ExchangeCalculusSyntax:
   self: ExchangeCalculusSemantics =>
 
   override def exchange[T](initial: SharedData[T])(
-    f: SharedData[T] => ReturnSending[SharedData[T]],
+      f: SharedData[T] => ReturnSending[SharedData[T]],
   ): SharedData[T] =
     xc(initial)(f.andThen(rs => (rs.returning, rs.sending)))

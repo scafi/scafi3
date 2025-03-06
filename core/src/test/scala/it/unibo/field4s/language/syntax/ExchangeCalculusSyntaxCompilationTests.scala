@@ -11,7 +11,7 @@ class ExchangeCalculusSyntaxCompilationTests extends UnitTest:
   val language: ExchangeCalculusSyntax & AggregateFoundation = new AggregateFoundationMock with ExchangeCalculusSyntax:
 
     override def exchange[T](initial: SharedData[T])(
-      f: SharedData[T] => ReturnSending[SharedData[T]],
+        f: SharedData[T] => ReturnSending[SharedData[T]],
     ): SharedData[T] = mock[SharedData[T]]
 
   "ExchangeCalculus Syntax" should "compile" in:

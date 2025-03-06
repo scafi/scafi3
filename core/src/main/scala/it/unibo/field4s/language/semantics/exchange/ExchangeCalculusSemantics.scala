@@ -20,11 +20,11 @@ trait ExchangeCalculusSemantics
 
   /**
    * Operations on NValues are provided by the ExchangeCalculusSemantics as extension methods.
- *
+   *
    * @return
    *   an instance of NValuesOps
    * @see
-   * [[NeighboringValueOps]]
+   *   [[NeighboringValueOps]]
    */
   given neighboringValue: NeighboringValueOps[SharedData, DeviceId]
 
@@ -54,6 +54,6 @@ trait ExchangeCalculusSemantics
    *   the neighbouring value providing for the next local state
    */
   protected def xc[T](init: SharedData[T])(
-    f: SharedData[T] => (SharedData[T], SharedData[T]),
+      f: SharedData[T] => (SharedData[T], SharedData[T]),
   ): SharedData[T]
 end ExchangeCalculusSemantics

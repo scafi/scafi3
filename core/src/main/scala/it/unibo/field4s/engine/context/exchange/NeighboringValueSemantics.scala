@@ -46,16 +46,17 @@ trait NeighboringValueSemantics:
     override def toString: String = s"NValues($default, $unalignedValues)"
   end NValues
 
-  override given neighboringValue: NeighboringValueOps[SharedData, DeviceId] = new NeighboringValueOps[SharedData, DeviceId]:
+  override given neighboringValue: NeighboringValueOps[SharedData, DeviceId] =
+    new NeighboringValueOps[SharedData, DeviceId]:
 
-    extension [T](nv: SharedData[T])
-      override def default: T = nv.default
-      override def values: MapView[DeviceId, T] = nv.alignedValues
+      extension [T](nv: SharedData[T])
+        override def default: T = nv.default
+        override def values: MapView[DeviceId, T] = nv.alignedValues
 
-      override def set(id: DeviceId, value: T): SharedData[T] = NValues[T](
-        nv.default,
-        nv.unalignedValues + (id -> value),
-      )
+        override def set(id: DeviceId, value: T): SharedData[T] = NValues[T](
+          nv.default,
+          nv.unalignedValues + (id -> value),
+        )
 
   override given liftable: Applicative[SharedData] = new Applicative[SharedData]:
     override def pure[A](x: A): NValues[A] = NValues(x, Map.empty)

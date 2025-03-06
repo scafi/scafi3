@@ -21,7 +21,7 @@ object ExchangeCalculusLibrary:
    * {{{exchange(0)(value => retsend(f(value)))}}} <h4>To send and return different values</h4>
    * {{{exchange(0)(value => (f(value), f2(value)))}}} {{{exchange(0)(value => ret (f(value)) send f2(value))}}}
    * {{{exchange(0)(value => ret(f(value)).send(f2(value)))}}} {{{exchange(0)(value => RetSend(f(value), f2(value)))}}}
- *
+   *
    * @param initial
    *   the initial aggregate value
    * @param f
@@ -32,9 +32,11 @@ object ExchangeCalculusLibrary:
    * @return
    *   the new aggregate value
    * @see
-   * [[ReturnSending]] [[ExchangeCalculusSyntax.exchange]]
+   *   [[ReturnSending]] [[ExchangeCalculusSyntax.exchange]]
    */
-  def exchange[T](using language: AggregateFoundation & ExchangeCalculusSyntax)(initial: language.SharedData[T])(
-    f: language.SharedData[T] => ReturnSending[language.SharedData[T]],
+  def exchange[T](using
+      language: AggregateFoundation & ExchangeCalculusSyntax,
+  )(initial: language.SharedData[T])(
+      f: language.SharedData[T] => ReturnSending[language.SharedData[T]],
   ): language.SharedData[T] = language.exchange(initial)(f)
 end ExchangeCalculusLibrary

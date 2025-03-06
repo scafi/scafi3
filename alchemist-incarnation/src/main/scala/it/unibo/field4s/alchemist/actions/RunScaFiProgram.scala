@@ -2,7 +2,7 @@ package it.unibo.field4s.alchemist.actions
 
 import it.unibo.alchemist.model.actions.AbstractAction
 import it.unibo.alchemist.model.molecules.SimpleMolecule
-import it.unibo.alchemist.model.{Position as AlchemistPosition, *}
+import it.unibo.alchemist.model.{ Position as AlchemistPosition, * }
 import it.unibo.field4s
 import it.unibo.field4s.alchemist.AlchemistContext
 import it.unibo.field4s.alchemist.device.ScaFiDevice

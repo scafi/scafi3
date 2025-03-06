@@ -2,7 +2,6 @@ package it.unibo.alchemist
 
 import javax.script.ScriptEngineManager
 
-import com.github.benmanes.caffeine.cache.{ Caffeine, LoadingCache }
 import it.unibo.alchemist.model.conditions.AbstractCondition
 import it.unibo.alchemist.model.molecules.SimpleMolecule
 import it.unibo.alchemist.model.nodes.GenericNode
@@ -12,6 +11,8 @@ import it.unibo.alchemist.model.times.DoubleTime
 import it.unibo.alchemist.model.{ Position as AlchemistPosition, * }
 import it.unibo.field4s.alchemist.actions.RunScaFiProgram
 import it.unibo.field4s.alchemist.device.ScaFiDevice
+
+import com.github.benmanes.caffeine.cache.{ Caffeine, LoadingCache }
 import org.apache.commons.math3.random.RandomGenerator
 
 class ExchangeIncarnation[Position <: AlchemistPosition[Position]] extends Incarnation[Any, Position]:
