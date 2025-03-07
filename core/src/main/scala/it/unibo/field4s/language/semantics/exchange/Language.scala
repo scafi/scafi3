@@ -1,10 +1,8 @@
 package it.unibo.field4s.language.semantics.exchange
 
+import it.unibo.field4s.language.bindings.exchange.*
+
 type Language = ExchangeCalculusSemantics & Binding
 
-trait Binding
-    extends bindings.ExchangeBindings
-    with bindings.BranchingExchangeBindings
-    with bindings.FieldCalculusByExchangeBindings:
+trait Binding extends ExchangeBindings, BranchingExchangeBindings, FieldCalculusByExchangeBindings:
   self: ExchangeCalculusSemantics =>
-

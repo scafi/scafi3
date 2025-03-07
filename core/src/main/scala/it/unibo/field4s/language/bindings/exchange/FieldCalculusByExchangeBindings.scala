@@ -1,4 +1,4 @@
-package it.unibo.field4s.language.semantics.exchange.bindings
+package it.unibo.field4s.language.bindings.exchange
 
 import it.unibo.field4s.language.semantics.exchange.ExchangeCalculusSemantics
 import it.unibo.field4s.language.syntax.{ ExchangeCalculusSyntax, FieldCalculusSyntax }

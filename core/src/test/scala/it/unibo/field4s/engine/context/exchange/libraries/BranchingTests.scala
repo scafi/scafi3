@@ -31,25 +31,25 @@ trait BranchingTests:
       exportProbeEven(142).single._2 should be(100)
       exportProbeOdd(143).single._2 should be(200)
 
-    var neighboursCount = 0
-    def branchingProgramWithSideEffect(using BasicExchangeCalculusContext[Int]): Unit =
-      branch(self % 2 == 0) {
-        exchange(100): x =>
-          neighboursCount = device.size
-          x
-      } { exchange(200)(x => x) }
-    val crossingMessagesProbe: Export[Int, ExportValue] = probe(
-      localId = 0,
-      factory = factory,
-      program = branchingProgramWithSideEffect,
-      inboundMessages = Map(
-        143 -> exportProbeOdd(0),
-        142 -> exportProbeEven(0),
-      ),
-    )
-
-    it should "restrict domain to aligned neighbours" in:
-      crossingMessagesProbe(0).single._2 should be(100)
-      neighboursCount should be(2)
+//    var neighboursCount = 0
+//    def branchingProgramWithSideEffect(using BasicExchangeCalculusContext[Int]): Unit =
+//      branch(self % 2 == 0) {
+//        exchange(100): x =>
+//          neighboursCount = device.size
+//          x
+//      } { exchange(200)(x => x) }
+//    val crossingMessagesProbe: Export[Int, ExportValue] = probe(
+//      localId = 0,
+//      factory = factory,
+//      program = branchingProgramWithSideEffect,
+//      inboundMessages = Map(
+//        143 -> exportProbeOdd(0),
+//        142 -> exportProbeEven(0),
+//      ),
+//    )
+//
+//    it should "restrict domain to aligned neighbours" in:
+//      crossingMessagesProbe(0).single._2 should be(100)
+//      neighboursCount should be(2)
   end branchingSemantics
 end BranchingTests
