@@ -1,3 +1,9 @@
+## [1.1.1](https://github.com/field4s/field4s/compare/v1.1.0...v1.1.1) (2025-03-08)
+
+### Dependency updates
+
+* **core-deps:** update dependency scala to v3.6.4 ([827aa9a](https://github.com/field4s/field4s/commit/827aa9a1742a3894266df957224a75dc1946d98f))
+
 ## [1.1.0](https://github.com/field4s/field4s/compare/v1.0.1...v1.1.0) (2025-03-08)
 
 ### Features
