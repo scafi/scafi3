@@ -5,8 +5,8 @@ import it.unibo.field4s.engine.context.Context
 import it.unibo.field4s.engine.context.common.*
 import it.unibo.field4s.engine.context.exchange.AbstractExchangeCalculusContext.ExportValue
 import it.unibo.field4s.engine.network.Import
+import it.unibo.field4s.language.ExchangeLanguage
 import it.unibo.field4s.language.semantics.exchange.ExchangeCalculusSemantics
-import it.unibo.field4s.language.semantics.exchange.Binding
 
 /**
  * Mixin composition of all the semantics needed to implement the exchange calculus, except for the message semantics.
@@ -30,7 +30,7 @@ abstract class AbstractExchangeCalculusContext[Id, Wrapper](
     with Message
     with InboundMessages
     with OutboundMessage
-    with Binding:
+    with ExchangeLanguage:
   override type DeviceId = Id
   override type Envelope = Wrapper
 

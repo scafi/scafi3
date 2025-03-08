@@ -1,7 +1,7 @@
 package it.unibo.field4s.alchemist.main
 
-import it.unibo.field4s.language.foundation.{AggregateFoundation, DeviceAwareAggregateFoundation}
-import it.unibo.field4s.language.libraries.All.{*, given}
+import it.unibo.field4s.language.foundation.{ AggregateFoundation, DeviceAwareAggregateFoundation }
+import it.unibo.field4s.language.libraries.All.{ *, given }
 import it.unibo.field4s.language.sensors.DistanceSensor
 import it.unibo.field4s.language.syntax.FieldCalculusSyntax
 

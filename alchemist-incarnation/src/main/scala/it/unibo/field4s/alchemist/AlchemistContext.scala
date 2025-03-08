@@ -1,14 +1,13 @@
 package it.unibo.field4s.alchemist
 
-import scala.jdk.CollectionConverters.*
-
-import it.unibo.alchemist.model.{ Environment, Node, Position as AlchemistPosition }
 import it.unibo.alchemist.model.molecules.SimpleMolecule
-import it.unibo.field4s.engine.network.Import
+import it.unibo.alchemist.model.{ Environment, Node, Position as AlchemistPosition }
 import it.unibo.field4s.engine.context.exchange.BasicExchangeCalculusContext
+import it.unibo.field4s.engine.network.Import
+import it.unibo.field4s.language.ExchangeLanguage
 import it.unibo.field4s.language.sensors.DistanceSensor
 
-import it.unibo.field4s.language.semantics.exchange
+import scala.jdk.CollectionConverters.*
 
 class AlchemistContext[Position <: AlchemistPosition[Position]](
     environment: Environment[Any, Position],
@@ -18,7 +17,7 @@ class AlchemistContext[Position <: AlchemistPosition[Position]](
     with DistanceSensor[Double]
     with AlchemistActuators
     with AlchemistSensors
-    with exchange.Binding:
+    with ExchangeLanguage:
 
   private def me: Node[Any] = environment.getNodeByID(deviceId).nn
 
