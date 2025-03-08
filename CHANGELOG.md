@@ -1,3 +1,65 @@
+## [1.1.0](https://github.com/field4s/field4s/compare/v1.0.1...v1.1.0) (2025-03-08)
+
+### Features
+
+* bindings and sematics separation ([cfc622d](https://github.com/field4s/field4s/commit/cfc622d04ca893ec228923d5f1b9c0e6e943a867))
+* improve API ergonomics ([dda4113](https://github.com/field4s/field4s/commit/dda411372c7fd79d1f90f50af6421905086daa92))
+* improve API ergonomics ([df8dff3](https://github.com/field4s/field4s/commit/df8dff36c6742428d32c6dded5a3e7658fadc373))
+* improve the API ergonomics ([e37ab56](https://github.com/field4s/field4s/commit/e37ab564fff6224848844f58c152e1e8b7fc6753))
+* integrate alchemist incarnation from [@ldeluigi](https://github.com/ldeluigi) ([1402d9f](https://github.com/field4s/field4s/commit/1402d9fc796303b2d8c58df0427b41ff4dcb9f03))
+* leaving to nico the beghesg ([f491dd4](https://github.com/field4s/field4s/commit/f491dd42ef593f86d37f7d3d579a683521129810))
+* more on API ergonomics ([0049d3b](https://github.com/field4s/field4s/commit/0049d3bd6a7276deb8f1fa01c7ed944e1a5bc58c))
+* more on ergonomics ([7252251](https://github.com/field4s/field4s/commit/725225147927570a2b608510d1716392ccd83950))
+* more on ergonomics ([7b1a215](https://github.com/field4s/field4s/commit/7b1a215b53184bca3dad17a8a6b80dc31353c9a9))
+* more on ergonomics ([9d6b1f8](https://github.com/field4s/field4s/commit/9d6b1f8798b54688a30c7520ec8877ddb1b79535))
+* move the bindings package ([240780d](https://github.com/field4s/field4s/commit/240780db1ce22cfe7f6b884e7e683c2cbc5e6a20))
+* on API ergonomics ([2b17ccb](https://github.com/field4s/field4s/commit/2b17ccbe70680fb03fe6cdd5b035da7327b3aea5))
+* refactor, remove the concept of Language ([307b74d](https://github.com/field4s/field4s/commit/307b74dd2193d09d7747df651c37fc2cd3f1c00c))
+
+### Dependency updates
+
+* **deps:** update dependency ch.epfl.scala:sbt-scalafix to v0.14.2 ([7aa101f](https://github.com/field4s/field4s/commit/7aa101f720bf8586f06b84ef1f7f0409d2319a11))
+* **deps:** update dependency org.scala-js:sbt-scalajs to v1.18.2 ([ccde28d](https://github.com/field4s/field4s/commit/ccde28d956fe1fd0fba463020dd39796ab019661))
+* **deps:** update dependency org.scala-native:sbt-scala-native to v0.5.7 ([cef5862](https://github.com/field4s/field4s/commit/cef5862b72a901f966a6740bc9fd628e34d68f42))
+* **deps:** update dependency org.scoverage:sbt-scoverage to v2.3.1 ([d0e0b23](https://github.com/field4s/field4s/commit/d0e0b23d66efa60969b2e28e08502da08ba054ac))
+* **deps:** update dependency org.typelevel:cats-core to v2.13.0 ([357abbf](https://github.com/field4s/field4s/commit/357abbfeb844bde2877ca1e8aa62e3cbacf774c5))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.120 ([c4ef863](https://github.com/field4s/field4s/commit/c4ef8632c916ce02b13c33123f64419d917abe06))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.121 ([8f84227](https://github.com/field4s/field4s/commit/8f842272e62e78c2538924267e1146dc0df113e4))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.122 ([d409ec9](https://github.com/field4s/field4s/commit/d409ec9b211187628dbe376308904aea82eb6bb0))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.123 ([0952f15](https://github.com/field4s/field4s/commit/0952f159528c3b13577f56b751895b54c3ada659))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.124 ([226420a](https://github.com/field4s/field4s/commit/226420a31b80acd0ea7cf46490a8bfc05f495216))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.125 ([10e03fa](https://github.com/field4s/field4s/commit/10e03fabc3f4f1aa23c2f483799f1ec2adc17e62))
+* **deps:** update node.js to 22.14 ([6440ad4](https://github.com/field4s/field4s/commit/6440ad4b50af85ba1e5b34a0658411727b2b622c))
+
+### Bug Fixes
+
+* **test:** add binding AbstractExchangeCalculusContext ([6616b2b](https://github.com/field4s/field4s/commit/6616b2bf70c29aabf6a8be16dc9852453e0c664a))
+* use SharedData instead of AggregateValue ([7fc3673](https://github.com/field4s/field4s/commit/7fc3673f01a89d207342967b0c742988d769e9ea))
+
+### Tests
+
+* use new syntax ([4e801eb](https://github.com/field4s/field4s/commit/4e801ebe8930899459a447770d639679688bc50c))
+
+### Build and continuous integration
+
+* **deps:** update actions/setup-node action to v4.2.0 ([802a86a](https://github.com/field4s/field4s/commit/802a86a4d71f1df0e80be6cc2e2c10ede93c7992))
+* update actions ([6de9113](https://github.com/field4s/field4s/commit/6de91131ca742184a6598c8950c0eba6f06dfebb))
+* update build-check-deploy-sbt-actions ([84a5dde](https://github.com/field4s/field4s/commit/84a5dde27e2a4a9f296abc6510c9fa7270e2ba43))
+
+### General maintenance
+
+* **readme:** better badges positioning ([80836ed](https://github.com/field4s/field4s/commit/80836ed0355c79d7a549fa45ba6827bb681fc0af))
+
+### Style improvements
+
+* reformat style ([05ea4cd](https://github.com/field4s/field4s/commit/05ea4cdd482d22675258acbdcf67046fffd0250f))
+* sort imports ([008be35](https://github.com/field4s/field4s/commit/008be3515b57f800cfeeedcb3ce706127a4f2a11))
+* update scalafmt version ([8c6f01c](https://github.com/field4s/field4s/commit/8c6f01c17ea80762799f4148628de431d3da5216))
+
+### Refactoring
+
+* solve deprecated abstract given ([ec01a68](https://github.com/field4s/field4s/commit/ec01a683059d6ab9d3079da4f1f7edd11ef623dc))
+
 ## [1.0.1](https://github.com/field4s/field4s/compare/v1.0.0...v1.0.1) (2025-01-17)
 
 ### Dependency updates
