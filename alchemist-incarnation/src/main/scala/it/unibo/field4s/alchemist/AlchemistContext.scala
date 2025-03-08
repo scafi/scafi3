@@ -9,8 +9,8 @@ import it.unibo.field4s.engine.network.Import
 import it.unibo.field4s.language.ExchangeLanguage
 import it.unibo.field4s.language.sensors.DistanceSensor
 
-class AlchemistContext[Position <: AlchemistPosition[Position]](
-    environment: Environment[Any, Position],
+class AlchemistContext[T, Position <: AlchemistPosition[Position]](
+    environment: Environment[T, Position],
     deviceId: Int,
     inbox: Import[Int, AlchemistContext.ExportValue],
 ) extends BasicExchangeCalculusContext[Int](deviceId, inbox)
@@ -19,14 +19,15 @@ class AlchemistContext[Position <: AlchemistPosition[Position]](
     with AlchemistSensors
     with ExchangeLanguage:
 
-  private def me: Node[Any] = environment.getNodeByID(deviceId).nn
+  private def me: Node[T] = environment.getNodeByID(deviceId).nn
 
   @SuppressWarnings(Array("DisableSyntax.asInstanceOf"))
   override def sense[Value](name: String): Value =
     environment.getNodeByID(deviceId).nn.getConcentration(SimpleMolecule(name)).asInstanceOf[Value]
 
+  @SuppressWarnings(Array("scalafix:DisableSyntax.asInstanceOf"))
   override def update[Value](name: String, value: Value): Unit =
-    environment.getNodeByID(deviceId).nn.setConcentration(SimpleMolecule(name), value)
+    environment.getNodeByID(deviceId).nn.setConcentration(SimpleMolecule(name), value.asInstanceOf[T])
 
   override def senseDistance: SharedData[Double] =
     val myPosition = environment.getPosition(me).nn
@@ -45,7 +46,7 @@ end AlchemistContext
 object AlchemistContext:
   type ExportValue = BasicExchangeCalculusContext.ExportValue
 
-  def sense[Value](sensor: String)(using AlchemistContext[?]): Value = summon[AlchemistContext[?]].sense(sensor)
+  def sense[Value](sensor: String)(using AlchemistContext[?, ?]): Value = summon[AlchemistContext[?, ?]].sense(sensor)
 
-  def update[Value](actuator: String, value: Value)(using AlchemistContext[?]): Unit =
-    summon[AlchemistContext[?]].update(actuator, value)
+  def update[Value](actuator: String, value: Value)(using AlchemistContext[?, ?]): Unit =
+    summon[AlchemistContext[?, ?]].update(actuator, value)

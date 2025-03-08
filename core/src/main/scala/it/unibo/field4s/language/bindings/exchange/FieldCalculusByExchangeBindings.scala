@@ -7,8 +7,8 @@ import it.unibo.field4s.language.syntax.common.ReturnSending.returning
 /**
  * This trait witnesses the fact that the field calculus can be implemented by the exchange calculus.
  */
-trait FieldCalculusByExchangeBindings extends FieldCalculusSyntax:
-  this: ExchangeCalculusSemantics & ExchangeCalculusSyntax =>
+trait FieldCalculusByExchangeBindings extends FieldCalculusSyntax, ExchangeCalculusSyntax:
+  this: ExchangeCalculusSemantics =>
 
   override def neighborValues[V](expr: V): SharedData[V] =
     exchange(expr)(nv => returning(nv) send expr)

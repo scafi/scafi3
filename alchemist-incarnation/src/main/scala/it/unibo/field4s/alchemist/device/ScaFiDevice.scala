@@ -6,12 +6,12 @@ import it.unibo.field4s.alchemist.TimeUtils.given Ordering[Time]
 
 import math.Ordering.Implicits.infixOrderingOps
 
-class ScaFiDevice[Position <: AlchemistPosition[Position], ExportValue](
-    val node: Node[Any],
-    val env: Environment[Any, Position],
+class ScaFiDevice[T, Position <: AlchemistPosition[Position], ExportValue](
+    val node: Node[T],
+    val env: Environment[T, Position],
     val retention: Time,
 ) extends Network[Int, ExportValue]
-    with NodeProperty[Any]:
+    with NodeProperty[T]:
   private var inbox: Map[Int, TimedMessage[ExportValue]] = Map.empty
 
   private def time: Time = env.getSimulation.nn.getTime.nn // TODO: maybe it should be a public var
@@ -24,8 +24,8 @@ class ScaFiDevice[Position <: AlchemistPosition[Position], ExportValue](
       .getNeighborhood(node)
       .nn
       .forEach: n =>
-        val node: Node[Any] = n.nn
-        node.asProperty(classOf[ScaFiDevice[Position, ExportValue]]).inbox += localId -> TimedMessage(
+        val node: Node[T] = n.nn
+        node.asProperty(classOf[ScaFiDevice[T, Position, ExportValue]]).inbox += localId -> TimedMessage(
           time, // TODO: current impl uses time of the sender
           e(localId),
         )
@@ -34,8 +34,8 @@ class ScaFiDevice[Position <: AlchemistPosition[Position], ExportValue](
     inbox = inbox.filterNot(_._2.time.plus(retention) < time)
     inbox.map((id, timedMessage) => id -> timedMessage.message)
 
-  override def getNode: Node[Any] = node
+  override def getNode: Node[T] = node
 
-  override def cloneOnNewNode(node: Node[Any]): NodeProperty[Any] =
+  override def cloneOnNewNode(node: Node[T]): NodeProperty[T] =
     ScaFiDevice(node, env, retention)
 end ScaFiDevice
