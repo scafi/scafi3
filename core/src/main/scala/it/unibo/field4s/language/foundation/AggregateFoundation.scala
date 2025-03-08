@@ -11,9 +11,9 @@ trait AggregateFoundation:
   /**
    * Aggregate values can be iterated also by ignoring the self value.
    */
-  given aggregate: SharedDataOps[SharedData]
+  given aggregate: SharedDataOps[SharedData] = scala.compiletime.deferred
 
   /**
    * Aggregate values can be composed and mapped.
    */
-  given liftable: Applicative[SharedData]
+  given liftable: Applicative[SharedData] = scala.compiletime.deferred

@@ -7,9 +7,6 @@ import it.unibo.field4s.language.semantics.exchange
  * This trait provides the semantics for the exchange calculus.
  */
 trait ExchangeCalculusSemantics extends AggregateFoundation with DeviceAwareAggregateFoundation:
-  // with ExchangeBindings
-  // with BranchingExchangeBindings
-  // with FieldCalculusByExchangeBindings:
 
   /**
    * Operations on NValues are provided by the ExchangeCalculusSemantics as extension methods.
@@ -19,7 +16,7 @@ trait ExchangeCalculusSemantics extends AggregateFoundation with DeviceAwareAggr
    * @see
    *   [[NeighboringValueOps]]
    */
-  given neighboringValue: NeighboringValueOps[SharedData, DeviceId]
+  given neighboringValue: NeighboringValueOps[SharedData, DeviceId] = scala.compiletime.deferred
 
   /**
    * Local values can be considered NValues.
@@ -27,7 +24,7 @@ trait ExchangeCalculusSemantics extends AggregateFoundation with DeviceAwareAggr
    * @tparam T
    *   can be any local value
    */
-  given convert[T]: Conversion[T, SharedData[T]]
+  given convert[T]: Conversion[T, SharedData[T]] = scala.compiletime.deferred
 
   /**
    * This operator branches the computation into `th` or `el` according to `cond`.
