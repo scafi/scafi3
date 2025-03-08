@@ -1,6 +1,6 @@
 import scala.scalanative.build.*
 
-val scala3Version = "3.6.3"
+val scala3Version = "3.6.4"
 
 ThisBuild / scalaVersion := scala3Version
 ThisBuild / organization := "it.unibo.field4s"
