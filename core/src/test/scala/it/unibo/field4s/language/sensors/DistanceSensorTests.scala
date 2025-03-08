@@ -16,8 +16,8 @@ class DistanceSensorTests extends UnitTest:
     override def senseDistance: MockAggregate[Int] = device.map(_ => 1)
 
   "senseDistance" should "be available from language" in:
-    "val _: lang.AggregateValue[Int] = lang.senseDistance" should compile
-    "val _: lang.AggregateValue[Double] = lang.senseDistance" shouldNot typeCheck
+    "val _: lang.SharedData[Int] = lang.senseDistance" should compile
+    "val _: lang.SharedData[Double] = lang.senseDistance" shouldNot typeCheck
 
   it should "be callable statically" in:
     senseDistance[Int] should equal(lang.senseDistance)

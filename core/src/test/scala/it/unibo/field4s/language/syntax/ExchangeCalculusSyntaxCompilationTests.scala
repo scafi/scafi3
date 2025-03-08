@@ -18,6 +18,6 @@ class ExchangeCalculusSyntaxCompilationTests extends UnitTest:
     val field: language.SharedData[Boolean] = mock[language.SharedData[Boolean]]
     val intField = mock[language.SharedData[Int]]
     "val _: language.SharedData[Boolean] = language.exchange(field)(x => x)" should compile
-    "val _: language.SharedData[Int] = language.exchange(intField)(x => ret (x) send x)" should compile
+    "val _: language.SharedData[Int] = language.exchange(intField)(x => returning (x) send x)" should compile
     "val _: language.SharedData[Boolean] = language.exchange(field)(x => (x, x))" should compile
     "val _: language.SharedData[Int] = language.exchange(field)(x => x)" shouldNot typeCheck
