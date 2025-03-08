@@ -88,7 +88,7 @@ lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   )
 
 
-val alchemistVersion = "30.1.11"
+val alchemistVersion = "33.1.2"
 lazy val `alchemist-incarnation` = project
   .settings(
     fork := true,
