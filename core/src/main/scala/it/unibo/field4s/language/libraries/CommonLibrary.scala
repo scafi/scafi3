@@ -1,6 +1,6 @@
 package it.unibo.field4s.language.libraries
 
-import it.unibo.field4s.language.foundation.{ AggregateFoundation, DeviceAwareAggregateFoundation }
+import it.unibo.field4s.language.foundation.AggregateFoundation
 
 /**
  * This library provides some common utility functions that are often used in programs and libraries.
@@ -29,7 +29,7 @@ object CommonLibrary:
    * @see
    *   [[DeviceAwareAggregateFoundation.self]]
    */
-  def self(using language: DeviceAwareAggregateFoundation): language.DeviceId = language.self
+  def self(using language: AggregateFoundation): language.DeviceId = language.self
 
   /**
    * @return
@@ -37,7 +37,5 @@ object CommonLibrary:
    * @see
    *   [[DeviceAwareAggregateFoundation.device]]
    */
-  def device(using
-      language: AggregateFoundation & DeviceAwareAggregateFoundation,
-  ): language.SharedData[language.DeviceId] = language.device
+  def device(using language: AggregateFoundation): language.SharedData[language.DeviceId] = language.device
 end CommonLibrary

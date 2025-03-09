@@ -31,7 +31,7 @@ trait InboundMessages:
    * @return
    *   the set of device ids of devices that are aligned with the current path, always including self
    */
-  protected def alignedDevices: Set[DeviceId] = unalignedMessages.view
+  protected def alignedDevices: Set[DeviceId] = unalignedMessages
     .filter(currentPath.isEmpty || _._2.containsPrefix(currentPath))
     .keys
     .toSet

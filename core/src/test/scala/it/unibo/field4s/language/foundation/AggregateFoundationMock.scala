@@ -6,11 +6,7 @@ import it.unibo.field4s.collections.SafeIterable
 import cats.Applicative
 import cats.syntax.all.*
 
-class AggregateFoundationMock
-    extends AggregateFoundation
-    with DeviceAwareAggregateFoundation
-    with FieldMock
-    with DeviceMock:
+class AggregateFoundationMock extends AggregateFoundation, FieldMock, DeviceMock:
   override type SharedData[T] = MockAggregate[T]
 
   case class MockAggregate[T](mockedValues: Iterable[T] = Seq()) extends SafeIterable[T]:

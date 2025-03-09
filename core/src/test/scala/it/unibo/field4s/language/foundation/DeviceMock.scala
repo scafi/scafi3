@@ -1,7 +1,7 @@
 package it.unibo.field4s.language.foundation
 
 trait DeviceMock:
-  this: DeviceAwareAggregateFoundation & AggregateFoundation & FieldMock =>
+  this: AggregateFoundation & FieldMock =>
 
   override type DeviceId = Int
 

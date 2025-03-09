@@ -5,7 +5,7 @@ import it.unibo.field4s.UnitTest
 trait DeviceAwareAggregateFoundationTests:
   this: AggregateFoundationTests & UnitTest =>
 
-  override type A <: DeviceAwareAggregateFoundation & AggregateFoundation & FieldMock & DeviceMock
+  override type A <: AggregateFoundation & FieldMock & DeviceMock
 
   def deviceAwareAggregateFoundation(): Unit =
     it should behave like aggregateFoundation()
