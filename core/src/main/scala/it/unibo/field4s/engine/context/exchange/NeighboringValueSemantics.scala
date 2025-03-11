@@ -73,7 +73,7 @@ trait NeighboringValueSemantics:
       fa.unalignedValues.view.mapValues(f).toMap,
     )
 
-  override given aggregate: SharedDataOps[SharedData] = new SharedDataOps[SharedData]:
+  override given sharedDataOps: SharedDataOps[SharedData] = new SharedDataOps[SharedData]:
 
     extension [A](a: SharedData[A])
 

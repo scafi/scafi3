@@ -12,7 +12,7 @@ class AggregateFoundationMock extends AggregateFoundation, FieldMock, DeviceMock
   case class MockAggregate[T](mockedValues: Iterable[T] = Seq()) extends SafeIterable[T]:
     override protected def iterator: Iterator[T] = mockedValues.iterator
 
-  override given aggregate: SharedDataOps[MockAggregate] = new SharedDataOps[MockAggregate]:
+  override given sharedDataOps: SharedDataOps[MockAggregate] = new SharedDataOps[MockAggregate]:
     extension [A](a: MockAggregate[A])
       override def withoutSelf: SafeIterable[A] = MockAggregate(a.mockedValues.tail)
       override def onlySelf: A = a.mockedValues.head
