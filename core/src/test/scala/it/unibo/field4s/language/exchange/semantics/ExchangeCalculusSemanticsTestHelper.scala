@@ -1,4 +1,4 @@
-package it.unibo.field4s.language.semantics.exchange
+package it.unibo.field4s.language.exchange.semantics
 
 trait ExchangeCalculusSemanticsTestHelper:
   this: ExchangeCalculusSemantics =>

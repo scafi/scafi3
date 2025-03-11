@@ -2,8 +2,8 @@ package it.unibo.field4s.language.foundation
 
 import it.unibo.field4s.abstractions.*
 import it.unibo.field4s.UnitTest
-
 import cats.syntax.all.*
+import it.unibo.field4s.language.AggregateFoundation
 
 trait AggregateFoundationTests:
   this: UnitTest & AggregateTests =>

@@ -1,7 +1,7 @@
 package it.unibo.field4s.engine.context.exchange
 
 import it.unibo.field4s.engine.context.common.*
-import it.unibo.field4s.language.semantics.exchange.ExchangeCalculusSemantics
+import it.unibo.field4s.language.exchange.semantics.ExchangeCalculusSemantics
 
 /**
  * Implements the foundational constructs of the exchange calculus semantics.

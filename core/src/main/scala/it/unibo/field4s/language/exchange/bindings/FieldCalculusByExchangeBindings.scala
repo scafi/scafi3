@@ -1,6 +1,6 @@
-package it.unibo.field4s.language.bindings.exchange
+package it.unibo.field4s.language.exchange.bindings
 
-import it.unibo.field4s.language.semantics.exchange.ExchangeCalculusSemantics
+import it.unibo.field4s.language.exchange.semantics.ExchangeCalculusSemantics
 import it.unibo.field4s.language.syntax.{ ExchangeCalculusSyntax, FieldCalculusSyntax }
 import it.unibo.field4s.language.syntax.common.ReturnSending.returning
 

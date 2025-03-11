@@ -4,9 +4,9 @@ import scala.collection.MapView
 
 import it.unibo.field4s.abstractions.SharedDataOps
 import it.unibo.field4s.collections.SafeIterable
-import it.unibo.field4s.language.semantics.exchange.{ ExchangeCalculusSemantics, NeighboringValueOps }
 
 import cats.Applicative
+import it.unibo.field4s.language.exchange.semantics.{ExchangeCalculusSemantics, NeighboringValueOps}
 
 /**
  * Implements the foundational semantics for the NValues of the exchange calculus.

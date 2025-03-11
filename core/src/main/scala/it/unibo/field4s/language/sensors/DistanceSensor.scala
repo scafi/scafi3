@@ -1,6 +1,6 @@
 package it.unibo.field4s.language.sensors
 
-import it.unibo.field4s.language.foundation.AggregateFoundation
+import it.unibo.field4s.language.AggregateFoundation
 
 /**
  * If an aggregate foundation implements this trait, it provides a way to measure the distance from the neighbours and

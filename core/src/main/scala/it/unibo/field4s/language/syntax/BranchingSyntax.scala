@@ -1,6 +1,6 @@
 package it.unibo.field4s.language.syntax
 
-import it.unibo.field4s.language.foundation.AggregateFoundation
+import it.unibo.field4s.language.AggregateFoundation
 
 /**
  * This trait enables the use of branching syntax in the aggregate programs. The syntax is similar to the `if` statement

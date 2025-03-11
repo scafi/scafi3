@@ -6,8 +6,8 @@ import it.unibo.field4s.collections.ValueTree
 import it.unibo.field4s.engine.context.common.InvocationCoordinate
 import it.unibo.field4s.engine.context.ContextFactory
 import it.unibo.field4s.engine.context.exchange.BasicExchangeCalculusContext
-import it.unibo.field4s.language.semantics.exchange.ExchangeCalculusSemantics
 import it.unibo.field4s.engine.network.Export
+import it.unibo.field4s.language.exchange.semantics.ExchangeCalculusSemantics
 import it.unibo.field4s.language.libraries.All.{ *, given }
 
 trait BranchingTests:

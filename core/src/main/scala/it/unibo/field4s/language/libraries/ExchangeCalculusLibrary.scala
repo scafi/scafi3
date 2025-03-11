@@ -1,6 +1,6 @@
 package it.unibo.field4s.language.libraries
 
-import it.unibo.field4s.language.foundation.AggregateFoundation
+import it.unibo.field4s.language.AggregateFoundation
 import it.unibo.field4s.language.syntax.ExchangeCalculusSyntax
 import it.unibo.field4s.language.syntax.common.ReturnSending
 

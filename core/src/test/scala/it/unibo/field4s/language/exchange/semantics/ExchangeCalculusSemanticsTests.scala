@@ -1,4 +1,4 @@
-package it.unibo.field4s.language.semantics.exchange
+package it.unibo.field4s.language.exchange.semantics
 
 import it.unibo.field4s.language.foundation.AggregateFoundationMock
 import it.unibo.field4s.UnitTest

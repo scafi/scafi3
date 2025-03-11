@@ -1,5 +1,7 @@
 package it.unibo.field4s.language.foundation
 
+import it.unibo.field4s.language.AggregateFoundation
+
 trait DeviceMock:
   this: AggregateFoundation & FieldMock =>
 

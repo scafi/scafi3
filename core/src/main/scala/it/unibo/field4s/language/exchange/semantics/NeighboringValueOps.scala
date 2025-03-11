@@ -1,8 +1,6 @@
-package it.unibo.field4s.language.semantics.exchange
+package it.unibo.field4s.language.exchange.semantics
 
 import scala.collection.MapView
-
-import it.unibo.field4s.language.semantics.exchange
 
 /**
  * This trait defines the operations that can be performed on NValues.

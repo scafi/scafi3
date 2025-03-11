@@ -2,7 +2,7 @@ package it.unibo.field4s.language.syntax
 
 import it.unibo.field4s.language.foundation.AggregateFoundationMock
 import it.unibo.field4s.UnitTest
-import it.unibo.field4s.language.foundation.AggregateFoundation
+import it.unibo.field4s.language.AggregateFoundation
 
 class FieldCalculusSyntaxCompilationTests extends UnitTest:
 

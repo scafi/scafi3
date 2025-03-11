@@ -1,6 +1,7 @@
 package it.unibo.field4s.language.foundation
 
 import it.unibo.field4s.UnitTest
+import it.unibo.field4s.language.AggregateFoundation
 
 trait DeviceAwareAggregateFoundationTests:
   this: AggregateFoundationTests & UnitTest =>

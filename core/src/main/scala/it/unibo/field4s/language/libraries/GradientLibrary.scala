@@ -1,7 +1,6 @@
 package it.unibo.field4s.language.libraries
 
 import it.unibo.field4s.abstractions.boundaries.UpperBounded
-import it.unibo.field4s.language.foundation.AggregateFoundation
 import it.unibo.field4s.language.sensors.DistanceSensor.senseDistance
 import it.unibo.field4s.language.sensors.DistanceSensor
 import it.unibo.field4s.language.syntax.FieldCalculusSyntax
@@ -10,6 +9,7 @@ import cats.syntax.all.*
 
 import FieldCalculusLibrary.share
 import CommonLibrary.mux
+import it.unibo.field4s.language.AggregateFoundation
 import Numeric.Implicits.*
 
 /**

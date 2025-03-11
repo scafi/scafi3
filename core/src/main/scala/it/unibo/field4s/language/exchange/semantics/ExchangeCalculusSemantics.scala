@@ -1,7 +1,6 @@
-package it.unibo.field4s.language.semantics.exchange
+package it.unibo.field4s.language.exchange.semantics
 
-import it.unibo.field4s.language.foundation.AggregateFoundation
-import it.unibo.field4s.language.semantics.exchange
+import it.unibo.field4s.language.AggregateFoundation
 
 /**
  * This trait provides the semantics for the exchange calculus.

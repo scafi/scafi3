@@ -1,12 +1,12 @@
 package it.unibo.field4s.language.sensors
 
 import it.unibo.field4s.UnitTest
-import it.unibo.field4s.language.foundation.AggregateFoundation
 import it.unibo.field4s.language.foundation.AggregateFoundationMock
 
 import cats.syntax.all.*
 
 import DistanceSensor.senseDistance
+import it.unibo.field4s.language.AggregateFoundation
 
 class DistanceSensorTests extends UnitTest:
 

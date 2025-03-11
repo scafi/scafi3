@@ -1,6 +1,5 @@
 package it.unibo.field4s.language.libraries
 
-import it.unibo.field4s.language.foundation.AggregateFoundation
 import it.unibo.field4s.language.syntax.FieldCalculusSyntax
 import it.unibo.field4s.language.sensors.DistanceSensor.senseDistance
 import it.unibo.field4s.language.sensors.DistanceSensor
@@ -9,6 +8,7 @@ import cats.syntax.all.*
 
 import FieldCalculusLibrary.neighborValues as fcNbr
 import FoldingLibrary.nfold
+import it.unibo.field4s.language.AggregateFoundation
 
 object FoldhoodLibrary:
 
