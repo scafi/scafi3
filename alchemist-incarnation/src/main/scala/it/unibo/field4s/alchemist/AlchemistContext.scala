@@ -40,7 +40,7 @@ class AlchemistContext[T, Position <: AlchemistPosition[Position]](
           environment.getPosition(n).nn.distanceTo(myPosition),
       )
       .toMap
-    NValues(Double.PositiveInfinity, distances)
+    Field(Double.PositiveInfinity, distances)
 end AlchemistContext
 
 object AlchemistContext:

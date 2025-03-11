@@ -30,7 +30,7 @@ class BasicExchangeCalculusContextTests
       with ExchangeCalculusSemanticsTestHelper:
 
     override def mockNValues[T](default: T, values: Map[DeviceId, T]): SharedData[T] =
-      NValues(default, values)
+      Field(default, values)
 
     override def unalignedDeviceId: Int = unalignedDevices.maxOption.getOrElse(1) + 1
 

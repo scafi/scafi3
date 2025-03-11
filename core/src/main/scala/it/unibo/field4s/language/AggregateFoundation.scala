@@ -20,7 +20,7 @@ trait AggregateFoundation:
   /**
    * Aggregate values can be composed and mapped.
    */
-  given liftable: Applicative[SharedData] = scala.compiletime.deferred
+  given sharedDataApplicative: Applicative[SharedData] = scala.compiletime.deferred
 
   /**
    * Device identifiers must be equatable.

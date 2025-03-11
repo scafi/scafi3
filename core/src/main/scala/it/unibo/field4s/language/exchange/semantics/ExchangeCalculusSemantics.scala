@@ -13,9 +13,9 @@ trait ExchangeCalculusSemantics extends AggregateFoundation:
    * @return
    *   an instance of NValuesOps
    * @see
-   *   [[NeighboringValueOps]]
+   *   [[FieldOps]]
    */
-  given neighboringValue: NeighboringValueOps[SharedData, DeviceId] = scala.compiletime.deferred
+  given fieldOps: FieldOps[SharedData, DeviceId] = scala.compiletime.deferred
 
   /**
    * Local values can be considered NValues.

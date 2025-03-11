@@ -17,7 +17,7 @@ class AggregateFoundationMock extends AggregateFoundation, FieldMock, DeviceMock
       override def withoutSelf: SafeIterable[A] = MockAggregate(a.mockedValues.tail)
       override def onlySelf: A = a.mockedValues.head
 
-  override given liftable: Applicative[MockAggregate] = new Applicative[MockAggregate]:
+  override given sharedDataApplicative: Applicative[MockAggregate] = new Applicative[MockAggregate]:
     override def pure[A](x: A): MockAggregate[A] = MockAggregate(Seq(x))
 
     override def ap[A, B](ff: MockAggregate[A => B])(fa: MockAggregate[A]): MockAggregate[B] =

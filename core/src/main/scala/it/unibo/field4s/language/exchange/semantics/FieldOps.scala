@@ -4,14 +4,14 @@ import scala.collection.MapView
 
 /**
  * This trait defines the operations that can be performed on NValues.
- * @tparam NeighboringValue
+ * @tparam SharedData
  *   the type of the NeighboringValue
  * @tparam DeviceId
  *   the type of the device id
  */
-trait NeighboringValueOps[NeighboringValue[_], DeviceId]:
+trait FieldOps[SharedData[_], DeviceId]:
 
-  extension [Value](neighboringValues: NeighboringValue[Value])
+  extension [Value](sharedData: SharedData[Value])
 
     /**
      * @return
@@ -34,7 +34,7 @@ trait NeighboringValueOps[NeighboringValue[_], DeviceId]:
      * @return
      *   the new NValues
      */
-    def set(id: DeviceId, value: Value): NeighboringValue[Value]
+    def set(id: DeviceId, value: Value): SharedData[Value]
 
     /**
      * @param id
@@ -42,7 +42,7 @@ trait NeighboringValueOps[NeighboringValue[_], DeviceId]:
      * @return
      *   the value associated with the given device id, or the default value if the device id value is not overridden
      */
-    def get(id: DeviceId): Value = neighboringValues.values.getOrElse(id, neighboringValues.default)
+    def get(id: DeviceId): Value = sharedData.values.getOrElse(id, sharedData.default)
 
     /**
      * Alias for `get`.
@@ -51,6 +51,6 @@ trait NeighboringValueOps[NeighboringValue[_], DeviceId]:
      * @return
      *   the value associated with the given device id, or the default value if the device id value is not overridden
      */
-    def apply(id: DeviceId): Value = neighboringValues.get(id)
+    def apply(id: DeviceId): Value = sharedData.get(id)
   end extension
-end NeighboringValueOps
+end FieldOps

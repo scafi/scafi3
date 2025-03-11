@@ -18,7 +18,7 @@ trait ConstructsSemantics:
   ): SharedData[T] =
     scope("exchange"): () =>
       val messages = alignedMessages.map((k, v) => (k, open[T](v)))
-      val subject = NValues[T](init(self), messages)
+      val subject = Field[T](init(self), messages)
       val (ret, send) = f(subject)
       sendMessages(send.alignedValues, send.default)
       ret
