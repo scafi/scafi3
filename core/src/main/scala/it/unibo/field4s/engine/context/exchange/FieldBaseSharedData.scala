@@ -11,7 +11,7 @@ import cats.Applicative
 /**
  * Implements the foundational semantics for the NValues of the exchange calculus.
  */
-trait NeighboringValueSemantics:
+trait FieldBaseSharedData:
   this: ExchangeCalculusSemantics =>
   override type SharedData[T] = Field[T]
 
@@ -43,7 +43,7 @@ trait NeighboringValueSemantics:
     def apply(id: DeviceId): T = alignedValues.getOrElse(id, default)
 
     override def iterator: Iterator[T] = alignedValues.values.iterator
-    override def toString: String = s"NValues($default, $unalignedValues)"
+    override def toString: String = s"Field($default, $unalignedValues)"
   end Field
 
   override given fieldOps: FieldOps[SharedData, DeviceId] =
@@ -91,4 +91,4 @@ trait NeighboringValueSemantics:
    *   the set of device ids that are aligned with the current device
    */
   protected def alignedDevices: Set[DeviceId]
-end NeighboringValueSemantics
+end FieldBaseSharedData

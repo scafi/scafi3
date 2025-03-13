@@ -25,7 +25,7 @@ abstract class AbstractExchangeCalculusContext[Id, Wrapper](
     override val inboundMessages: Import[Id, ExportValue[Wrapper]],
 ) extends Context[Id, ExportValue[Wrapper]]
     with ExchangeCalculusSemantics
-    with NeighboringValueSemantics
+    with FieldBaseSharedData
     with ConstructsSemantics
     with Stack
     with Message
