@@ -1,10 +1,10 @@
 package it.unibo.field4s.language.libraries
 
 import it.unibo.field4s.language.syntax.FieldCalculusSyntax
+import it.unibo.field4s.language.AggregateFoundation
 
 import FieldCalculusLibrary.neighborValues
 import FoldingLibrary.nfold
-import it.unibo.field4s.language.AggregateFoundation
 import Fractional.Implicits.*
 
 /**

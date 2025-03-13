@@ -2,9 +2,10 @@ package it.unibo.field4s.language.foundation
 
 import it.unibo.field4s.abstractions.SharedDataOps
 import it.unibo.field4s.collections.SafeIterable
+import it.unibo.field4s.language.AggregateFoundation
+
 import cats.Applicative
 import cats.syntax.all.*
-import it.unibo.field4s.language.AggregateFoundation
 
 class AggregateFoundationMock extends AggregateFoundation, FieldMock, DeviceMock:
   override type SharedData[T] = MockAggregate[T]

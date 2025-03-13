@@ -1,8 +1,9 @@
 package it.unibo.field4s.language
 
-import cats.Applicative
 import it.unibo.field4s.abstractions.SharedDataOps
 import it.unibo.field4s.collections.SafeIterable
+
+import cats.Applicative
 
 trait AggregateFoundation:
   type SharedData[T] <: SafeIterable[T]

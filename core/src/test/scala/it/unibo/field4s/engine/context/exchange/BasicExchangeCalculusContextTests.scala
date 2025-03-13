@@ -8,7 +8,10 @@ import it.unibo.field4s.engine.context.common.InvocationCoordinate
 import it.unibo.field4s.engine.context.exchange.BasicExchangeCalculusContext.ExportValue
 import it.unibo.field4s.engine.context.exchange.libraries.*
 import it.unibo.field4s.engine.network.Import
-import it.unibo.field4s.language.exchange.semantics.{ExchangeCalculusSemanticsTestHelper, ExchangeCalculusSemanticsTests}
+import it.unibo.field4s.language.exchange.semantics.{
+  ExchangeCalculusSemanticsTestHelper,
+  ExchangeCalculusSemanticsTests,
+}
 
 class BasicExchangeCalculusContextTests
     extends UnitTest

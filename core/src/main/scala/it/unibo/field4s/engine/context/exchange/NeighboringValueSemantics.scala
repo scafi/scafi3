@@ -4,9 +4,9 @@ import scala.collection.MapView
 
 import it.unibo.field4s.abstractions.SharedDataOps
 import it.unibo.field4s.collections.SafeIterable
+import it.unibo.field4s.language.exchange.semantics.{ ExchangeCalculusSemantics, FieldOps }
 
 import cats.Applicative
-import it.unibo.field4s.language.exchange.semantics.{ExchangeCalculusSemantics, FieldOps}
 
 /**
  * Implements the foundational semantics for the NValues of the exchange calculus.
@@ -16,8 +16,8 @@ trait NeighboringValueSemantics:
   override type SharedData[T] = Field[T]
 
   /**
-   * A Field (NValue in https://doi.org/10.1016/j.jss.2024.111976) is a mapping from device ids to values of type T. For devices not aligned with the current device, the
-   * default value is used.
+   * A Field (NValue in https://doi.org/10.1016/j.jss.2024.111976) is a mapping from device ids to values of type T. For
+   * devices not aligned with the current device, the default value is used.
    * @param default
    *   the default value for unaligned devices
    * @param unalignedValues
