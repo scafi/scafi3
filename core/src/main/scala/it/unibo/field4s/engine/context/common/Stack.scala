@@ -9,7 +9,7 @@ import it.unibo.field4s.engine.path.Path
  * aligning with inbound value trees.
  */
 trait Stack:
-  this: Message =>
+  this: MessageManager =>
 
   private val trace: mutable.Map[Path[InvocationCoordinate], Int] =
     mutable.Map.empty[Path[InvocationCoordinate], Int]

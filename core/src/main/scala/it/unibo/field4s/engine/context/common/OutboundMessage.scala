@@ -11,7 +11,7 @@ import it.unibo.field4s.engine.path.Path
  * Implements the semantics related to outbound messages directed to self and neighbours.
  */
 trait OutboundMessage:
-  this: Stack & Message & Context[DeviceId, ValueTree[InvocationCoordinate, Envelope]] =>
+  this: Stack & MessageManager & Context[DeviceId, ValueTree[InvocationCoordinate, Envelope]] =>
 
   /**
    * The type of device ids.

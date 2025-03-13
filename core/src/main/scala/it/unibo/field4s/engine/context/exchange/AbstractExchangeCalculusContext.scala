@@ -5,7 +5,7 @@ import it.unibo.field4s.engine.context.Context
 import it.unibo.field4s.engine.context.common.*
 import it.unibo.field4s.engine.context.exchange.AbstractExchangeCalculusContext.ExportValue
 import it.unibo.field4s.engine.network.Import
-import it.unibo.field4s.language.exchange.{ExchangeLanguage, FieldBasedSharedData}
+import it.unibo.field4s.language.exchange.{ ExchangeLanguage, FieldBasedSharedData }
 import it.unibo.field4s.language.exchange.semantics.ExchangeCalculusSemantics
 
 /**
@@ -28,7 +28,7 @@ abstract class AbstractExchangeCalculusContext[Id, Wrapper](
     with FieldBasedSharedData
     with ConstructsSemantics
     with Stack
-    with Message
+    with MessageManager
     with InboundMessages
     with OutboundMessage
     with ExchangeLanguage:

@@ -8,7 +8,7 @@ import it.unibo.field4s.language.exchange.semantics.ExchangeCalculusSemantics
  * Implements the foundational constructs of the exchange calculus semantics.
  */
 trait ConstructsSemantics:
-  this: ExchangeCalculusSemantics & FieldBasedSharedData & Message & Stack & InboundMessages & OutboundMessage =>
+  this: ExchangeCalculusSemantics & FieldBasedSharedData & MessageManager & Stack & InboundMessages & OutboundMessage =>
 
   override protected def br[T](cond: Boolean)(th: => T)(el: => T): T =
     scope(s"branch/$cond"): () =>

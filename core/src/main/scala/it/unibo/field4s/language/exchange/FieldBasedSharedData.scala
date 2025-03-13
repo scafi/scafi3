@@ -1,11 +1,12 @@
 package it.unibo.field4s.language.exchange
 
-import cats.Applicative
+import scala.collection.MapView
+
 import it.unibo.field4s.abstractions.SharedDataOps
 import it.unibo.field4s.collections.SafeIterable
-import it.unibo.field4s.language.exchange.semantics.{ExchangeCalculusSemantics, FieldOps}
+import it.unibo.field4s.language.exchange.semantics.{ ExchangeCalculusSemantics, FieldOps }
 
-import scala.collection.MapView
+import cats.Applicative
 
 /**
  * Implements the foundational semantics for the NValues of the exchange calculus.

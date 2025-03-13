@@ -1,7 +1,7 @@
 package it.unibo.field4s.engine
 
-import it.unibo.field4s.engine.context.{ Context, ContextFactory }
-import it.unibo.field4s.engine.network.{ Export, Import, Network }
+import it.unibo.field4s.engine.context.{ Context as BaseContext, ContextFactory }
+import it.unibo.field4s.engine.network.{ Export, Import, Network as BaseNetwork }
 
 /**
  * The engine is responsible for linking a context with a network and a program and handling the program execution for
@@ -18,25 +18,25 @@ import it.unibo.field4s.engine.network.{ Export, Import, Network }
  *   the type of the result of the program
  * @tparam Value
  *   the type of the value
- * @tparam N
+ * @tparam Network
  *   the type of the network
- * @tparam C
+ * @tparam Context
  *   the type of the context
  */
 class Engine[
     DeviceId,
     Result,
     Value,
-    N <: Network[DeviceId, Value],
-    C <: Context[DeviceId, Value],
+    Network <: BaseNetwork[DeviceId, Value],
+    Context <: BaseContext[DeviceId, Value],
 ](
-    private val network: N,
-    private val factory: ContextFactory[N, C],
-    private val program: C ?=> Result,
+    private val network: Network,
+    private val factory: ContextFactory[Network, Context],
+    private val program: Context ?=> Result,
 ):
 
   private def round(): AggregateResult =
-    val context: C = factory.create(network)
+    val context: Context = factory.create(network)
     val result: Result = program(using context)
     val outMessages = context.outboundMessages
     network.send(outMessages)
