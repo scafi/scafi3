@@ -1,17 +1,16 @@
-package it.unibo.field4s.engine.context.exchange
-
-import scala.collection.MapView
-
-import it.unibo.field4s.abstractions.SharedDataOps
-import it.unibo.field4s.collections.SafeIterable
-import it.unibo.field4s.language.exchange.semantics.{ ExchangeCalculusSemantics, FieldOps }
+package it.unibo.field4s.language.exchange
 
 import cats.Applicative
+import it.unibo.field4s.abstractions.SharedDataOps
+import it.unibo.field4s.collections.SafeIterable
+import it.unibo.field4s.language.exchange.semantics.{ExchangeCalculusSemantics, FieldOps}
+
+import scala.collection.MapView
 
 /**
  * Implements the foundational semantics for the NValues of the exchange calculus.
  */
-trait FieldBaseSharedData:
+trait FieldBasedSharedData:
   this: ExchangeCalculusSemantics =>
   override type SharedData[T] = Field[T]
 
@@ -91,4 +90,4 @@ trait FieldBaseSharedData:
    *   the set of device ids that are aligned with the current device
    */
   protected def alignedDevices: Set[DeviceId]
-end FieldBaseSharedData
+end FieldBasedSharedData
