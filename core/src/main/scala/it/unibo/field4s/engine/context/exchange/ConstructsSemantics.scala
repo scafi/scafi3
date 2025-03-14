@@ -21,7 +21,7 @@ trait ConstructsSemantics:
       val messages = alignedMessages.map((k, v) => (k, open[T](v)))
       val subject = Field[T](init(self), messages)
       val (ret, send) = f(subject)
-      sendMessages(send.alignedValues, send.default)
+      sendMessages(send.alignedValues.view, send.default)
       ret
 
 end ConstructsSemantics
