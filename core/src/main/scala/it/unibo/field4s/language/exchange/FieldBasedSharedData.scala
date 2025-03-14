@@ -32,9 +32,13 @@ trait FieldBasedSharedData:
      *   a filtered view of the NValues data that only contains the values for aligned devices
      */
     def alignedValues: Map[DeviceId, T] =
-      if neighborValues.isEmpty then Map(self -> default)
-      else if alignedDevices.size == neighborValues.size then neighborValues
-      else alignedDevices.map(id => id -> neighborValues.getOrElse(id, default)).toMap
+      if neighborValues.isEmpty then Map(self -> default) // self is always aligned, even if there are no neighbors
+      else if alignedDevices.size == neighborValues.size then
+        neighborValues // all devices are aligned, there is no need to filter
+      else
+        alignedDevices
+          .map(id => id -> neighborValues.getOrElse(id, default))
+          .toMap // in all other cases, I need to filter based on the aligned devices
 
     /**
      * @param id
