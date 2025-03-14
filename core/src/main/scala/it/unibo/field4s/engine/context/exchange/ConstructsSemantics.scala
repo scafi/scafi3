@@ -14,9 +14,7 @@ trait ConstructsSemantics:
     scope(s"branch/$cond"): () =>
       if cond then th else el
 
-  override protected def xc[T](init: SharedData[T])(
-      f: SharedData[T] => (SharedData[T], SharedData[T]),
-  ): SharedData[T] =
+  override protected def xc[T](init: SharedData[T])(f: SharedData[T] => (SharedData[T], SharedData[T])): SharedData[T] =
     scope("exchange"): () =>
       val messages = alignedMessages.map((k, v) => (k, open[T](v)))
       val subject = Field[T](init(self), messages)

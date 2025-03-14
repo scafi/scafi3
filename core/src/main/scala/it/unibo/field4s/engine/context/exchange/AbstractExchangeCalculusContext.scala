@@ -23,15 +23,15 @@ import it.unibo.field4s.language.exchange.semantics.ExchangeCalculusSemantics
 abstract class AbstractExchangeCalculusContext[Id, Wrapper](
     override val self: Id,
     override val inboundMessages: Import[Id, ExportValue[Wrapper]],
-) extends Context[Id, ExportValue[Wrapper]]
-    with ExchangeCalculusSemantics
-    with FieldBasedSharedData
-    with ConstructsSemantics
-    with Stack
-    with MessageManager
-    with InboundMessages
-    with OutboundMessage
-    with ExchangeLanguage:
+) extends Context[Id, ExportValue[Wrapper]],
+      ExchangeCalculusSemantics,
+      FieldBasedSharedData,
+      ConstructsSemantics,
+      Stack,
+      MessageManager,
+      InboundMessages,
+      OutboundMessage,
+      ExchangeLanguage:
   override type DeviceId = Id
   override type Envelope = Wrapper
 

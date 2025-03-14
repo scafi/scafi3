@@ -46,7 +46,7 @@ end AlchemistContext
 object AlchemistContext:
   type ExportValue = BasicExchangeCalculusContext.ExportValue
 
-  def sense[Value](sensor: String)(using AlchemistContext[?, ?]): Value = summon[AlchemistContext[?, ?]].sense(sensor)
+  def sense[Value](sensor: String)(using alchemist: AlchemistContext[?, ?]): Value = alchemist.sense(sensor)
 
-  def update[Value](actuator: String, value: Value)(using AlchemistContext[?, ?]): Unit =
-    summon[AlchemistContext[?, ?]].update(actuator, value)
+  def update[Value](actuator: String, value: Value)(using alchemist: AlchemistContext[?, ?]): Unit =
+    alchemist.update(actuator, value)

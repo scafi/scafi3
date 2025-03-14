@@ -22,16 +22,17 @@ trait FieldBasedSharedData:
    *   the default value for unaligned devices
    * @param neighborValues
    *   the values for all devices, aligned and unaligned
-   * @tparam T
+   * @tparam Value
    *   the type of the values
    */
-  protected case class Field[+T](default: T, neighborValues: Map[DeviceId, T] = Map.empty) extends SafeIterable[T]:
+  protected case class Field[+Value](default: Value, neighborValues: Map[DeviceId, Value] = Map.empty)
+      extends SafeIterable[Value]:
 
     /**
      * @return
      *   a filtered view of the NValues data that only contains the values for aligned devices
      */
-    def alignedValues: Map[DeviceId, T] =
+    def alignedValues: Map[DeviceId, Value] =
       if neighborValues.isEmpty then Map(self -> default) // self is always aligned, even if there are no neighbors
       else if alignedDevices.size == neighborValues.size then
         neighborValues // all devices are aligned, there is no need to filter
@@ -46,9 +47,9 @@ trait FieldBasedSharedData:
      * @return
      *   the value for the given device id, or the default value if the device is not aligned
      */
-    def apply(id: DeviceId): T = alignedValues.getOrElse(id, default)
+    def apply(id: DeviceId): Value = alignedValues.getOrElse(id, default)
 
-    override def iterator: Iterator[T] = alignedValues.values.iterator
+    override def iterator: Iterator[Value] = alignedValues.values.iterator
     override def toString: String = s"Field($default, $neighborValues)"
   end Field
 

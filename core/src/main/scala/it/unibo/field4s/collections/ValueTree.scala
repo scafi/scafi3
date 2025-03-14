@@ -6,12 +6,12 @@ import it.unibo.field4s.implementations.collections.MapValueTree
 
 /**
  * A tree-like structure that maps sequences of nodes to values.
- * @tparam N
+ * @tparam Node
  *   the type of the nodes
- * @tparam V
+ * @tparam Value
  *   the type of the values
  */
-trait ValueTree[N, +V] extends Iterable[(Seq[N], V)] with PartialFunction[Seq[N], V]:
+trait ValueTree[Node, +Value] extends Iterable[(Seq[Node], Value)] with PartialFunction[Seq[Node], Value]:
   /**
    * Checks if the tree contains the given sequence of nodes.
    * @param seq
@@ -19,7 +19,7 @@ trait ValueTree[N, +V] extends Iterable[(Seq[N], V)] with PartialFunction[Seq[N]
    * @return
    *   true if the tree contains the sequence, false otherwise
    */
-  def contains(seq: Seq[N]): Boolean
+  def contains(seq: Seq[Node]): Boolean
 
   /**
    * Checks if the tree contains the given sequence of nodes as a prefix of some sequence.
@@ -28,7 +28,7 @@ trait ValueTree[N, +V] extends Iterable[(Seq[N], V)] with PartialFunction[Seq[N]
    * @return
    *   true if the tree contains the sequence as a prefix, false otherwise
    */
-  def containsPrefix(seq: Iterable[N]): Boolean
+  def containsPrefix(seq: Iterable[Node]): Boolean
 
   /**
    * Gets the value associated with the given sequence of nodes.
@@ -37,7 +37,7 @@ trait ValueTree[N, +V] extends Iterable[(Seq[N], V)] with PartialFunction[Seq[N]
    * @return
    *   the value associated with the sequence, if any
    */
-  def get(seq: Seq[N]): Option[V]
+  def get(seq: Seq[Node]): Option[Value]
 
   /**
    * Maps the values of the tree.
@@ -48,7 +48,7 @@ trait ValueTree[N, +V] extends Iterable[(Seq[N], V)] with PartialFunction[Seq[N]
    * @return
    *   a new tree with the mapped values
    */
-  def mapValues[V1](f: (Seq[N], V) => V1): ValueTree[N, V1]
+  def mapValues[V1](f: (Seq[Node], Value) => V1): ValueTree[Node, V1]
 
   /**
    * Maps the nodes of the tree.
@@ -59,7 +59,7 @@ trait ValueTree[N, +V] extends Iterable[(Seq[N], V)] with PartialFunction[Seq[N]
    * @return
    *   a new tree with the mapped nodes
    */
-  def mapNodes[N1](f: N => N1): ValueTree[N1, V]
+  def mapNodes[N1](f: Node => N1): ValueTree[N1, Value]
 
   /**
    * Changes the path of every value in the tree by mapping path-value pairs to new path-value pairs.
@@ -72,7 +72,7 @@ trait ValueTree[N, +V] extends Iterable[(Seq[N], V)] with PartialFunction[Seq[N]
    * @return
    *   a new tree with the mapped paths
    */
-  def map[N1, V1](f: (Seq[N], V) => (Seq[N1], V1)): ValueTree[N1, V1]
+  def map[N1, V1](f: (Seq[Node], Value) => (Seq[N1], V1)): ValueTree[N1, V1]
 
   /**
    * Filters the tree by keeping only the values that satisfy the given predicate.
@@ -81,7 +81,7 @@ trait ValueTree[N, +V] extends Iterable[(Seq[N], V)] with PartialFunction[Seq[N]
    * @return
    *   a new tree with the filtered values
    */
-  def filter(f: (Seq[N], V) => Boolean): ValueTree[N, V]
+  def filter(f: (Seq[Node], Value) => Boolean): ValueTree[Node, Value]
 
   /**
    * Filters the tree by keeping only the values that do not satisfy the given predicate.
@@ -90,7 +90,7 @@ trait ValueTree[N, +V] extends Iterable[(Seq[N], V)] with PartialFunction[Seq[N]
    * @return
    *   a new tree with the filtered values
    */
-  def filterNot(f: (Seq[N], V) => Boolean): ValueTree[N, V] =
+  def filterNot(f: (Seq[Node], Value) => Boolean): ValueTree[Node, Value] =
     filter((k, v) => !f(k, v))
 
   /**
@@ -104,9 +104,7 @@ trait ValueTree[N, +V] extends Iterable[(Seq[N], V)] with PartialFunction[Seq[N]
    * @return
    *   a new tree with the flattened paths
    */
-  def flatMap[N1, V1](
-      f: (Seq[N], V) => IterableOnce[(Seq[N1], V1)],
-  ): ValueTree[N1, V1]
+  def flatMap[N1, V1](f: (Seq[Node], Value) => IterableOnce[(Seq[N1], V1)]): ValueTree[N1, V1]
 
   /**
    * Removes the given sequence of nodes from the tree.
@@ -115,7 +113,7 @@ trait ValueTree[N, +V] extends Iterable[(Seq[N], V)] with PartialFunction[Seq[N]
    * @return
    *   a new tree without the given sequence
    */
-  def remove(seq: Seq[N]): ValueTree[N, V]
+  def remove(seq: Seq[Node]): ValueTree[Node, Value]
 
   /**
    * Removes all the sequences of nodes that start with the given sequence from the tree.
@@ -124,7 +122,7 @@ trait ValueTree[N, +V] extends Iterable[(Seq[N], V)] with PartialFunction[Seq[N]
    * @return
    *   a new tree without the given sequence as a prefix
    */
-  def removePrefix(seq: Iterable[N]): ValueTree[N, V]
+  def removePrefix(seq: Iterable[Node]): ValueTree[Node, Value]
 
   /**
    * Updates the value associated with the given sequence of nodes.
@@ -137,7 +135,7 @@ trait ValueTree[N, +V] extends Iterable[(Seq[N], V)] with PartialFunction[Seq[N]
    * @return
    *   a new tree with the updated value
    */
-  def update[V1 >: V](seq: Seq[N], value: V1): ValueTree[N, V1]
+  def update[V1 >: Value](seq: Seq[Node], value: V1): ValueTree[Node, V1]
 
   /**
    * Concatenates the tree with another tree.
@@ -148,7 +146,7 @@ trait ValueTree[N, +V] extends Iterable[(Seq[N], V)] with PartialFunction[Seq[N]
    * @return
    *   a new tree with the concatenated values
    */
-  def concat[V1 >: V](other: ValueTree[N, V1]): ValueTree[N, V1]
+  def concat[V1 >: Value](other: ValueTree[Node, V1]): ValueTree[Node, V1]
 
   /**
    * Partitions the tree into two trees according to the given predicate.
@@ -157,7 +155,7 @@ trait ValueTree[N, +V] extends Iterable[(Seq[N], V)] with PartialFunction[Seq[N]
    * @return
    *   a pair of trees
    */
-  def partition(f: (Seq[N], V) => Boolean): (ValueTree[N, V], ValueTree[N, V])
+  def partition(f: (Seq[Node], Value) => Boolean): (ValueTree[Node, Value], ValueTree[Node, Value])
 
   /**
    * Prepends a sequence of nodes to every path in the tree.
@@ -168,7 +166,7 @@ trait ValueTree[N, +V] extends Iterable[(Seq[N], V)] with PartialFunction[Seq[N]
    * @return
    *   a new tree with the prepended paths
    */
-  def prepend[N1 >: N](prefix: Seq[N1]): ValueTree[N1, V] =
+  def prepend[N1 >: Node](prefix: Seq[N1]): ValueTree[N1, Value] =
     map((k, v) => (prefix ++ k, v))
 
   /**
@@ -180,7 +178,7 @@ trait ValueTree[N, +V] extends Iterable[(Seq[N], V)] with PartialFunction[Seq[N]
    * @return
    *   a new tree with the appended paths
    */
-  def append[N1 >: N](suffix: Seq[N1]): ValueTree[N1, V] =
+  def append[N1 >: Node](suffix: Seq[N1]): ValueTree[N1, Value] =
     map((k, v) => (k ++ suffix, v))
 
   /**
@@ -188,22 +186,22 @@ trait ValueTree[N, +V] extends Iterable[(Seq[N], V)] with PartialFunction[Seq[N]
    * @return
    *   a new tree with the reversed paths
    */
-  def reversedNodes: ValueTree[N, V] = map((k, v) => (k.reverse, v))
+  def reversedNodes: ValueTree[Node, Value] = map((k, v) => (k.reverse, v))
 
   @targetName("concat")
-  inline def ++[V1 >: V](other: ValueTree[N, V1]): ValueTree[N, V1] = concat(
+  inline def ++[V1 >: Value](other: ValueTree[Node, V1]): ValueTree[Node, V1] = concat(
     other,
   )
 
   @targetName("update")
-  inline def +[V1 >: V](kv: (Seq[N], V1)): ValueTree[N, V1] =
+  inline def +[V1 >: Value](kv: (Seq[Node], V1)): ValueTree[Node, V1] =
     update(kv._1, kv._2)
 
   override def className: String = "ValueTree"
 
-  override def apply(v1: Seq[N]): V = get(v1).get
+  override def apply(v1: Seq[Node]): Value = get(v1).get
 
-  override def isDefinedAt(v1: Seq[N]): Boolean = contains(v1)
+  override def isDefinedAt(v1: Seq[Node]): Boolean = contains(v1)
 
   override def toString(): String = super[Iterable].toString()
 end ValueTree

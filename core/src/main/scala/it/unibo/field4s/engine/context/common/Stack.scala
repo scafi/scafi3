@@ -1,6 +1,6 @@
 package it.unibo.field4s.engine.context.common
 
-import scala.collection.{ mutable, IndexedSeqView }
+import scala.collection.mutable
 
 import it.unibo.field4s.engine.path.Path
 
@@ -19,8 +19,7 @@ trait Stack:
    * @return
    *   the current path of invocation coordinates, that is the path of the location of the current function scope.
    */
-  protected def currentPath: IndexedSeqView[InvocationCoordinate] =
-    stack.view.reverse
+  protected def currentPath: IndexedSeq[InvocationCoordinate] = stack.reverse.toIndexedSeq
 
   /**
    * Executes the given function body inside a new scope, updating the current path accordingly. Restores the previous
