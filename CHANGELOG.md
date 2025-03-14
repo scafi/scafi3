@@ -1,3 +1,35 @@
+## [1.1.2](https://github.com/field4s/field4s/compare/v1.1.1...v1.1.2) (2025-03-14)
+
+### Dependency updates
+
+* **deps:** update alchemistversion to v41 ([7e2626f](https://github.com/field4s/field4s/commit/7e2626f0bc3452b8448d2edea3b788d5da049e47))
+* **deps:** update alchemistversion to v42 ([10d6258](https://github.com/field4s/field4s/commit/10d62582c9d52e212826d2cbfcd0705feda36df3))
+* **deps:** update alchemistversion to v42.0.1 ([6b83f55](https://github.com/field4s/field4s/commit/6b83f55695a009ff4c7a6cdc21bac3f2c378f060))
+* **deps:** update dependency com.github.sbt:sbt-ci-release to v1.9.3 ([6893346](https://github.com/field4s/field4s/commit/6893346f00e1a9cbdb90fec07853f764bae1835f))
+* **deps:** update dependency sbt/sbt to v1.10.10 ([cfb078e](https://github.com/field4s/field4s/commit/cfb078e915ee4c8fdda6cdcf876439afb069f0a0))
+
+### Performance improvements
+
+* improve the alignedValues performance ([f9ddc71](https://github.com/field4s/field4s/commit/f9ddc71bd0d794e81b501ef732e85170f2975285))
+
+### Style improvements
+
+* add comments ([ca4219a](https://github.com/field4s/field4s/commit/ca4219a7aaacf463f9faa21123a382c310dee09b))
+* run scalafmt ([4b98a44](https://github.com/field4s/field4s/commit/4b98a44e5a8871ce03c76fd07f2215605b7c7d54))
+
+### Refactoring
+
+* better name of aggregate ([93ce62b](https://github.com/field4s/field4s/commit/93ce62bd9ae8255a62c4c8a01ee2a7818de76aca))
+* better names ([fcb7124](https://github.com/field4s/field4s/commit/fcb71243e5744fbc8d166417e2ba3883eba97859))
+* improve readability ([91d3fe0](https://github.com/field4s/field4s/commit/91d3fe0186199c2e65853690719fc7d76b5c46e4))
+* improving names ([0e20d4d](https://github.com/field4s/field4s/commit/0e20d4dd27f08b060333a465e732776e18145d88))
+* more on style ([b16b833](https://github.com/field4s/field4s/commit/b16b833228735cdf9af0379dc6e5984710f2bee0))
+* move FieldBasedSharedData to langugage.exchange ([213c850](https://github.com/field4s/field4s/commit/213c850d254ad46e9e581dc98def5b3d38e485c1))
+* remove `DeviceAwareAggregateFoundation` trait ([524d8d2](https://github.com/field4s/field4s/commit/524d8d25a2f3d7cd2212e04058c34f234e146560))
+* remove foundation ([a696d26](https://github.com/field4s/field4s/commit/a696d269e79cd3e2ad9654527f57e6a72b86c536))
+* update the package exchange as first level ([30fc21d](https://github.com/field4s/field4s/commit/30fc21d49309c1c0f0be5852c533878236908f40))
+* update to alchemist 40 ([63fcf88](https://github.com/field4s/field4s/commit/63fcf88e04c82ba891fd42b70c146436ade7e6a5))
+
 ## [1.1.1](https://github.com/field4s/field4s/compare/v1.1.0...v1.1.1) (2025-03-08)
 
 ### Dependency updates
