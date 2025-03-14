@@ -8,7 +8,7 @@ import it.unibo.field4s.language.AggregateFoundation
 import cats.syntax.all.*
 
 import FieldCalculusLibrary.neighborValues as fcNbr
-import FoldingLibrary.nfold
+import FoldingLibrary.foldWithoutSelf
 
 object FoldhoodLibrary:
 
@@ -112,7 +112,7 @@ object FoldhoodLibrary:
     val selfExprValue: A = expr(using initial)
     for nv <- neighbouringValues do
       zippedNeighbouringValues = (zippedNeighbouringValues, nv).mapN((list, value) => value :: list)
-    zippedNeighbouringValues.nfold(if withSelf then f(base, selfExprValue) else base): (acc, values) =>
+    zippedNeighbouringValues.foldWithoutSelf(if withSelf then f(base, selfExprValue) else base): (acc, values) =>
       val iterator = values.iterator
       val context: FoldhoodContext[L] = new FoldhoodContext[L]:
         override def current[X](expr: (lang: L) ?=> lang.SharedData[X]): X = iterator.next match

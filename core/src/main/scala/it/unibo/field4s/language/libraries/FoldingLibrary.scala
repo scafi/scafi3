@@ -30,6 +30,6 @@ object FoldingLibrary:
      * @return
      *   the result of the accumulation
      */
-    def nfold[A](base: A)(f: (A, T) => A): A = av.withoutSelf.foldLeft(base)(f)
+    def foldWithoutSelf[A](base: A)(f: (A, T) => A): A = av.withoutSelf.foldLeft(base)(f)
   end extension
 end FoldingLibrary

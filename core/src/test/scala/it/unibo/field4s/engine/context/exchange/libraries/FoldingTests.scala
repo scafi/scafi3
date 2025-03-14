@@ -17,7 +17,7 @@ trait FoldingTests:
     def foldingProgram(using BasicExchangeCalculusContext[Int]): Unit =
       branch(self < 10) {
         foldingResult = neighborValues(self).fold(1)(_ * _)
-        neighbouringFoldingResult = neighborValues(self).nfold(1)(_ * _)
+        neighbouringFoldingResult = neighborValues(self).foldWithoutSelf(1)(_ * _)
       } {}
 
     var exportProbe: Export[Int, BasicExchangeCalculusContext.ExportValue] = probe(
@@ -28,7 +28,7 @@ trait FoldingTests:
 
     it should "correctly fold the values of neighbours with fold" in:
       foldingResult shouldBe 2
-    it should "correctly fold the values of neighbours excluding self with nfold" in:
+    it should "correctly fold the values of neighbours excluding self with foldWithoutSelf" in:
       neighbouringFoldingResult shouldBe 1
 
     it should "correctly fold the values of neighbours with fold when there are multiple neighbours" in:
@@ -47,7 +47,7 @@ trait FoldingTests:
         ),
       )
       foldingResult shouldBe 42
-    it should "correctly fold the values of neighbours excluding self with nfold when there are multiple neighbours" in:
+    it should "correctly fold the values of neighbours excluding self with foldWithoutSelf when there are multiple neighbours" in:
       neighbouringFoldingResult shouldBe 14
   end foldingSemantics
 end FoldingTests
