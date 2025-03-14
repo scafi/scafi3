@@ -1,3 +1,9 @@
+## [1.1.3](https://github.com/field4s/field4s/compare/v1.1.2...v1.1.3) (2025-03-14)
+
+### Performance improvements
+
+* improve performance reading currentPath ([e88bfeb](https://github.com/field4s/field4s/commit/e88bfeb372b07c9490157dda4be3f0ccbdd8b675))
+
 ## [1.1.2](https://github.com/field4s/field4s/compare/v1.1.1...v1.1.2) (2025-03-14)
 
 ### Dependency updates
