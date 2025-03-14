@@ -83,9 +83,8 @@ trait FieldBasedSharedData:
   override given sharedDataOps: SharedDataOps[SharedData] = new SharedDataOps[SharedData]:
 
     extension [A](a: SharedData[A])
-
       override def withoutSelf: SafeIterable[A] =
-        val filtered = a.alignedValues.filterKeys(_ != self).values
+        val filtered = a.alignedValues.view.filterKeys(_ != self).values
         SafeIterable(filtered)
       override def onlySelf: A = a(self)
 
