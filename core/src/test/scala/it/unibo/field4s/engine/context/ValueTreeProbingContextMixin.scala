@@ -1,7 +1,7 @@
 package it.unibo.field4s.engine.context
 
 import it.unibo.field4s.collections.ValueTree
-import it.unibo.field4s.engine.network.{ Export, Import }
+import it.unibo.field4s.engine.network.{ Export, Import, ImportCachedData }
 
 trait ValueTreeProbingContextMixin:
 
@@ -25,5 +25,5 @@ trait ValueTreeProbingContextMixin:
       factory: ContextFactory[ValueTreeTestingNetwork[Id, Tokens, Values], C],
       program: C ?=> Any,
   ): Export[Id, ValueTree[Tokens, Values]] =
-    probe(localId, factory, program, Map.empty)
+    probe(localId, factory, program, ImportCachedData(Map.empty))
 end ValueTreeProbingContextMixin

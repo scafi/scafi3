@@ -25,16 +25,16 @@ trait InboundMessages:
    *   the set of device ids of visible devices even if they are not aligned with the current path, always including
    *   self
    */
-  protected def unalignedDevices: Set[DeviceId] = unalignedMessages.keySet + self
+  protected def unalignedDevices: Set[DeviceId] = ??? // unalignedMessages.keySet + self
 
   /**
    * @return
    *   the set of device ids of devices that are aligned with the current path, always including self
    */
-  protected def alignedDevices: Set[DeviceId] = unalignedMessages
-    .filter(currentPath.isEmpty || _._2.containsPrefix(currentPath))
-    .keySet
-    + self
+  protected def alignedDevices: Set[DeviceId] = unalignedMessages.dataAt(currentPath).keySet
+//    .filter(currentPath.isEmpty || _._2.containsPrefix(currentPath))
+//    .keySet
+//    + self
 
   /**
    * @return
@@ -48,12 +48,12 @@ trait InboundMessages:
    *   the [[Map]]`[DeviceId, Envelope]` that contains the inbound values of devices that are aligned with the current
    *   path
    */
-  protected def alignedMessages: Map[DeviceId, Envelope] = unalignedMessages
-    .flatMap((id, valueTree) =>
-      valueTree
-        .get(currentPath.toList)
-        .map(id -> _),
-    )
+  protected def alignedMessages: Map[DeviceId, Envelope] = unalignedMessages.dataAt(currentPath)
+//    .flatMap((id, valueTree) =>
+//      valueTree
+//        .get(currentPath.toList)
+//        .map(id -> _),
+//    )
 
   /**
    * @return

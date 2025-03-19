@@ -1,11 +1,11 @@
 package it.unibo.field4s.engine.context
 
 import it.unibo.field4s.collections.{ MapWithDefault, ValueTree }
-import it.unibo.field4s.engine.network.{ Export, Import, Network }
+import it.unibo.field4s.engine.network.*
 
 class ValueTreeTestingNetwork[Id, Token, Value](
     var localId: Id,
-    var received: Import[Id, ValueTree[Token, Value]] = Map.empty,
+    var received: Import[Id, ValueTree[Token, Value]] = ImportCachedData(Map.empty),
 ) extends Network[Id, ValueTree[Token, Value]]:
   var sent: Export[Id, ValueTree[Token, Value]] = MapWithDefault.empty(ValueTree.empty)
 

@@ -6,7 +6,7 @@ import it.unibo.field4s.UnitTest
 import it.unibo.field4s.engine.context.ContextFactory
 import it.unibo.field4s.engine.context.common.InvocationCoordinate
 import it.unibo.field4s.engine.context.exchange.BasicExchangeCalculusContext
-import it.unibo.field4s.engine.network.{ Export, Import }
+import it.unibo.field4s.engine.network.{ Export, Import, ImportCachedData }
 import it.unibo.field4s.language.libraries.All.{ *, given }
 import it.unibo.field4s.language.sensors.DistanceSensor
 
@@ -45,8 +45,10 @@ trait GradientTests:
         localId = 3,
         factory = factory,
         program = gradientProgram,
-        inboundMessages = Map(
-          2 -> exportProbeSource(3),
+        inboundMessages = ImportCachedData(
+          Map(
+            2 -> exportProbeSource(3),
+          ),
         ),
       )
       gradientValue shouldBe 2.0 +- epsilon
@@ -68,8 +70,10 @@ trait GradientTests:
       localId = 1,
       factory = factory,
       program = gradientProgram,
-      inboundMessages = Map(
-        0 -> exportProbeSource(1),
+      inboundMessages = ImportCachedData(
+        Map(
+          0 -> exportProbeSource(1),
+        ),
       ),
     )
     val closeToSourceGradient: Double = gradientValue
@@ -77,8 +81,10 @@ trait GradientTests:
       localId = 2,
       factory = factory,
       program = gradientProgram,
-      inboundMessages = Map(
-        1 -> exportProbeCloseToSource(2),
+      inboundMessages = ImportCachedData(
+        Map(
+          1 -> exportProbeCloseToSource(2),
+        ),
       ),
     )
     val farFromSourceGradient: Double = gradientValue
@@ -106,9 +112,11 @@ trait GradientTests:
         localId = 3,
         factory = factory,
         program = gradientProgram,
-        inboundMessages = Map(
-          1 -> exportProbeCloseToSource(3),
-          2 -> exportProbeFarToSource(3),
+        inboundMessages = ImportCachedData(
+          Map(
+            1 -> exportProbeCloseToSource(3),
+            2 -> exportProbeFarToSource(3),
+          ),
         ),
       )
       gradientValue shouldBe 10.0 +- epsilon

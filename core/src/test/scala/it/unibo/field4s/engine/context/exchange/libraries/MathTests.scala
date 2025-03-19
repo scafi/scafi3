@@ -5,7 +5,7 @@ import it.unibo.field4s.UnitTest
 import it.unibo.field4s.collections.ValueTree
 import it.unibo.field4s.engine.context.common.InvocationCoordinate
 import it.unibo.field4s.engine.context.exchange.BasicExchangeCalculusContext
-import it.unibo.field4s.engine.network.Export
+import it.unibo.field4s.engine.network.{ Export, ImportCachedData }
 import it.unibo.field4s.language.libraries.All.{ *, given }
 
 trait MathTests:
@@ -32,21 +32,25 @@ trait MathTests:
         localId = 42,
         factory = factory,
         program = averagingProgram,
-        inboundMessages = Map(
-          42 -> exportProbe(42),
-          2 -> probe(
-            localId = 2,
-            factory = factory,
-            program = averagingProgram,
-            inboundMessages = Map(
-              42 -> exportProbe(2),
-            ),
-          )(42),
-          12 -> probe(
-            localId = 12,
-            factory = factory,
-            program = averagingProgram,
-          )(42),
+        inboundMessages = ImportCachedData(
+          Map(
+            42 -> exportProbe(42),
+            2 -> probe(
+              localId = 2,
+              factory = factory,
+              program = averagingProgram,
+              inboundMessages = ImportCachedData(
+                Map(
+                  42 -> exportProbe(2),
+                ),
+              ),
+            )(42),
+            12 -> probe(
+              localId = 12,
+              factory = factory,
+              program = averagingProgram,
+            )(42),
+          ),
         ),
       )
 

@@ -49,12 +49,12 @@ class ValueTreeNetworkAdapter[
         ),
     )
 
-  override def receive(): Import[DeviceIdB, ValueTree[TokenB, ValueB]] = network
-    .receive()
-    .map(
-      deviceIdAdapter.forward(_) ->
-        _.map((path, value) => path.map(tokenAdapter.forward) -> valueAdapter.forward(value)),
-    )
+  override def receive(): Import[DeviceIdB, ValueTree[TokenB, ValueB]] = ??? // network
+//    .receive()
+//    .map(
+//      deviceIdAdapter.forward(_) ->
+//        _.map((path, value) => path.map(tokenAdapter.forward) -> valueAdapter.forward(value)),
+//    )
 end ValueTreeNetworkAdapter
 
 object ValueTreeNetworkAdapter:

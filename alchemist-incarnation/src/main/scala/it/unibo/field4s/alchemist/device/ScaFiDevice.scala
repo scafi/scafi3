@@ -1,7 +1,7 @@
 package it.unibo.field4s.alchemist.device
 
-import it.unibo.alchemist.model.{ Position as AlchemistPosition, * }
-import it.unibo.field4s.engine.network.{ Export, Import, Network }
+import it.unibo.alchemist.model.{ Environment, Node, NodeProperty, Position as AlchemistPosition, Time }
+import it.unibo.field4s.engine.network.*
 import it.unibo.field4s.alchemist.TimeUtils.given Ordering[Time]
 
 import math.Ordering.Implicits.infixOrderingOps
@@ -32,7 +32,7 @@ class ScaFiDevice[T, Position <: AlchemistPosition[Position], ExportValue](
 
   override def receive(): Import[Int, ExportValue] =
     inbox = inbox.filterNot(_._2.time.plus(retention) < time)
-    inbox.map((id, timedMessage) => id -> timedMessage.message)
+    ImportCachedData(inbox.map((id, timedMessage) => id -> timedMessage.message))
 
   override def getNode: Node[T] = node
 

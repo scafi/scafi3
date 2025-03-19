@@ -7,7 +7,7 @@ import it.unibo.field4s.collections.{ MapWithDefault, ValueTree }
 import it.unibo.field4s.engine.context.common.InvocationCoordinate
 import it.unibo.field4s.engine.context.exchange.BasicExchangeCalculusContext.ExportValue
 import it.unibo.field4s.engine.context.exchange.libraries.*
-import it.unibo.field4s.engine.network.Import
+import it.unibo.field4s.engine.network.{ Import, ImportCachedData }
 import it.unibo.field4s.language.exchange.semantics.{
   ExchangeCalculusSemanticsTestHelper,
   ExchangeCalculusSemanticsTests,
@@ -39,15 +39,17 @@ class BasicExchangeCalculusContextTests
 
   given context: BasicExchangeCalculusContextWithTestHelpers = BasicExchangeCalculusContextWithTestHelpers(
     self = 0,
-    inboundMessages = (0 until 10)
-      .map(id =>
-        id -> probe(
-          localId = id,
-          factory = factory,
-          program = () => (),
-        )(0),
-      )
-      .toMap,
+    inboundMessages = ImportCachedData(
+      (0 until 10)
+        .map(id =>
+          id -> probe(
+            localId = id,
+            factory = factory,
+            program = () => (),
+          )(0),
+        )
+        .toMap,
+    ),
   )
 
   "Basic ExchangeCalculusContext" should behave like exchangeCalculusSemanticsWithAtLeast10AlignedDevices

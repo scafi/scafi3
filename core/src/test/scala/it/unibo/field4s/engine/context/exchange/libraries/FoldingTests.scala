@@ -5,7 +5,7 @@ import it.unibo.field4s.UnitTest
 import it.unibo.field4s.collections.ValueTree
 import it.unibo.field4s.engine.context.common.InvocationCoordinate
 import it.unibo.field4s.engine.context.exchange.BasicExchangeCalculusContext
-import it.unibo.field4s.engine.network.Export
+import it.unibo.field4s.engine.network.{ Export, ImportCachedData }
 import it.unibo.field4s.language.libraries.All.{ *, given }
 
 trait FoldingTests:
@@ -36,14 +36,16 @@ trait FoldingTests:
         localId = 3,
         factory = factory,
         program = foldingProgram,
-        inboundMessages = Map(
-          2 -> exportProbe(3),
-          7 -> probe(
-            localId = 7,
-            factory = factory,
-            program = foldingProgram,
-            inboundMessages = Map(7 -> ValueTree.empty, 3 -> ValueTree.empty),
-          )(3),
+        inboundMessages = ImportCachedData(
+          Map(
+            2 -> exportProbe(3),
+            7 -> probe(
+              localId = 7,
+              factory = factory,
+              program = foldingProgram,
+              inboundMessages = ImportCachedData(Map(7 -> ValueTree.empty, 3 -> ValueTree.empty)),
+            )(3),
+          ),
         ),
       )
       foldingResult shouldBe 42

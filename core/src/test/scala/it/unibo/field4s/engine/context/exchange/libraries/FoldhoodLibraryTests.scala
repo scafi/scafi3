@@ -8,7 +8,7 @@ import it.unibo.field4s.engine.context.common.InvocationCoordinate
 import it.unibo.field4s.engine.context.exchange.BasicExchangeCalculusContext
 import it.unibo.field4s.language.libraries.FoldhoodLibrary.*
 import it.unibo.field4s.language.libraries.CommonLibrary.self
-import it.unibo.field4s.engine.network.{ Export, Import }
+import it.unibo.field4s.engine.network.{ Export, Import, ImportCachedData }
 import it.unibo.field4s.language.sensors.DistanceSensor
 
 import cats.syntax.all.*
@@ -58,23 +58,25 @@ trait FoldhoodLibraryTests:
         localId = 66,
         factory = factory,
         program = foldhoodingPlusProgram,
-        inboundMessages = Map(
-          1 -> probe(
-            localId = 1,
-            factory = factory,
-            program = foldhoodingPlusProgram,
-          )(66),
-          2 -> probe(
-            localId = 2,
-            factory = factory,
-            program = foldhoodingPlusProgram,
-          )(66),
-          3 -> probe(
-            localId = 3,
-            factory = factory,
-            program = foldhoodingPlusProgram,
-          )(66),
-          66 -> exportProbe(66),
+        inboundMessages = ImportCachedData(
+          Map(
+            1 -> probe(
+              localId = 1,
+              factory = factory,
+              program = foldhoodingPlusProgram,
+            )(66),
+            2 -> probe(
+              localId = 2,
+              factory = factory,
+              program = foldhoodingPlusProgram,
+            )(66),
+            3 -> probe(
+              localId = 3,
+              factory = factory,
+              program = foldhoodingPlusProgram,
+            )(66),
+            66 -> exportProbe(66),
+          ),
         ),
       )
       exportProbe.size shouldBe 4
@@ -94,27 +96,29 @@ trait FoldhoodLibraryTests:
         localId = 66,
         factory = factory,
         program = foldhoodingProgram,
-        inboundMessages = Map(
-          1 -> probe(
-            localId = 1,
-            factory = factory,
-            program = foldhoodingProgram,
-          )(66),
-          2 -> probe(
-            localId = 2,
-            factory = factory,
-            program = foldhoodingProgram,
-          )(66),
-          3 -> probe(
-            localId = 3,
-            factory = factory,
-            program = foldhoodingProgram,
-          )(66),
-          66 -> probe(
-            localId = 66,
-            factory = factory,
-            program = foldhoodingProgram,
-          )(66),
+        inboundMessages = ImportCachedData(
+          Map(
+            1 -> probe(
+              localId = 1,
+              factory = factory,
+              program = foldhoodingProgram,
+            )(66),
+            2 -> probe(
+              localId = 2,
+              factory = factory,
+              program = foldhoodingProgram,
+            )(66),
+            3 -> probe(
+              localId = 3,
+              factory = factory,
+              program = foldhoodingProgram,
+            )(66),
+            66 -> probe(
+              localId = 66,
+              factory = factory,
+              program = foldhoodingProgram,
+            )(66),
+          ),
         ),
       )
       exportProbe.size shouldBe 4

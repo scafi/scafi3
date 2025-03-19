@@ -4,7 +4,7 @@ import it.unibo.field4s.engine.context.ValueTreeTestingNetwork
 import it.unibo.field4s.UnitTest
 import it.unibo.field4s.collections.{ MapWithDefault, ValueTree }
 import it.unibo.field4s.engine.context.Context
-import it.unibo.field4s.engine.network.{ Export, Import }
+import it.unibo.field4s.engine.network.{ Export, Import, ImportCachedData }
 import it.unibo.field4s.engine.context.common.InvocationCoordinate
 import it.unibo.field4s.engine.context.exchange.BasicExchangeCalculusContext
 
@@ -34,7 +34,7 @@ class EngineTests extends UnitTest:
 
   val network: TestNetwork = ValueTreeTestingNetwork(
     localId = 5,
-    received = Map(3 -> ValueTree.empty),
+    received = ImportCachedData(Map(3 -> ValueTree.empty)),
   )
 
   var count: Int = 0
@@ -64,7 +64,7 @@ class EngineTests extends UnitTest:
 
   it should "allow to cycle until a condition is met" in:
     sut.cycleWhile(x =>
-      x.inboundMessages.keySet shouldBe Set(3)
+      x.inboundMessages.neighbors shouldBe Set(3)
       x.outboundMessages.keySet shouldBe Set(5)
       x.result < 5,
     ) shouldBe 5

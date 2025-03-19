@@ -6,7 +6,7 @@ import it.unibo.field4s.collections.{ MapWithDefault, ValueTree }
 import it.unibo.field4s.engine.context.ContextFactory
 import it.unibo.field4s.engine.context.common.InvocationCoordinate
 import it.unibo.field4s.engine.context.exchange.BasicExchangeCalculusContext
-import it.unibo.field4s.engine.network.{ Export, Import }
+import it.unibo.field4s.engine.network.{ Export, Import, ImportCachedData }
 import it.unibo.field4s.language.libraries.All.{ *, given }
 
 trait FieldCalculusTests:
@@ -33,7 +33,7 @@ trait FieldCalculusTests:
         localId = 66,
         factory = factory,
         program = neighbouringProgram,
-        inboundMessages = Map(66 -> exportProbe(66)),
+        inboundMessages = ImportCachedData(Map(66 -> exportProbe(66))),
       )
       exportProbe.single._1 shouldBe 66
       exportProbe.single._2.single._2.as[Int] shouldBe 71
@@ -44,22 +44,24 @@ trait FieldCalculusTests:
         localId = 1,
         factory = factory,
         program = neighbouringProgram,
-        inboundMessages = Map(
-          1 -> probe(
-            localId = 1,
-            factory = factory,
-            program = neighbouringProgram,
-          )(1),
-          2 -> probe(
-            localId = 2,
-            factory = factory,
-            program = neighbouringProgram,
-          )(1),
-          3 -> probe(
-            localId = 3,
-            factory = factory,
-            program = neighbouringProgram,
-          )(1),
+        inboundMessages = ImportCachedData(
+          Map(
+            1 -> probe(
+              localId = 1,
+              factory = factory,
+              program = neighbouringProgram,
+            )(1),
+            2 -> probe(
+              localId = 2,
+              factory = factory,
+              program = neighbouringProgram,
+            )(1),
+            3 -> probe(
+              localId = 3,
+              factory = factory,
+              program = neighbouringProgram,
+            )(1),
+          ),
         ),
       )
       exportProbe.size shouldBe 3
@@ -71,12 +73,14 @@ trait FieldCalculusTests:
         localId = 1,
         factory = factory,
         program = neighbouringProgram,
-        inboundMessages = Map(
-          2 -> probe(
-            localId = 2,
-            factory = factory,
-            program = neighbouringProgram,
-          )(1),
+        inboundMessages = ImportCachedData(
+          Map(
+            2 -> probe(
+              localId = 2,
+              factory = factory,
+              program = neighbouringProgram,
+            )(1),
+          ),
         ),
       )
       exportProbe(2).single._2.as[Int] shouldBe 6
@@ -92,7 +96,7 @@ trait FieldCalculusTests:
       factory = factory,
       program = repeatingProgram,
     )
-    val messageFromNeighbour: Import[Int, BasicExchangeCalculusContext.ExportValue] = Map(
+    val messageFromNeighbour = Map(
       1 ->
         probe( // adding a neighbour should not alter the result
           localId = 1,
@@ -111,7 +115,7 @@ trait FieldCalculusTests:
         localId = 66,
         factory = factory,
         program = repeatingProgram,
-        inboundMessages = messageFromNeighbour + (66 -> exportProbe(66)),
+        inboundMessages = ImportCachedData(messageFromNeighbour + (66 -> exportProbe(66))),
       )
       exportProbe.keySet should contain(66)
       exportProbe(66).single._2.as[Option[Int]] shouldBe Some(4)
@@ -121,7 +125,7 @@ trait FieldCalculusTests:
         localId = 66,
         factory = factory,
         program = repeatingProgram,
-        inboundMessages = messageFromNeighbour + (66 -> exportProbe(66)),
+        inboundMessages = ImportCachedData(messageFromNeighbour + (66 -> exportProbe(66))),
       )
       exportProbe.keySet should contain(66)
       exportProbe(66).single._2.as[Option[Int]] shouldBe Some(6)
@@ -133,7 +137,7 @@ trait FieldCalculusTests:
         localId = 66,
         factory = factory,
         program = repeatingProgram,
-        inboundMessages = messageFromNeighbour,
+        inboundMessages = ImportCachedData(messageFromNeighbour),
       )
       exportProbe.keySet should contain(66)
       exportProbe(66).single._2.as[Option[Int]] shouldBe Some(2)
@@ -159,7 +163,7 @@ trait FieldCalculusTests:
         localId = 7,
         factory = factory,
         program = sharingProgram,
-        inboundMessages = Map(7 -> exportProbe(7)),
+        inboundMessages = ImportCachedData(Map(7 -> exportProbe(7))),
       )
       exportProbe.single._1 shouldBe 7
       exportProbe.single._2.single._2.as[Int] shouldBe 1
@@ -169,23 +173,25 @@ trait FieldCalculusTests:
         localId = 7,
         factory = factory,
         program = sharingProgram,
-        inboundMessages = Map(
-          7 -> exportProbe(7),
-          1 -> probe(
-            localId = 1,
-            factory = factory,
-            program = sharingProgram,
-          )(7),
-          2 -> probe(
-            localId = 2,
-            factory = factory,
-            program = sharingProgram,
-          )(7),
-          3 -> probe(
-            localId = 3,
-            factory = factory,
-            program = sharingProgram,
-          )(7),
+        inboundMessages = ImportCachedData(
+          Map(
+            7 -> exportProbe(7),
+            1 -> probe(
+              localId = 1,
+              factory = factory,
+              program = sharingProgram,
+            )(7),
+            2 -> probe(
+              localId = 2,
+              factory = factory,
+              program = sharingProgram,
+            )(7),
+            3 -> probe(
+              localId = 3,
+              factory = factory,
+              program = sharingProgram,
+            )(7),
+          ),
         ),
       )
       exportProbe.size shouldBe 4
@@ -195,23 +201,25 @@ trait FieldCalculusTests:
         localId = 7,
         factory = factory,
         program = sharingProgram,
-        inboundMessages = Map(
-          7 -> exportProbe(7),
-          1 -> probe(
-            localId = 1,
-            factory = factory,
-            program = sharingProgram,
-          )(7),
-          2 -> probe(
-            localId = 2,
-            factory = factory,
-            program = sharingProgram,
-          )(7),
-          3 -> probe(
-            localId = 3,
-            factory = factory,
-            program = sharingProgram,
-          )(7),
+        inboundMessages = ImportCachedData(
+          Map(
+            7 -> exportProbe(7),
+            1 -> probe(
+              localId = 1,
+              factory = factory,
+              program = sharingProgram,
+            )(7),
+            2 -> probe(
+              localId = 2,
+              factory = factory,
+              program = sharingProgram,
+            )(7),
+            3 -> probe(
+              localId = 3,
+              factory = factory,
+              program = sharingProgram,
+            )(7),
+          ),
         ),
       )
       exportProbe.size shouldBe 4
