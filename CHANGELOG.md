@@ -1,3 +1,26 @@
+## [1.1.4](https://github.com/field4s/field4s/compare/v1.1.3...v1.1.4) (2025-03-21)
+
+### Dependency updates
+
+* **deps:** update dependency sbt/sbt to v1.10.11 ([eb9d59d](https://github.com/field4s/field4s/commit/eb9d59d6f0fcf094b476f1b339a797551b4cf82c))
+
+### Performance improvements
+
+* aligned process optimized ([3f9b9e2](https://github.com/field4s/field4s/commit/3f9b9e2dd64c44b1efbe3aa4ccf1e3a195ead478))
+
+### Build and continuous integration
+
+* **deps:** update actions/setup-node action to v4.3.0 ([79bbcc7](https://github.com/field4s/field4s/commit/79bbcc732e8a4787e8d6937a33f204eebd4b9606))
+* **deps:** update nicolasfara/build-check-deploy-sbt-action action to v1.0.16 ([d4d5a32](https://github.com/field4s/field4s/commit/d4d5a32f28a70868c81aff73b40fe49b70d2aae5))
+
+### General maintenance
+
+* remove class files ([b814b4d](https://github.com/field4s/field4s/commit/b814b4d650ad829daa9fa5125757bf69cb7d951c))
+
+### Refactoring
+
+* avoid deprecated methods ([642b63c](https://github.com/field4s/field4s/commit/642b63c3cf8381394d30642a41ac1dd6e2608f41))
+
 ## [1.1.3](https://github.com/field4s/field4s/compare/v1.1.2...v1.1.3) (2025-03-14)
 
 ### Performance improvements
