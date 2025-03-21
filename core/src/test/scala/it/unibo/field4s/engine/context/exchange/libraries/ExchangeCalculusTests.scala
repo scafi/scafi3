@@ -18,7 +18,6 @@ trait ExchangeCalculusTests:
     var neighbours: Set[Int] = Set.empty
     def exchangingProgram(using BasicExchangeCalculusContext[Int]): Unit =
       assert(exchange(self)(ids =>
-        println(ids.getClass)
         neighbours = ids.toSet
         returning(ids.map(_ + 1)) send ids,
       ).toSet == neighbours.map(_ + 1)) // assert the ret/send semantics

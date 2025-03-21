@@ -29,7 +29,7 @@ trait OutboundMessage:
       .withDefaultValue(ValueTree.empty)
     var default: ValueTree[InvocationCoordinate, Envelope] = ValueTree.empty
     for (path, messageMap) <- sentMessages do
-      for deviceId <- unalignedDevices do
+      for deviceId <- neighbors do
         messages = messages.updated(deviceId, messages(deviceId).update(path, messageMap(deviceId)))
       default = default.update(path, messageMap.default)
     MapWithDefault(messages, default)
@@ -60,5 +60,5 @@ trait OutboundMessage:
    *   the set of device ids of visible devices even if they are not aligned with the current path, always including
    *   self
    */
-  protected def unalignedDevices: Set[DeviceId]
+  protected def neighbors: Set[DeviceId]
 end OutboundMessage

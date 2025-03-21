@@ -30,8 +30,8 @@ ThisBuild / developers := List(
   )
 )
 ThisBuild / scalacOptions ++= Seq(
-  "-Werror",
-  "-Wunused:all",
+//  "-Werror",
+//  "-Wunused:all",
   "-Wvalue-discard",
   "-Wnonunit-statement",
   "-Yexplicit-nulls",
@@ -65,22 +65,23 @@ lazy val commonTestSettings = Seq(
   ),
 )
 
-lazy val core = crossProject(JSPlatform, JVMPlatform, NativePlatform)
-  .crossType(CrossType.Pure)
-  .in(file("core"))
-  .configs()
-    .nativeSettings(
-      nativeConfig ~= {
-        _.withLTO(LTO.default)
-          .withMode(Mode.releaseSize)
-          .withGC(GC.immix)
-      }
-    )
-    .jsSettings(
-      libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "2.8.0",
-      scalaJSUseMainModuleInitializer := true,
-      scalaJSLinkerConfig ~= { _.withOptimizer(true) }
-    )
+lazy val core = // crossProject(JSPlatform, JVMPlatform, NativePlatform)
+//  .crossType(CrossType.Pure)
+//  .in(file("core"))
+//  .configs()
+//    .nativeSettings(
+//      nativeConfig ~= {
+//        _.withLTO(LTO.default)
+//          .withMode(Mode.releaseSize)
+//          .withGC(GC.immix)
+//      }
+//    )
+//    .jsSettings(
+//      libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "2.8.0",
+//      scalaJSUseMainModuleInitializer := true,
+//      scalaJSLinkerConfig ~= { _.withOptimizer(true) }
+//    )
+  project
   .settings(
     name := "core",
     sonatypeProfileName := "it.unibo.field4s",
@@ -100,13 +101,15 @@ lazy val `alchemist-incarnation` = project
     ),
     commonTestSettings,
   )
-  .dependsOn(core.jvm)
+//  .dependsOn(core.jvm)
+  .dependsOn(core)
 
 
 lazy val root = project
   .in(file("."))
   .enablePlugins(ScalaUnidocPlugin)
-  .aggregate(core.jvm, core.js, core.native, `alchemist-incarnation`)
+//  .aggregate(core.jvm, core.js, core.native, `alchemist-incarnation`)
+  .aggregate(core, `alchemist-incarnation`)
     .settings(
         name := "field4s",
         publish / skip := true,

@@ -11,5 +11,5 @@ import it.unibo.alchemist.model.times.DoubleTime
       "simulation-gradient.yml",
       java.util.Map.of(),
     )
-  sim.getEnvironment.nn.addTerminator(AfterTime[Any, Euclidean2DPosition](DoubleTime(1000.0)))
+  sim.getEnvironment.nn.addTerminator(AfterTime[Any, Euclidean2DPosition](DoubleTime(100000.0)))
   sim.run()

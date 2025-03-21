@@ -10,6 +10,8 @@ import it.unibo.field4s.engine.network.Import
 trait InboundMessages:
   this: Stack & MessageManager & Context[DeviceId, ValueTree[InvocationCoordinate, Envelope]] =>
 
+  private lazy val pathCaches = PreCachedPaths(inboundMessages)
+
   /**
    * The type of device ids.
    */
@@ -25,39 +27,43 @@ trait InboundMessages:
    *   the set of device ids of visible devices even if they are not aligned with the current path, always including
    *   self
    */
-  protected def unalignedDevices: Set[DeviceId] = unalignedMessages.keySet + self
+  protected def neighbors: Set[DeviceId] = pathCaches.neighbors
 
   /**
    * @return
    *   the set of device ids of devices that are aligned with the current path, always including self
    */
-  protected def alignedDevices: Set[DeviceId] = unalignedMessages
-    .filter(currentPath.isEmpty || _._2.containsPrefix(currentPath))
-    .keySet
-    + self
-
-  /**
-   * @return
-   *   the [[Import]] that contains the inbound messages of visible devices even if they are not aligned with the
-   *   current path, always including self
-   */
-  private def unalignedMessages: Import[DeviceId, ValueTree[InvocationCoordinate, Envelope]] = inboundMessages
+  protected def alignedDevices: Set[DeviceId] =
+    if currentPath.isEmpty then pathCaches.neighbors else pathCaches.alignedDevicesAt(currentPath)
 
   /**
    * @return
    *   the [[Map]]`[DeviceId, Envelope]` that contains the inbound values of devices that are aligned with the current
    *   path
    */
-  protected def alignedMessages: Map[DeviceId, Envelope] = unalignedMessages
-    .flatMap((id, valueTree) =>
-      valueTree
-        .get(currentPath.toList)
-        .map(id -> _),
-    )
+  protected def alignedMessages: Map[DeviceId, Envelope] = pathCaches.dataAt(currentPath)
 
   /**
    * @return
    *   the device id of the current device
    */
   protected def self: DeviceId
+
+  private class PreCachedPaths(private val input: Import[DeviceId, ValueTree[InvocationCoordinate, Envelope]]):
+    private lazy val cachedPaths: Map[IndexedSeq[InvocationCoordinate], Map[DeviceId, Envelope]] =
+      input.foldLeft(Map.empty):
+        case (accumulator, (deviceId, valueTree)) =>
+          valueTree.prefixes.foldLeft(accumulator) { (accInner, path) =>
+            accInner.updatedWith(path.toIndexedSeq):
+              case Some(existing) => Some(existing + (deviceId -> valueTree(path)))
+              case None => Some(Map(deviceId -> valueTree(path)))
+          }
+
+    lazy val neighbors: Set[DeviceId] = input.keySet + self
+
+    def alignedDevicesAt(path: IndexedSeq[InvocationCoordinate]): Set[DeviceId] =
+      cachedPaths.filter(_._1.startsWith(path)).values.flatMap(_.keySet).toSet + self
+
+    def dataAt(path: IndexedSeq[InvocationCoordinate]): Map[DeviceId, Envelope] =
+      cachedPaths.getOrElse(path, Map.empty)
 end InboundMessages

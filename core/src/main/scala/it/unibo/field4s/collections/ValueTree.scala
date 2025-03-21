@@ -31,6 +31,13 @@ trait ValueTree[Node, +Value] extends Iterable[(Seq[Node], Value)] with PartialF
   def containsPrefix(seq: Iterable[Node]): Boolean
 
   /**
+   * Gets the prefixes of the tree.
+   * @return
+   *   the prefixes of the tree
+   */
+  def prefixes: Iterable[Seq[Node]]
+
+  /**
    * Gets the value associated with the given sequence of nodes.
    * @param seq
    *   the sequence of nodes

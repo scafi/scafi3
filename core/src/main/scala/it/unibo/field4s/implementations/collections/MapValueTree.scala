@@ -10,6 +10,9 @@ case class MapValueTree[N, +V](underlying: Map[Seq[N], V]) extends ValueTree[N, 
   override def containsPrefix(seq: Iterable[N]): Boolean =
     underlying.exists(_._1.startsWith(seq))
 
+  override def prefixes: Iterable[Seq[N]] =
+    underlying.keys
+
   override def get(seq: Seq[N]): Option[V] = underlying.get(seq)
 
   override def mapValues[V1](f: (Seq[N], V) => V1): ValueTree[N, V1] =

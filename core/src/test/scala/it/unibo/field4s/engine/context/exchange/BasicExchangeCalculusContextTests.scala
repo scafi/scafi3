@@ -35,7 +35,7 @@ class BasicExchangeCalculusContextTests
     override def mockNValues[T](default: T, values: Map[DeviceId, T]): SharedData[T] =
       Field(default, values)
 
-    override def unalignedDeviceId: Int = unalignedDevices.maxOption.getOrElse(1) + 1
+    override def unalignedDeviceId: Int = neighbors.maxOption.getOrElse(1) + 1
 
   given context: BasicExchangeCalculusContextWithTestHelpers = BasicExchangeCalculusContextWithTestHelpers(
     self = 0,
