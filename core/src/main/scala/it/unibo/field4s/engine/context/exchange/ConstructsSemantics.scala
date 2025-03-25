@@ -1,6 +1,7 @@
 package it.unibo.field4s.engine.context.exchange
 
 import it.unibo.field4s.engine.context.common.*
+import it.unibo.field4s.engine.path.Path
 import it.unibo.field4s.language.exchange.FieldBasedSharedData
 import it.unibo.field4s.language.exchange.semantics.ExchangeCalculusSemantics
 
@@ -21,5 +22,8 @@ trait ConstructsSemantics:
       val (ret, send) = f(subject)
       sendMessages(send.alignedValues.view, send.default)
       ret
+
+  override def align[T](path: Any)(body: () => T): T =
+    scope(path.mkString("/"))(body)
 
 end ConstructsSemantics

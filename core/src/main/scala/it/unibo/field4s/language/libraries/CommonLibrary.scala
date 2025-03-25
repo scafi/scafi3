@@ -38,4 +38,16 @@ object CommonLibrary:
    *   [[DeviceAwareAggregateFoundation.device]]
    */
   def device(using language: AggregateFoundation): language.SharedData[language.DeviceId] = language.device
+
+  /**
+   * TOOD.
+   *
+   * @param path
+   * @param body
+   * @param aggregateFoundation
+   * @tparam T
+   * @return
+   */
+  def align[T](path: Any)(body: () => T)(using aggregateFoundation: AggregateFoundation): T =
+    aggregateFoundation.align(path)(body)
 end CommonLibrary

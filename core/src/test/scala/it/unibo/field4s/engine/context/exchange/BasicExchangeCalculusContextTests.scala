@@ -24,7 +24,8 @@ class BasicExchangeCalculusContextTests
     with FoldingTests
     with GradientTests
     with MathTests
-    with FoldhoodLibraryTests:
+    with FoldhoodLibraryTests
+    with AlignTest:
 
   class BasicExchangeCalculusContextWithTestHelpers(
       self: Int,
@@ -58,4 +59,5 @@ class BasicExchangeCalculusContextTests
   "Basic ExchangeCalculusContext gradient library" should behave like gradientSemantics()
   "Basic ExchangeCalculusContext math library" should behave like mathLibrarySemantics()
   "Basic ExchangeCalculusContext foldhood library" should behave like foldhoodSemantics()
+  "Align should align the same devices" should behave like testAlign()
 end BasicExchangeCalculusContextTests

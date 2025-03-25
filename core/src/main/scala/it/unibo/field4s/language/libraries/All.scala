@@ -7,7 +7,6 @@ import it.unibo.field4s.implementations.CommonBoundaries
  * single import.
  */
 object All:
-
   export BranchingLibrary.{ *, given }
   export CommonLibrary.{ *, given }
   export ExchangeCalculusLibrary.{ *, given }

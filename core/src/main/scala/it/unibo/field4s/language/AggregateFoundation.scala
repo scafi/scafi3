@@ -2,6 +2,7 @@ package it.unibo.field4s.language
 
 import it.unibo.field4s.abstractions.SharedDataOps
 import it.unibo.field4s.collections.SafeIterable
+import it.unibo.field4s.engine.path.Path
 
 import cats.Applicative
 
@@ -39,4 +40,12 @@ trait AggregateFoundation:
    *   the aggregate value of device identifiers of aligned devices (including the current device)
    */
   def device: SharedData[DeviceId]
+
+  /**
+   * @param token
+   * @param body
+   * @tparam T
+   * @return
+   */
+  def align[T](token: Any)(body: () => T): T
 end AggregateFoundation
