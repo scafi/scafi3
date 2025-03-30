@@ -3,10 +3,10 @@ import scala.scalanative.build.*
 val scala3Version = "3.6.4"
 
 ThisBuild / scalaVersion := scala3Version
-ThisBuild / organization := "it.unibo.field4s"
+ThisBuild / organization := "it.unibo.scafi"
 ThisBuild / sonatypeCredentialHost := "s01.oss.sonatype.org"
 ThisBuild / sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
-ThisBuild / homepage := Some(url("https://github.com/field4s/field4s"))
+ThisBuild / homepage := Some(url("https://github.com/scafi/scafi3"))
 ThisBuild / licenses := List("Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0"))
 ThisBuild / versionScheme := Some("early-semver")
 ThisBuild / developers := List(
@@ -84,7 +84,7 @@ lazy val core = // crossProject(JSPlatform, JVMPlatform, NativePlatform)
   project
   .settings(
     name := "core",
-    sonatypeProfileName := "it.unibo.field4s",
+    sonatypeProfileName := "it.unibo.scafi",
     commonTestSettings,
   )
 
@@ -111,7 +111,7 @@ lazy val root = project
 //  .aggregate(core.jvm, core.js, core.native, `alchemist-incarnation`)
   .aggregate(core, `alchemist-incarnation`)
     .settings(
-        name := "field4s",
+        name := "scafi3",
         publish / skip := true,
         publishArtifact := false,
     )

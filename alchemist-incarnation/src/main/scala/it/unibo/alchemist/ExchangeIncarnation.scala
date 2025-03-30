@@ -9,8 +9,8 @@ import it.unibo.alchemist.model.reactions.Event
 import it.unibo.alchemist.model.timedistributions.DiracComb
 import it.unibo.alchemist.model.times.DoubleTime
 import it.unibo.alchemist.model.{ Position as AlchemistPosition, * }
-import it.unibo.field4s.alchemist.actions.RunScaFiProgram
-import it.unibo.field4s.alchemist.device.ScaFiDevice
+import it.unibo.scafi.alchemist.actions.RunScaFiProgram
+import it.unibo.scafi.alchemist.device.ScaFiDevice
 
 import com.github.benmanes.caffeine.cache.{ Caffeine, LoadingCache }
 import org.apache.commons.math3.random.RandomGenerator
