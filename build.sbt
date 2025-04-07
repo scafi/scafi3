@@ -104,6 +104,13 @@ lazy val `alchemist-incarnation` = project
 //  .dependsOn(core.jvm)
   .dependsOn(core)
 
+lazy val `scafi-test-tooling` = project
+    .settings(
+        name := "scafi-test-tooling",
+        commonTestSettings,
+    )
+    .dependsOn(core)
+
 
 lazy val root = project
   .in(file("."))
