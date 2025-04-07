@@ -15,9 +15,9 @@ trait FieldCalculusByExchangeBindings extends FieldCalculusSyntax, ExchangeCalcu
 
   override def evolve[A](initial: A)(evolution: A => A): A =
     exchange[Option[A]](None)(nones =>
-      val previousValue = nones(self).getOrElse(initial)
-      nones.set(self, Some(evolution(previousValue))),
-    )(self).get
+      val previousValue = nones(localId).getOrElse(initial)
+      nones.set(localId, Some(evolution(previousValue))),
+    )(localId).get
 
   override def share[A](initial: A)(shareAndReturning: SharedData[A] => A): A =
-    exchange(initial)(nv => shareAndReturning(nv))(self)
+    exchange(initial)(nv => shareAndReturning(nv))(localId)

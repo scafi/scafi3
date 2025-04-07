@@ -33,7 +33,7 @@ trait AggregateFoundation:
    * @return
    *   the device identifier of the current device
    */
-  def self: DeviceId
+  def localId: DeviceId
 
   /**
    * @return
@@ -42,10 +42,15 @@ trait AggregateFoundation:
   def device: SharedData[DeviceId]
 
   /**
+   * Given a token, performs a manual alignment calling the body function.
    * @param token
+   *   to be used for alignment
    * @param body
+   *   the code to align
    * @tparam T
+   *   the type of the result
    * @return
+   *   an aligned computation
    */
   def align[T](token: Any)(body: () => T): T
 end AggregateFoundation

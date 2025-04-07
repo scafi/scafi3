@@ -47,7 +47,7 @@ trait InboundMessages:
    * @return
    *   the device id of the current device
    */
-  protected def self: DeviceId
+  protected def localId: DeviceId
 
   private class PreCachedPaths(private val input: Import[DeviceId, ValueTree[InvocationCoordinate, Envelope]]):
     private lazy val cachedPaths: Map[IndexedSeq[InvocationCoordinate], Map[DeviceId, Envelope]] =
@@ -59,10 +59,10 @@ trait InboundMessages:
               case None => Some(Map(deviceId -> valueTree(path)))
           }
 
-    lazy val neighbors: Set[DeviceId] = input.keySet + self
+    lazy val neighbors: Set[DeviceId] = input.keySet + localId
 
     def alignedDevicesAt(path: IndexedSeq[InvocationCoordinate]): Set[DeviceId] =
-      cachedPaths.filter(_._1.startsWith(path)).values.flatMap(_.keySet).toSet + self
+      cachedPaths.filter(_._1.startsWith(path)).values.flatMap(_.keySet).toSet + localId
 
     def dataAt(path: IndexedSeq[InvocationCoordinate]): Map[DeviceId, Envelope] =
       cachedPaths.getOrElse(path, Map.empty)

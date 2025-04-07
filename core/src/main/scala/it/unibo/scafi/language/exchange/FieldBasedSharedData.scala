@@ -33,7 +33,7 @@ trait FieldBasedSharedData:
      *   a filtered view of the NValues data that only contains the values for aligned devices
      */
     def alignedValues: Map[DeviceId, Value] =
-      if neighborValues.isEmpty then Map(self -> default) // self is always aligned, even if there are no neighbors
+      if neighborValues.isEmpty then Map(localId -> default) // self is always aligned, even if there are no neighbors
       else if alignedDevices.size == neighborValues.size then
         neighborValues // all devices are aligned, there is no need to filter
       else
@@ -84,13 +84,13 @@ trait FieldBasedSharedData:
 
     extension [A](a: SharedData[A])
       override def withoutSelf: SafeIterable[A] =
-        val filtered = a.alignedValues.view.filterKeys(_ != self).values
+        val filtered = a.alignedValues.view.filterKeys(_ != localId).values
         SafeIterable(filtered)
-      override def onlySelf: A = a(self)
+      override def onlySelf: A = a(localId)
 
   override given convert[T]: Conversion[T, SharedData[T]] = Field[T](_)
 
-  override def device: SharedData[DeviceId] = Field[DeviceId](self, alignedDevices.map(id => (id, id)).toMap)
+  override def device: SharedData[DeviceId] = Field[DeviceId](localId, alignedDevices.map(id => (id, id)).toMap)
 
   /**
    * @return

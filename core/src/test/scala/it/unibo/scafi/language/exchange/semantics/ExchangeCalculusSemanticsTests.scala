@@ -7,7 +7,7 @@ trait ExchangeCalculusSemanticsTests:
   this: UnitTest =>
 
   def nvalues[C <: ExchangeCalculusSemantics & ExchangeCalculusSemanticsTestHelper](using lang: C): Unit =
-    assume(lang.self == 0)
+    assume(lang.localId == 0)
     assume(
       (0 until 10).toSet.subsetOf(lang.device.toSet),
       s"Devices: ${lang.device.toSet} is not a superset of ${0 until 10}",
@@ -22,15 +22,15 @@ trait ExchangeCalculusSemanticsTests:
         .map(id => valuesMap.getOrElse(id, 10))
         .toList
     it should "allow to retrieve a value" in:
-      nv.get(lang.self) shouldEqual 1
-      nv(lang.self) shouldEqual 1
+      nv.get(lang.localId) shouldEqual 1
+      nv(lang.localId) shouldEqual 1
       nv.get(lang.unalignedDeviceId) shouldEqual 10
       nv(lang.unalignedDeviceId) shouldEqual 10
     it should "allow to override a value for an aligned device" in:
-      val newNv = nv.set(lang.self, 100)
-      newNv.get(lang.self) shouldEqual 100
+      val newNv = nv.set(lang.localId, 100)
+      newNv.get(lang.localId) shouldEqual 100
     it should "not allow to override a value for an unaligned device" in:
-      var newNv = nv.set(lang.self, 100)
+      var newNv = nv.set(lang.localId, 100)
       newNv.get(lang.unalignedDeviceId) shouldEqual 10
       newNv = newNv.set(lang.unalignedDeviceId, 100)
       newNv.get(lang.unalignedDeviceId) shouldEqual 10
@@ -42,7 +42,7 @@ trait ExchangeCalculusSemanticsTests:
     it should "provide conversion from local values to nvalues using the default value" in:
       "val _: lang.SharedData[Int] = 10" should compile
       val example: lang.SharedData[String] = "a"
-      example(lang.self) shouldEqual "a"
+      example(lang.localId) shouldEqual "a"
       example(lang.unalignedDeviceId) shouldEqual "a"
     "NValues" should behave like nvalues[C]
 end ExchangeCalculusSemanticsTests
