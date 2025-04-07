@@ -6,7 +6,7 @@ import it.unibo.scafi.engine.network.Import
 
 /**
  * Implements a basic version of an exchange calculus context that wraps any value into [[Any]].
- * @param self
+ * @param localId
  *   the device id of the current device
  * @param inboundMessages
  *   inbound messages as [[Import]]
@@ -16,9 +16,9 @@ import it.unibo.scafi.engine.network.Import
  *   [[AbstractExchangeCalculusContext]]
  */
 class BasicExchangeCalculusContext[Id](
-    self: Id,
+    override val localId: Id,
     inboundMessages: Import[Id, ExportValue],
-) extends AbstractExchangeCalculusContext[Id, Any](self, inboundMessages)
+) extends AbstractExchangeCalculusContext[Id, Any](localId, inboundMessages)
     with MessageManager.Basic
 
 object BasicExchangeCalculusContext:

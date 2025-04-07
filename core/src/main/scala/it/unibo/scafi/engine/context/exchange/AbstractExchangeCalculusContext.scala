@@ -11,7 +11,7 @@ import it.unibo.scafi.language.exchange.semantics.ExchangeCalculusSemantics
 /**
  * Mixin composition of all the semantics needed to implement the exchange calculus, except for the message semantics.
  *
- * @param self
+ * @param localId
  *   the device id of the current device
  * @param inboundMessages
  *   inbound messages as [[Import]]
@@ -21,7 +21,7 @@ import it.unibo.scafi.language.exchange.semantics.ExchangeCalculusSemantics
  *   the type of the envelope
  */
 abstract class AbstractExchangeCalculusContext[Id, Wrapper](
-    override val self: Id,
+    override val localId: Id,
     override val inboundMessages: Import[Id, ExportValue[Wrapper]],
 ) extends Context[Id, ExportValue[Wrapper]],
       ExchangeCalculusSemantics,
