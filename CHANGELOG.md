@@ -1,3 +1,25 @@
+## [1.2.0](https://github.com/scafi/scafi3/compare/v1.1.4...v1.2.0) (2025-04-07)
+
+### Features
+
+* add align method for explicit alignment ([21eff3e](https://github.com/scafi/scafi3/commit/21eff3e29fadfa86fff6e5747874e73473801f15))
+
+### Dependency updates
+
+* **deps:** update dependency scalafmt to v3.9.4 ([5613dfd](https://github.com/scafi/scafi3/commit/5613dfd2689dbdd9d727cba7a11b847df9b75ebc))
+
+### Documentation
+
+* update readme ([b01981a](https://github.com/scafi/scafi3/commit/b01981a97f0bcfdf854a48f4fa47a05b31b634bc))
+
+### Build and continuous integration
+
+* **deps:** update nicolasfara/build-check-deploy-sbt-action action to v1.0.17 ([b6385ee](https://github.com/scafi/scafi3/commit/b6385ee217606daeddc1c22cdf400e27e0970f37))
+
+### Refactoring
+
+* use scafi package name ([be9e26e](https://github.com/scafi/scafi3/commit/be9e26ecd2398fe1a817334aecf81c048364545a))
+
 ## [1.1.4](https://github.com/field4s/field4s/compare/v1.1.3...v1.1.4) (2025-03-21)
 
 ### Dependency updates
