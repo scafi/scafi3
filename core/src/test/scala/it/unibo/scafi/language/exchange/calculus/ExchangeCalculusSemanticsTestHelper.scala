@@ -1,7 +1,7 @@
-package it.unibo.scafi.language.exchange.semantics
+package it.unibo.scafi.language.exchange.calculus
 
 trait ExchangeCalculusSemanticsTestHelper:
-  this: ExchangeCalculusSemantics =>
+  this: ExchangeCalculus =>
   override type DeviceId = Int
   def mockNValues[T](default: T, values: Map[DeviceId, T]): SharedData[T]
   def unalignedDeviceId: DeviceId

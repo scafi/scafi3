@@ -7,7 +7,7 @@ import it.unibo.scafi.engine.context.common.InvocationCoordinate
 import it.unibo.scafi.engine.context.ContextFactory
 import it.unibo.scafi.engine.context.exchange.BasicExchangeCalculusContext
 import it.unibo.scafi.engine.network.Export
-import it.unibo.scafi.language.exchange.semantics.ExchangeCalculusSemantics
+import it.unibo.scafi.language.exchange.calculus.ExchangeCalculus
 import it.unibo.scafi.language.libraries.All.{ *, given }
 
 trait BranchingTests:

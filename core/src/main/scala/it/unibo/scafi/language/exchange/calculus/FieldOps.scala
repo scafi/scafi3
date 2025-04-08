@@ -1,4 +1,4 @@
-package it.unibo.scafi.language.exchange.semantics
+package it.unibo.scafi.language.exchange.calculus
 
 import scala.collection.MapView
 

@@ -3,13 +3,13 @@ package it.unibo.scafi.engine.context.exchange
 import it.unibo.scafi.engine.context.common.*
 import it.unibo.scafi.engine.path.Path
 import it.unibo.scafi.language.exchange.FieldBasedSharedData
-import it.unibo.scafi.language.exchange.semantics.ExchangeCalculusSemantics
+import it.unibo.scafi.language.exchange.calculus.ExchangeCalculus
 
 /**
  * Implements the foundational constructs of the exchange calculus semantics.
  */
 trait ConstructsSemantics:
-  this: ExchangeCalculusSemantics & FieldBasedSharedData & MessageManager & Stack & InboundMessages & OutboundMessage =>
+  this: ExchangeCalculus & FieldBasedSharedData & MessageManager & Stack & InboundMessages & OutboundMessage =>
 
   override protected def br[T](cond: Boolean)(th: => T)(el: => T): T =
     scope(s"branch/$cond"): () =>

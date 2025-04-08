@@ -1,6 +1,6 @@
 package it.unibo.scafi.language.exchange.bindings
 
-import it.unibo.scafi.language.exchange.semantics.ExchangeCalculusSemantics
+import it.unibo.scafi.language.exchange.calculus.ExchangeCalculus
 import it.unibo.scafi.language.syntax.{ ExchangeCalculusSyntax, FieldCalculusSyntax }
 import it.unibo.scafi.language.syntax.common.ReturnSending.returning
 
@@ -8,7 +8,7 @@ import it.unibo.scafi.language.syntax.common.ReturnSending.returning
  * This trait witnesses the fact that the field calculus can be implemented by the exchange calculus.
  */
 trait FieldCalculusByExchangeBindings extends FieldCalculusSyntax, ExchangeCalculusSyntax:
-  this: ExchangeCalculusSemantics =>
+  this: ExchangeCalculus =>
 
   override def neighborValues[V](expr: V): SharedData[V] =
     exchange(expr)(nv => returning(nv) send expr)
