@@ -109,7 +109,7 @@ lazy val root = project
   .in(file("."))
   .enablePlugins(ScalaUnidocPlugin)
 //  .aggregate(core.jvm, core.js, core.native, `alchemist-incarnation`)
-  .aggregate(core, `alchemist-incarnation`)
+  .aggregate(core /*`alchemist-incarnation`*/)
     .settings(
         name := "scafi3",
         publish / skip := true,

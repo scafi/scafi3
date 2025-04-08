@@ -1,10 +1,9 @@
 package it.unibo.scafi.language
 
-import it.unibo.scafi.abstractions.SharedDataOps
 import it.unibo.scafi.collections.SafeIterable
-import it.unibo.scafi.engine.path.Path
 
 import cats.Applicative
+import it.unibo.scafi.utils.SharedDataOps
 
 trait AggregateFoundation:
   type SharedData[T] <: SafeIterable[T]

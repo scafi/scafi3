@@ -1,12 +1,11 @@
 package it.unibo.scafi.language.exchange
 
 import scala.collection.MapView
-
-import it.unibo.scafi.abstractions.SharedDataOps
 import it.unibo.scafi.collections.SafeIterable
 import it.unibo.scafi.language.exchange.calculus.{ ExchangeCalculus, FieldOps }
 
 import cats.Applicative
+import it.unibo.scafi.utils.SharedDataOps
 
 /**
  * Implements the foundational semantics for the NValues of the exchange calculus.
@@ -25,8 +24,10 @@ trait FieldBasedSharedData:
    * @tparam Value
    *   the type of the values
    */
-  protected case class Field[+Value](default: Value, neighborValues: Map[DeviceId, Value] = Map.empty)
-      extends SafeIterable[Value]:
+  protected case class Field[+Value](
+      default: Value,
+      neighborValues: Map[DeviceId, Value] = Map.empty,
+  ) extends SafeIterable[Value]:
 
     /**
      * @return
@@ -53,17 +54,20 @@ trait FieldBasedSharedData:
     override def toString: String = s"Field($default, $neighborValues)"
   end Field
 
-  override given fieldOps: FieldOps[SharedData, DeviceId] =
-    new FieldOps[SharedData, DeviceId]:
+  /**
+   * @return
+   * the set of device ids that are aligned with the current device
+   */
+  protected def alignedDevices: Iterable[DeviceId]
 
-      extension [T](nv: SharedData[T])
-        override def default: T = nv.default
-        override def values: MapView[DeviceId, T] = nv.alignedValues.view
-
-        override def set(id: DeviceId, value: T): SharedData[T] = Field[T](
-          nv.default,
-          nv.neighborValues + (id -> value),
-        )
+  override given fieldOps: FieldOps[SharedData, DeviceId] = new FieldOps[SharedData, DeviceId]:
+    extension [T](nv: SharedData[T])
+      override def default: T = nv.default
+      override def values: MapView[DeviceId, T] = nv.alignedValues.view
+      override def set(id: DeviceId, value: T): SharedData[T] = Field[T](
+        nv.default,
+        nv.neighborValues + (id -> value),
+      )
 
   override given sharedDataApplicative: Applicative[SharedData] = new Applicative[SharedData]:
     override def pure[A](x: A): Field[A] = Field(x, Map.empty)
@@ -81,7 +85,6 @@ trait FieldBasedSharedData:
     )
 
   override given sharedDataOps: SharedDataOps[SharedData] = new SharedDataOps[SharedData]:
-
     extension [A](a: SharedData[A])
       override def withoutSelf: SafeIterable[A] =
         val filtered = a.alignedValues.view.filterKeys(_ != localId).values
@@ -91,10 +94,4 @@ trait FieldBasedSharedData:
   override given convert[T]: Conversion[T, SharedData[T]] = Field[T](_)
 
   override def device: SharedData[DeviceId] = Field[DeviceId](localId, alignedDevices.map(id => (id, id)).toMap)
-
-  /**
-   * @return
-   *   the set of device ids that are aligned with the current device
-   */
-  protected def alignedDevices: Iterable[DeviceId]
 end FieldBasedSharedData
