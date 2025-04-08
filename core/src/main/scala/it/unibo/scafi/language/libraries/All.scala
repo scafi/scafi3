@@ -1,6 +1,6 @@
 package it.unibo.scafi.language.libraries
 
-import it.unibo.scafi.implementations.CommonBoundaries
+import it.unibo.scafi.utils.boundaries.CommonBoundaries
 
 /**
  * This object is a container for all the standard libraries available. It is useful to import all the libraries with a

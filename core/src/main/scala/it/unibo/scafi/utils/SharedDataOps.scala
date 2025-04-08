@@ -1,4 +1,4 @@
-package it.unibo.scafi.abstractions
+package it.unibo.scafi.utils
 
 import it.unibo.scafi.collections.SafeIterable
 

@@ -1,6 +1,5 @@
 package it.unibo.scafi.language.libraries
 
-import it.unibo.scafi.abstractions.boundaries.UpperBounded
 import it.unibo.scafi.language.sensors.DistanceSensor.senseDistance
 import it.unibo.scafi.language.sensors.DistanceSensor
 import it.unibo.scafi.language.syntax.FieldCalculusSyntax
@@ -10,6 +9,7 @@ import cats.syntax.all.*
 
 import FieldCalculusLibrary.share
 import CommonLibrary.mux
+import it.unibo.scafi.utils.boundaries.UpperBounded
 import Numeric.Implicits.*
 
 /**
