@@ -1,4 +1,4 @@
-package it.unibo.scafi.language.exchange.semantics
+package it.unibo.scafi.language.exchange.calculus
 
 import it.unibo.scafi.language.foundation.AggregateFoundationMock
 import it.unibo.scafi.UnitTest
@@ -6,7 +6,7 @@ import it.unibo.scafi.UnitTest
 trait ExchangeCalculusSemanticsTests:
   this: UnitTest =>
 
-  def nvalues[C <: ExchangeCalculusSemantics & ExchangeCalculusSemanticsTestHelper](using lang: C): Unit =
+  def nvalues[C <: ExchangeCalculus & ExchangeCalculusSemanticsTestHelper](using lang: C): Unit =
     assume(lang.localId == 0)
     assume(
       (0 until 10).toSet.subsetOf(lang.device.toSet),
@@ -37,7 +37,7 @@ trait ExchangeCalculusSemanticsTests:
   end nvalues
 
   def exchangeCalculusSemanticsWithAtLeast10AlignedDevices[
-      C <: ExchangeCalculusSemantics & ExchangeCalculusSemanticsTestHelper,
+      C <: ExchangeCalculus & ExchangeCalculusSemanticsTestHelper,
   ](using lang: C): Unit =
     it should "provide conversion from local values to nvalues using the default value" in:
       "val _: lang.SharedData[Int] = 10" should compile

@@ -4,7 +4,7 @@ import scala.collection.MapView
 
 import it.unibo.scafi.abstractions.SharedDataOps
 import it.unibo.scafi.collections.SafeIterable
-import it.unibo.scafi.language.exchange.semantics.{ ExchangeCalculusSemantics, FieldOps }
+import it.unibo.scafi.language.exchange.calculus.{ ExchangeCalculus, FieldOps }
 
 import cats.Applicative
 
@@ -12,7 +12,7 @@ import cats.Applicative
  * Implements the foundational semantics for the NValues of the exchange calculus.
  */
 trait FieldBasedSharedData:
-  this: ExchangeCalculusSemantics =>
+  this: ExchangeCalculus =>
   override type SharedData[T] = Field[T]
 
   /**

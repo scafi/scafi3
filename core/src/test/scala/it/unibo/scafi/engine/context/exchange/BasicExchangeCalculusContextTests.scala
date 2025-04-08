@@ -8,7 +8,7 @@ import it.unibo.scafi.engine.context.common.InvocationCoordinate
 import it.unibo.scafi.engine.context.exchange.BasicExchangeCalculusContext.ExportValue
 import it.unibo.scafi.engine.context.exchange.libraries.*
 import it.unibo.scafi.engine.network.Import
-import it.unibo.scafi.language.exchange.semantics.{
+import it.unibo.scafi.language.exchange.calculus.{
   ExchangeCalculusSemanticsTestHelper,
   ExchangeCalculusSemanticsTests,
 }

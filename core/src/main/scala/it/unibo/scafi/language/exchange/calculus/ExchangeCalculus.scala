@@ -1,11 +1,11 @@
-package it.unibo.scafi.language.exchange.semantics
+package it.unibo.scafi.language.exchange.calculus
 
 import it.unibo.scafi.language.AggregateFoundation
 
 /**
  * This trait provides the semantics for the exchange calculus.
  */
-trait ExchangeCalculusSemantics extends AggregateFoundation:
+trait ExchangeCalculus extends AggregateFoundation:
 
   /**
    * Operations on NValues are provided by the ExchangeCalculusSemantics as extension methods.
@@ -45,4 +45,4 @@ trait ExchangeCalculusSemantics extends AggregateFoundation:
   protected def xc[T](init: SharedData[T])(
       f: SharedData[T] => (SharedData[T], SharedData[T]),
   ): SharedData[T]
-end ExchangeCalculusSemantics
+end ExchangeCalculus

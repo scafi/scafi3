@@ -6,7 +6,7 @@ import it.unibo.scafi.engine.context.common.*
 import it.unibo.scafi.engine.context.exchange.AbstractExchangeCalculusContext.ExportValue
 import it.unibo.scafi.engine.network.Import
 import it.unibo.scafi.language.exchange.{ ExchangeLanguage, FieldBasedSharedData }
-import it.unibo.scafi.language.exchange.semantics.ExchangeCalculusSemantics
+import it.unibo.scafi.language.exchange.calculus.ExchangeCalculus
 
 /**
  * Mixin composition of all the semantics needed to implement the exchange calculus, except for the message semantics.
@@ -24,7 +24,7 @@ abstract class AbstractExchangeCalculusContext[Id, Wrapper](
     override val localId: Id,
     override val inboundMessages: Import[Id, ExportValue[Wrapper]],
 ) extends Context[Id, ExportValue[Wrapper]],
-      ExchangeCalculusSemantics,
+      ExchangeCalculus,
       FieldBasedSharedData,
       ConstructsSemantics,
       Stack,

@@ -5,7 +5,7 @@ import it.unibo.scafi.language.exchange.bindings.{
   ExchangeBindings,
   FieldCalculusByExchangeBindings,
 }
-import it.unibo.scafi.language.exchange.semantics.ExchangeCalculusSemantics
+import it.unibo.scafi.language.exchange.calculus.ExchangeCalculus
 
 trait ExchangeLanguage extends ExchangeBindings, BranchingExchangeBindings, FieldCalculusByExchangeBindings:
-  self: ExchangeCalculusSemantics =>
+  self: ExchangeCalculus =>
