@@ -1,11 +1,12 @@
 package it.unibo.scafi.collections
 
-import it.unibo.scafi.abstractions.boundaries.{ LowerBounded, UpperBounded }
+import it.unibo.scafi.utils.boundaries.{LowerBounded, UpperBounded}
 
 /**
  * A safe iterable is an iterable that provides only safe operations. Safe operations are those that do not throw
  * exceptions when the iterable is empty. For example, the `head` method of the [[Iterable]] trait throws an exception
  * when the iterable is empty.
+ *
  * @tparam A
  *   the type of the elements of the iterable
  */

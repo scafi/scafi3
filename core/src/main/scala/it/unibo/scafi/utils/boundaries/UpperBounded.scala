@@ -1,4 +1,4 @@
-package it.unibo.scafi.abstractions.boundaries
+package it.unibo.scafi.utils.boundaries
 
 /**
  * Type class representing a lower bound for a type T.

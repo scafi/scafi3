@@ -1,7 +1,7 @@
 package it.unibo.scafi.collections
 
 import it.unibo.scafi.UnitTest
-import it.unibo.scafi.abstractions.boundaries.Bounded
+import it.unibo.scafi.utils.boundaries.Bounded
 
 trait SafeIterableTests:
   this: UnitTest =>

@@ -1,6 +1,6 @@
-package it.unibo.scafi.implementations
+package it.unibo.scafi.utils.boundaries
 
-import it.unibo.scafi.abstractions.boundaries.Bounded
+import it.unibo.scafi.utils.boundaries.Bounded
 
 /**
  * Provides common boundaries for the most common types.

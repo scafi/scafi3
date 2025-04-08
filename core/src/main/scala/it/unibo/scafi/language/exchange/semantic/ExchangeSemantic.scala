@@ -1,4 +1,4 @@
-package it.unibo.scafi.language.exchange.bindings
+package it.unibo.scafi.language.exchange.semantic
 
 import it.unibo.scafi.language.exchange.calculus.ExchangeCalculus
 import it.unibo.scafi.language.syntax.ExchangeCalculusSyntax
@@ -7,7 +7,7 @@ import it.unibo.scafi.language.syntax.common.ReturnSending
 /**
  * This trait enables the exchange syntax for the exchange calculus semantics.
  */
-trait ExchangeBindings extends ExchangeCalculusSyntax:
+trait ExchangeSemantic extends ExchangeCalculusSyntax:
   self: ExchangeCalculus =>
 
   override def exchange[T](initial: SharedData[T])(

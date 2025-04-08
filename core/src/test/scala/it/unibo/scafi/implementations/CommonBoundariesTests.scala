@@ -2,7 +2,7 @@ package it.unibo.scafi.implementations
 
 import it.unibo.scafi.UnitTest
 import it.unibo.scafi.abstractions.BoundedTests
-import it.unibo.scafi.implementations.CommonBoundaries.given
+import it.unibo.scafi.utils.boundaries.CommonBoundaries.given
 
 class CommonBoundariesTests extends UnitTest with BoundedTests:
   "Double" should behave like bounded[Double]()
