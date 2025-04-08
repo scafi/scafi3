@@ -214,7 +214,7 @@
         "platform": {
             "name": "jvm",
             "config": {
-                "home": "/home/nicolas/.gradle/jdks/eclipse_adoptium-21-amd64-linux/jdk-21.0.3+9",
+                "home": "/usr/lib/jvm/java-17-openjdk",
                 "options": [
                     "-Duser.dir=/home/nicolas/Documents/repos/scafi3/project/project"
                 ]
@@ -223,7 +223,7 @@
                 
             ],
             "runtimeConfig": {
-                "home": "/home/nicolas/.gradle/jdks/eclipse_adoptium-21-amd64-linux/jdk-21.0.3+9",
+                "home": "/usr/lib/jvm/java-17-openjdk",
                 "options": [
                     "-Duser.dir=/home/nicolas/Documents/repos/scafi3/project/project"
                 ]
