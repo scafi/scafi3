@@ -14,9 +14,13 @@ final class Scafi[DeviceId, Network <: Net[DeviceId], Context <: AggregateContex
     // TODO: call network to send the result
     AggregateResult(result)
 
-  def cycle(): Result = ???
+  def cycle(): Result = round().result
 
-  def cycleWhile(condition: AggregateResult => Boolean): Result = ???
+  def cycleWhile(condition: AggregateResult => Boolean): Result =
+    var result: AggregateResult = round()
+    while condition(result) do
+      result = round()
+    result.result
 
   final case class AggregateResult(result: Result)
 end Scafi
