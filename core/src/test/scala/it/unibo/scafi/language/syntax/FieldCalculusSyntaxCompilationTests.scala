@@ -3,6 +3,7 @@ package it.unibo.scafi.language.syntax
 import it.unibo.scafi.language.foundation.AggregateFoundationMock
 import it.unibo.scafi.UnitTest
 import it.unibo.scafi.language.AggregateFoundation
+import it.unibo.scafi.language.fc.syntax.FieldCalculusSyntax
 
 class FieldCalculusSyntaxCompilationTests extends UnitTest:
 

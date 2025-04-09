@@ -1,9 +1,9 @@
 package it.unibo.scafi.alchemist.main
 
 import it.unibo.scafi.language.AggregateFoundation
-import it.unibo.scafi.language.libraries.All.{ *, given }
-import it.unibo.scafi.language.sensors.DistanceSensor
-import it.unibo.scafi.language.syntax.FieldCalculusSyntax
+import it.unibo.scafi.language.fc.syntax.FieldCalculusSyntax
+import it.unibo.scafi.libraries.All.{ *, given }
+import it.unibo.scafi.sensors.DistanceSensor
 
 object TestProgram:
   type MyLanguage = AggregateFoundation { type DeviceId = Int } & FieldCalculusSyntax & DistanceSensor[Double]

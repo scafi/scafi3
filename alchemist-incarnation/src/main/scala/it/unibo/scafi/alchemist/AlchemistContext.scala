@@ -6,8 +6,8 @@ import it.unibo.alchemist.model.molecules.SimpleMolecule
 import it.unibo.alchemist.model.{ Environment, Node, Position as AlchemistPosition }
 import it.unibo.scafi.engine.context.exchange.BasicExchangeCalculusContext
 import it.unibo.scafi.engine.network.Import
-import it.unibo.scafi.language.exchange.ExchangeLanguage
-import it.unibo.scafi.language.sensors.DistanceSensor
+import it.unibo.scafi.language.xc.ExchangeLanguage
+import it.unibo.scafi.sensors.DistanceSensor
 
 class AlchemistContext[T, Position <: AlchemistPosition[Position]](
     environment: Environment[T, Position],

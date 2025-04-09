@@ -3,10 +3,9 @@ package it.unibo.scafi.language.sensors
 import it.unibo.scafi.UnitTest
 import it.unibo.scafi.language.foundation.AggregateFoundationMock
 import it.unibo.scafi.language.AggregateFoundation
-
 import cats.syntax.all.*
-
-import DistanceSensor.senseDistance
+import it.unibo.scafi.sensors.DistanceSensor
+import it.unibo.scafi.sensors.DistanceSensor.senseDistance
 
 class DistanceSensorTests extends UnitTest:
 

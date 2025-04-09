@@ -8,7 +8,6 @@ import it.unibo.scafi.alchemist.AlchemistContext
 import it.unibo.scafi.alchemist.device.ScaFiDevice
 import it.unibo.scafi.alchemist
 import it.unibo.scafi.engine.Engine
-import it.unibo.scafi.engine.context.ContextFactory
 
 class RunScaFiProgram[T, Position <: AlchemistPosition[Position]](
     val node: Node[T],
