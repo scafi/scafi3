@@ -3,7 +3,7 @@ package it.unibo.scafi.language.libraries
 import it.unibo.scafi.UnitTest
 import it.unibo.scafi.language.foundation.AggregateFoundationMock
 
-import CommonLibrary.*
+import it.unibo.scafi.libraries.CommonLibrary.*
 
 class CommonLibraryTests extends UnitTest:
   val lang: AggregateFoundationMock = AggregateFoundationMock()
