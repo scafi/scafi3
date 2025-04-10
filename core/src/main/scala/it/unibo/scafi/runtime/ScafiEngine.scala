@@ -8,9 +8,9 @@ final class ScafiEngine[DeviceId, Network <: Net[DeviceId], Context <: Aggregate
     factory: ContextFactory[DeviceId, Network, Context],
 )(program: Context ?=> Result):
   private def round(): AggregateResult =
-    val ctx: Context = factory.createContext(network)
+    val ctx: Context = factory.createContext(network) // Here it is used the network (receive) for generate the context
     val result: Result = program(using ctx)
-    network.send(ctx.createOutboundMessage())
+    network.send(ctx.exportFromOutboundMessages)
     AggregateResult(result)
 
   def cycle(): Result = round().result
