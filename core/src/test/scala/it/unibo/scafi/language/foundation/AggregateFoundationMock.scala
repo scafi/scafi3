@@ -2,10 +2,10 @@ package it.unibo.scafi.language.foundation
 
 import it.unibo.scafi.collections.SafeIterable
 import it.unibo.scafi.language.AggregateFoundation
+import it.unibo.scafi.utils.SharedDataOps
 
 import cats.Applicative
 import cats.syntax.all.*
-import it.unibo.scafi.utils.SharedDataOps
 
 class AggregateFoundationMock extends AggregateFoundation, FieldMock, DeviceMock:
   override type SharedData[T] = MockAggregate[T]

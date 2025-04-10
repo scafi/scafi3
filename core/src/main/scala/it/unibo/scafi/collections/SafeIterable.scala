@@ -1,6 +1,6 @@
 package it.unibo.scafi.collections
 
-import it.unibo.scafi.utils.boundaries.{LowerBounded, UpperBounded}
+import it.unibo.scafi.utils.boundaries.{ LowerBounded, UpperBounded }
 
 /**
  * A safe iterable is an iterable that provides only safe operations. Safe operations are those that do not throw
