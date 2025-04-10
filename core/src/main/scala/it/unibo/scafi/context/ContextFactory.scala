@@ -1,4 +1,4 @@
-package it.unibo.scafi.runtime.context
+package it.unibo.scafi.context
 
 import it.unibo.scafi.runtime.network.Network
 

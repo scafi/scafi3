@@ -1,11 +1,13 @@
 package it.unibo.scafi.message
 
-import it.unibo.scafi.runtime.context.AggregateContext
+import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.utils.Stack
 import language.experimental.saferExceptions
 
-trait InboundMessage[DeviceId]:
+trait InboundMessage:
   self: Stack & AggregateContext[DeviceId] =>
+
+  type DeviceId
 
   private lazy val cachedPaths = new CachedPaths(importFromInboundMessages)
 
@@ -13,6 +15,8 @@ trait InboundMessage[DeviceId]:
     if currentPath.isEmpty then cachedPaths.neighbors else cachedPaths.alignedDevicesAt(currentPath)
 
   protected def alignedMessages[Value]: Map[DeviceId, Value] = cachedPaths.dataAt(currentPath)
+
+  override def neighbors: Iterable[DeviceId] = cachedPaths.neighbors
 
   private class CachedPaths(private val input: Import[DeviceId]):
     private lazy val cachedPaths: Map[Path[?], Map[DeviceId, Any]] =
