@@ -6,10 +6,10 @@ import it.unibo.scafi.language.xc.{ ExchangeLanguage, FieldBasedSharedData }
 import it.unibo.scafi.message.{ Import, InboundMessage, OutboundMessage }
 import it.unibo.scafi.utils.Stack
 
-class ExchangeAggregateContext[ID](
+trait ExchangeAggregateContext[ID](
     override val localId: ID,
     override val importFromInboundMessages: Import[ID],
-) extends AggregateContext[ID],
+) extends AggregateContext,
       ExchangeLanguage,
       ExchangeCalculus,
       FieldBasedSharedData,

@@ -1,14 +1,21 @@
 package it.unibo.scafi.runtime
 
 import it.unibo.scafi.context.{ AggregateContext, ContextFactory }
-import it.unibo.scafi.runtime.network.Network as Net
+import it.unibo.scafi.runtime.network.NetworkManager
 
-final class ScafiEngine[DeviceId, Network <: Net[DeviceId], Context <: AggregateContext[DeviceId], Result](
+final class ScafiEngine[
+    ID,
+    Context <: AggregateContext { type DeviceId = ID },
+    Network <: NetworkManager { type DeviceId = ID },
+    Result,
+](
+    deviceId: ID,
     network: Network,
-    factory: ContextFactory[DeviceId, Network, Context],
+    factory: ContextFactory[ID, Network, Context],
 )(program: Context ?=> Result):
   private def round(): AggregateResult =
-    val ctx: Context = factory.createContext(network) // Here it is used the network (receive) for generate the context
+    val ctx: Context =
+      factory.createContext(deviceId, network) // Here it is used the network (receive) for generate the context
     val result: Result = program(using ctx)
     network.send(ctx.exportFromOutboundMessages)
     AggregateResult(result)
