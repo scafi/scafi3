@@ -1,12 +1,14 @@
 package it.unibo.scafi.message
 
-import it.unibo.scafi.runtime.context.AggregateContext
+import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.utils.Stack
 
 import scala.collection.mutable
 
-trait OutboundMessage[DeviceId]:
+trait OutboundMessage:
   self: Stack & AggregateContext[DeviceId] =>
+  
+  type DeviceId
 
   private val registeredMessages = mutable.Map.empty[Path[InvocationCoordinate], MapWithDefault[DeviceId, Any]]
 
