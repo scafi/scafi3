@@ -2,7 +2,6 @@ package it.unibo.scafi.language.libraries
 
 import it.unibo.scafi.UnitTest
 import it.unibo.scafi.language.foundation.AggregateFoundationMock
-
 import it.unibo.scafi.libraries.CommonLibrary.*
 
 class CommonLibraryTests extends UnitTest:

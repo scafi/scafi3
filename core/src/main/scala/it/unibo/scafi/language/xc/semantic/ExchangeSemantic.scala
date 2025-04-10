@@ -1,7 +1,7 @@
 package it.unibo.scafi.language.xc.semantic
 
 import it.unibo.scafi.language.xc.calculus.ExchangeCalculus
-import it.unibo.scafi.language.xc.syntax.{ExchangeCalculusSyntax, ReturnSending}
+import it.unibo.scafi.language.xc.syntax.{ ExchangeCalculusSyntax, ReturnSending }
 
 /**
  * This trait enables the exchange syntax for the exchange calculus semantics.

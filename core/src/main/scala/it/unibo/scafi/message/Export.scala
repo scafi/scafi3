@@ -15,7 +15,6 @@ trait Export[DeviceId]:
    *   the [[ValueTree]] produced for the given deviceId.
    */
   def apply(deviceId: DeviceId): ValueTree
-end Export
 
 object Export:
   def apply[DeviceId](default: ValueTree, overrides: Map[DeviceId, ValueTree]): Export[DeviceId] = ???

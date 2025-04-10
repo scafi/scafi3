@@ -2,14 +2,14 @@ package it.unibo.scafi.libraries
 
 import it.unibo.scafi.sensors.DistanceSensor.senseDistance
 import it.unibo.scafi.language.AggregateFoundation
+import it.unibo.scafi.language.fc.syntax.FieldCalculusSyntax
+import it.unibo.scafi.sensors.DistanceSensor
+import it.unibo.scafi.utils.boundaries.UpperBounded
 
 import cats.syntax.all.*
 
 import FieldCalculusLibrary.share
 import CommonLibrary.mux
-import it.unibo.scafi.language.fc.syntax.FieldCalculusSyntax
-import it.unibo.scafi.sensors.DistanceSensor
-import it.unibo.scafi.utils.boundaries.UpperBounded
 import Numeric.Implicits.*
 
 /**

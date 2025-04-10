@@ -2,6 +2,7 @@ package it.unibo.scafi.message
 
 import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.utils.Stack
+
 import language.experimental.saferExceptions
 
 trait InboundMessage:
@@ -42,7 +43,8 @@ trait InboundMessage:
         .flatMap(_.keySet)
         .toSet + localId
 
+    @SuppressWarnings(Array("DisableSyntax.asInstanceOf"))
     def dataAt[Value](tokens: IndexedSeq[InvocationCoordinate]): Map[DeviceId, Value] =
-      cachedPaths.get(Path(tokens *)).map(_.view.mapValues(_.asInstanceOf[Value]).toMap).getOrElse(Map.empty)
+      cachedPaths.get(Path(tokens*)).map(_.view.mapValues(_.asInstanceOf[Value]).toMap).getOrElse(Map.empty)
   end CachedPaths
 end InboundMessage

@@ -1,11 +1,12 @@
 package it.unibo.scafi.language.xc
 
 import scala.collection.MapView
+
 import it.unibo.scafi.collections.SafeIterable
 import it.unibo.scafi.language.xc.calculus.{ ExchangeCalculus, FieldOps }
+import it.unibo.scafi.utils.SharedDataOps
 
 import cats.Applicative
-import it.unibo.scafi.utils.SharedDataOps
 
 /**
  * Implements the foundational semantics for the NValues of the exchange calculus.
@@ -56,7 +57,7 @@ trait FieldBasedSharedData:
 
   /**
    * @return
-   * the set of device ids that are aligned with the current device
+   *   the set of device ids that are aligned with the current device
    */
   protected def alignedDevices: Iterable[DeviceId]
 

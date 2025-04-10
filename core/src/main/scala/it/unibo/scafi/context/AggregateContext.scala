@@ -1,7 +1,7 @@
 package it.unibo.scafi.context
 
 import it.unibo.scafi.language.AggregateFoundation
-import it.unibo.scafi.message.{Export, Import}
+import it.unibo.scafi.message.{ Export, Import }
 
 trait AggregateContext[DeviceId]:
   self: AggregateFoundation =>
