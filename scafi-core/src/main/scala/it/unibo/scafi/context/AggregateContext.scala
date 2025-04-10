@@ -24,7 +24,6 @@ trait AggregateContext:
 
   /**
    * The known neighbors.
-   *
    * @return
    *   a collection of the known neighbors.
    */

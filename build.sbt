@@ -66,7 +66,7 @@ lazy val commonTestSettings = Seq(
   ),
 )
 
-lazy val core = // crossProject(JSPlatform, JVMPlatform, NativePlatform)
+lazy val `scafi-core` = // crossProject(JSPlatform, JVMPlatform, NativePlatform)
 //  .crossType(CrossType.Pure)
 //  .in(file("core"))
 //  .configs()
@@ -103,14 +103,14 @@ lazy val `alchemist-incarnation` = project
     commonTestSettings,
   )
 //  .dependsOn(core.jvm)
-  .dependsOn(core)
+  .dependsOn(`scafi-core`)
 
 
 lazy val root = project
   .in(file("."))
   .enablePlugins(ScalaUnidocPlugin)
 //  .aggregate(core.jvm, core.js, core.native, `alchemist-incarnation`)
-  .aggregate(core /*`alchemist-incarnation`*/)
+  .aggregate(`scafi-core` /*`alchemist-incarnation`*/)
     .settings(
         name := "scafi3",
         publish / skip := true,
