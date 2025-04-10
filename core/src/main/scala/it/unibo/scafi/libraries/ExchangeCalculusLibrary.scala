@@ -1,7 +1,7 @@
 package it.unibo.scafi.libraries
 
 import it.unibo.scafi.language.AggregateFoundation
-import it.unibo.scafi.language.xc.syntax.{ExchangeCalculusSyntax, ReturnSending}
+import it.unibo.scafi.language.xc.syntax.{ ExchangeCalculusSyntax, ReturnSending }
 
 /**
  * This library provides the exchange calculus primitive, `exchange`.

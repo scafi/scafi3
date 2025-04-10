@@ -1,6 +1,6 @@
 package it.unibo.scafi.runtime
 
-import it.unibo.scafi.context.{AggregateContext, ContextFactory}
+import it.unibo.scafi.context.{ AggregateContext, ContextFactory }
 import it.unibo.scafi.runtime.network.Network as Net
 
 final class ScafiEngine[DeviceId, Network <: Net[DeviceId], Context <: AggregateContext[DeviceId], Result](

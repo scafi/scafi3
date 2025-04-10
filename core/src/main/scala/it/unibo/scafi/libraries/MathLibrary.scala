@@ -1,10 +1,10 @@
 package it.unibo.scafi.libraries
 
 import it.unibo.scafi.language.AggregateFoundation
+import it.unibo.scafi.language.fc.syntax.FieldCalculusSyntax
 
 import FieldCalculusLibrary.neighborValues
 import FoldingLibrary.foldWithoutSelf
-import it.unibo.scafi.language.fc.syntax.FieldCalculusSyntax
 import Fractional.Implicits.*
 
 /**

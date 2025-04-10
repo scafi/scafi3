@@ -1,8 +1,8 @@
 package it.unibo.scafi.utils
 
-import it.unibo.scafi.message.Path
-
 import scala.collection.mutable
+
+import it.unibo.scafi.message.Path
 
 trait Stack:
   private val trace = mutable.Map.empty[Path[InvocationCoordinate], Int]
