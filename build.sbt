@@ -42,6 +42,7 @@ ThisBuild / scalacOptions ++= Seq(
   "-indent",
   "-unchecked",
   "-explain",
+  "-experimental",
   "-feature",
   "-language:strictEquality",
   "-language:implicitConversions",
