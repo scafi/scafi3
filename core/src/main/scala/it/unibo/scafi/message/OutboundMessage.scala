@@ -6,7 +6,7 @@ import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.utils.Stack
 
 trait OutboundMessage:
-  self: Stack & AggregateContext[DeviceId] =>
+  self: Stack & AggregateContext =>
 
   type DeviceId
 

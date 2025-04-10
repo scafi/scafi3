@@ -6,7 +6,7 @@ import it.unibo.scafi.utils.Stack
 import language.experimental.saferExceptions
 
 trait InboundMessage:
-  self: Stack & AggregateContext[DeviceId] =>
+  self: Stack & AggregateContext =>
 
   type DeviceId
 
