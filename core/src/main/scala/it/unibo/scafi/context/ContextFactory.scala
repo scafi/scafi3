@@ -1,6 +1,6 @@
 package it.unibo.scafi.context
 
-import it.unibo.scafi.runtime.network.Network
-
-trait ContextFactory[DeviceId, Net <: Network[DeviceId], Ctx <: AggregateContext[DeviceId]]:
-  def createContext(network: Net): Ctx
+import it.unibo.scafi.runtime.network.NetworkManager
+ 
+trait ContextFactory[ID, Net <: NetworkManager { type DeviceId = ID }, Context <: AggregateContext { type DeviceId = ID }]:
+  def createContext(deviceId: ID, network: Net): Context
