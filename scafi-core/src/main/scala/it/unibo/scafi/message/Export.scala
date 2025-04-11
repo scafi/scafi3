@@ -7,14 +7,28 @@ package it.unibo.scafi.message
  */
 trait Export[DeviceId]:
   /**
-   * The [[ValueTree]] produced for the given deviceId. A possible [[NoDeviceIdException]] is thrown if the deviceId is
-   * not present in the [[Export]].
+   * Retrieves the [[ValueTree]] associated to the given [[deviceId]]. If the [[deviceId]] is not present in the
+   * [[Export]], it returns the default [[ValueTree]].
+   *
    * @param deviceId
-   *   the deviceId for which the [[ValueTree]] is produced.
+   *   the id of the device to retrieve the [[ValueTree]] for.
    * @return
-   *   the [[ValueTree]] produced for the given deviceId.
+   *   the [[ValueTree]] associated to the given [[deviceId]] or the default [[ValueTree]] if the [[deviceId]] is not
+   *   present.
    */
   def apply(deviceId: DeviceId): ValueTree
 
 object Export:
-  def apply[DeviceId](default: ValueTree, overrides: Map[DeviceId, ValueTree]): Export[DeviceId] = ???
+  /**
+   * Creates an [[Export]] from a default [[ValueTree]] and a map of [[ValueTree]]s for each [[DeviceId]].
+   * @param default
+   *   the default [[ValueTree]] to use if the [[deviceId]] is not present in the map.
+   * @param overrides
+   *   the map of [[ValueTree]]s for each [[DeviceId]].
+   * @tparam DeviceId
+   *   the type of the deviceId of neighbor devices.
+   * @return
+   *   an [[Export]] that retrieves the [[ValueTree]] associated to the given [[deviceId]] or the default.
+   */
+  def apply[DeviceId](default: ValueTree, overrides: Map[DeviceId, ValueTree]): Export[DeviceId] =
+    deviceId => overrides.getOrElse(deviceId, default)
