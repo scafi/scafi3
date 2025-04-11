@@ -17,7 +17,7 @@ trait ValueTree:
    * @return
    *   an iterable of all the available [[Path]]s in the [[ValueTree]].
    */
-  def paths: Iterable[Path[?]]
+  def paths: Iterable[Path]
 
   /**
    * Retrieves the value associated to the given [[Path]].
@@ -28,7 +28,7 @@ trait ValueTree:
    * @return
    *   the value associated to the given [[Path]].
    */
-  def apply[Value](path: Path[?]): Value throws NoPathFoundException
+  def apply[Value](path: Path): Value throws NoPathFoundException
 
   /**
    * Retrieves the value associated to the given [[Path]] if it exists, otherwise returns None.
@@ -39,7 +39,7 @@ trait ValueTree:
    * @return
    *   an Option containing the value associated to the given [[Path]] if it exists, otherwise None.
    */
-  def get[Value](path: Path[?]): Option[Value] =
+  def get[Value](path: Path): Option[Value] =
     try Some(apply(path))
     catch case _: NoPathFoundException => None
 
@@ -54,7 +54,7 @@ trait ValueTree:
    * @return
    *   the updated [[ValueTree]].
    */
-  def update[Value](path: Path[?], value: Value): ValueTree
+  def update[Value](path: Path, value: Value): ValueTree
 end ValueTree
 
 object ValueTree:
@@ -64,7 +64,7 @@ object ValueTree:
    * @param path
    *   the path that was not found.
    */
-  class NoPathFoundException(path: Path[?]) extends Exception
+  class NoPathFoundException(path: Path) extends Exception
 
   /**
    * Creates a new [[ValueTree]] from the given [[underlying]] map of [[Path]]s and [[Value]]s.
@@ -77,7 +77,13 @@ object ValueTree:
    * @return
    *   a new [[ValueTree]] created from the given map of [[Path]]s and [[Value]]s.
    */
-  def apply[TokenType, Value](underlying: Map[Path[TokenType], Value]): ValueTree = ???
+  def apply[TokenType, Value](underlying: Map[Path, Value]): ValueTree = new ValueTree:
+    override def paths: Iterable[Path] = underlying.keys
+    override def apply[V](path: Path): V throws NoPathFoundException =
+      underlying.get(path) match
+        case Some(value) => value.asInstanceOf[V]
+        case None => throw new NoPathFoundException(path)
+    override def update[V](path: Path, value: V): ValueTree = ValueTree.apply(underlying + (path -> value))
 
   /**
    * Creates an empty [[ValueTree]].
@@ -89,8 +95,8 @@ object ValueTree:
    *   an empty [[ValueTree]].
    */
   def empty[TokenType, Value]: ValueTree = new ValueTree:
-    override def paths: Iterable[Path[?]] = Iterable.empty
-    override def apply[V](path: Path[?]): V throws NoPathFoundException =
+    override def paths: Iterable[Path] = Iterable.empty
+    override def apply[V](path: Path): V throws NoPathFoundException =
       throw new NoPathFoundException(path)
-    override def update[V](path: Path[?], value: V): ValueTree = ValueTree.apply(Map(path -> value))
+    override def update[V](path: Path, value: V): ValueTree = ValueTree.apply(Map(path -> value))
 end ValueTree

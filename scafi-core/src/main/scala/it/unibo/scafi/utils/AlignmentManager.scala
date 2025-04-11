@@ -4,8 +4,8 @@ import scala.collection.mutable
 
 import it.unibo.scafi.message.Path
 
-trait Stack:
-  private val trace = mutable.Map.empty[Path[InvocationCoordinate], Int]
+trait AlignmentManager:
+  private val trace = mutable.Map.empty[Path, Int]
   private val stack = mutable.Stack.empty[InvocationCoordinate]
 
   /**
@@ -45,4 +45,4 @@ trait Stack:
     val _ = stack.pop()
     trace.update(currentPath, invocationCount)
     result
-end Stack
+end AlignmentManager

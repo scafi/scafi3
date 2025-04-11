@@ -2,12 +2,12 @@ package it.unibo.scafi.message
 
 import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.message.ValueTree.NoPathFoundException
-import it.unibo.scafi.utils.Stack
+import it.unibo.scafi.utils.AlignmentManager
 
 import language.experimental.saferExceptions
 
 trait InboundMessage:
-  self: Stack & AggregateContext =>
+  self: AlignmentManager & AggregateContext =>
 
   type DeviceId
 
@@ -21,7 +21,7 @@ trait InboundMessage:
   override def neighbors: Iterable[DeviceId] = cachedPaths.neighbors
 
   private class CachedPaths(private val input: Import[DeviceId]):
-    private lazy val cachedPaths: Map[Path[?], Map[DeviceId, Any]] =
+    private lazy val cachedPaths: Map[Path, Map[DeviceId, Any]] =
       input.foldLeft(Map.empty):
         case (accumulator, (deviceId, valueTree)) =>
           valueTree.paths.foldLeft(accumulator): (accInner, path) =>

@@ -1,8 +1,8 @@
 package it.unibo.scafi.message
 
-trait Path[+Token] extends IndexedSeq[Token]
+trait Path extends IndexedSeq[Any]
 
 object Path:
-  def apply[Token](tokens: Token*): Path[Token] = new Path[Token]:
+  def apply[Token](tokens: Token*): Path = new Path:
     override def apply(i: Int): Token = tokens(i)
     override def length: Int = tokens.length
