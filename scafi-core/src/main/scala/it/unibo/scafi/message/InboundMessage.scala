@@ -1,6 +1,7 @@
 package it.unibo.scafi.message
 
 import it.unibo.scafi.context.AggregateContext
+import it.unibo.scafi.message.ValueTree.NoPathFoundException
 import it.unibo.scafi.utils.Stack
 
 import language.experimental.saferExceptions
@@ -27,7 +28,7 @@ trait InboundMessage:
             val valueAtPath =
               try valueTree(path)
               catch
-                case _: valueTree.NoPathFoundException =>
+                case _: NoPathFoundException =>
                   throw RuntimeException(s"Path: $path not found, this should not happen. Please report this.")
             accInner.updatedWith(path):
               case Some(existing) => Some(existing + (deviceId -> valueAtPath))

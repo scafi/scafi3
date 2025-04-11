@@ -46,6 +46,11 @@ ThisBuild / scalacOptions ++= Seq(
   "-feature",
   "-language:strictEquality",
   "-language:implicitConversions",
+  "-Wconf:msg=unused value of type org.scalatest.Assertion:s",
+  "-Wconf:msg=unused value of type org.scalatest.compatible.Assertion:s",
+  "-Wconf:msg=unused value of type org.specs2.specification.core.Fragment:s",
+  "-Wconf:msg=unused value of type org.specs2.matcher.MatchResult:s",
+  "-Wconf:msg=unused value of type org.scalamock:s",
 )
 ThisBuild / coverageEnabled := true
 ThisBuild / semanticdbEnabled := true
