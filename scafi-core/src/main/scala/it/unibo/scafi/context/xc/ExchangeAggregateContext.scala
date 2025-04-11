@@ -4,7 +4,7 @@ import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.language.xc.calculus.ExchangeCalculus
 import it.unibo.scafi.language.xc.{ ExchangeLanguage, FieldBasedSharedData }
 import it.unibo.scafi.message.{ Import, InboundMessage, OutboundMessage }
-import it.unibo.scafi.utils.Stack
+import it.unibo.scafi.utils.AlignmentManager
 
 trait ExchangeAggregateContext[ID](
     override val localId: ID,
@@ -15,7 +15,7 @@ trait ExchangeAggregateContext[ID](
       FieldBasedSharedData,
       InboundMessage,
       OutboundMessage,
-      Stack:
+      AlignmentManager:
   override type DeviceId = ID
 
   override def xc[T](init: SharedData[T])(f: SharedData[T] => (SharedData[T], SharedData[T])): SharedData[T] =
