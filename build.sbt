@@ -84,16 +84,16 @@ lazy val `scafi-core` = // crossProject(JSPlatform, JVMPlatform, NativePlatform)
 //    )
   project
   .settings(
-    name := "core",
+    name := "scafi-core",
     sonatypeProfileName := "it.unibo.scafi",
     commonTestSettings,
   )
 
 val alchemistVersion = "42.1.0"
-lazy val `alchemist-incarnation` = project
+lazy val `alchemist-incarnation-scafi3` = project
   .settings(
     fork := true,
-    name := "alchemist-incarnation",
+    name := "alchemist-incarnation-scafi3",
     libraryDependencies ++= Seq(
       "it.unibo.alchemist" % "alchemist" % alchemistVersion,
       "it.unibo.alchemist" % "alchemist-swingui" % alchemistVersion,
