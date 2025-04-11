@@ -3,14 +3,14 @@ package it.unibo.scafi.message
 import scala.collection.mutable
 
 import it.unibo.scafi.context.AggregateContext
-import it.unibo.scafi.utils.Stack
+import it.unibo.scafi.utils.AlignmentManager
 
 trait OutboundMessage:
-  self: Stack & AggregateContext =>
+  self: AlignmentManager & AggregateContext =>
 
   type DeviceId
 
-  private val registeredMessages = mutable.Map.empty[Path[InvocationCoordinate], MapWithDefault[DeviceId, Any]]
+  private val registeredMessages = mutable.Map.empty[Path, MapWithDefault[DeviceId, Any]]
 
   /**
    * Write a value at the current path with a [[default]] and possible [[overrides]].
