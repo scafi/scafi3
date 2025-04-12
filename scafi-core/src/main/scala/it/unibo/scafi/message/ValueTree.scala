@@ -85,6 +85,17 @@ object ValueTree:
         case None => throw new NoPathFoundException(path)
     override def update[V](path: Path, value: V): ValueTree = ValueTree.apply(underlying + (path -> value))
 
+    override def equals(obj: Any): Boolean =
+      obj match
+        case that: ValueTree =>
+          try this.paths == that.paths && this.paths.forall(path => this(path) == that(path))
+          catch case _: NoPathFoundException => false
+        case _ => false
+
+    override def hashCode(): Int = underlying.hashCode()
+
+    override def toString: String = s"ValueTree(${underlying.mkString(", ")})"
+
   /**
    * Creates an empty [[ValueTree]].
    * @tparam TokenType
@@ -96,9 +107,18 @@ object ValueTree:
    */
   def empty[TokenType, Value]: ValueTree = new ValueTree:
     override def paths: Iterable[Path] = Iterable.empty
-    override def apply[V](path: Path): V throws NoPathFoundException =
-      throw new NoPathFoundException(path)
+    override def apply[V](path: Path): V throws NoPathFoundException = throw new NoPathFoundException(path)
     override def update[V](path: Path, value: V): ValueTree = ValueTree.apply(Map(path -> value))
-    
+
+    override def equals(obj: Any): Boolean =
+      obj match
+        case that: ValueTree =>
+          this.paths.isEmpty && that.paths.isEmpty
+        case _ => false
+
+    override def hashCode(): Int = Iterable.empty.hashCode()
+
+    override def toString: String = "ValueTree()"
+
   given valueTreeCanEqual: CanEqual[ValueTree, ValueTree] = CanEqual.derived
 end ValueTree

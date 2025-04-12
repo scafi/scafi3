@@ -35,4 +35,14 @@ class ExportTest extends AnyFlatSpecLike, should.Matchers:
     val export1 = Export[Int](defaultValue, Map(1 -> overriddenValue))
     val export2 = Export[Int](ValueTree(Map(Path("key4") -> "newDefault")), Map(1 -> overriddenValue))
     export1 should not equal export2
+
+  it should "be not equal to another Export with different overrides" in:
+    val export1 = Export[Int](defaultValue, Map(1 -> overriddenValue))
+    val export2 = Export[Int](defaultValue, Map(2 -> overriddenValue))
+    export1 should not equal export2
+
+  it should "be equal to another Export with the same default ValueTree and overrides" in:
+    val export1 = Export[Int](defaultValue, Map(1 -> overriddenValue))
+    val export2 = Export[Int](defaultValue, Map(1 -> overriddenValue))
+    export1 should equal(export2)
 end ExportTest
