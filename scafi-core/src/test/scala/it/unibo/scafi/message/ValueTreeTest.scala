@@ -1,6 +1,7 @@
 package it.unibo.scafi.message
 
 import it.unibo.scafi.message.ValueTree.NoPathFoundException
+
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should
 
@@ -42,7 +43,7 @@ class ValueTreeTest extends AnyFlatSpecLike, should.Matchers:
     valueTree(Path("path2")) shouldBe "value2"
     updatedValueTree.paths should contain theSameElementsAs Seq(Path("path1"), Path("path2"))
     updatedValueTree(Path("path1")) shouldBe "newValue"
-    
+
   it should "not affect the original ValueTree when updating a non-existing path" in:
     val updatedValueTree = valueTree.update(Path("path3"), "newValue")
     valueTree.paths should contain theSameElementsAs Seq(Path("path1"), Path("path2"))

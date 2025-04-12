@@ -42,6 +42,7 @@ object Export:
     override def devices: Seq[DeviceId] = overrides.keys.toSeq
     given CanEqual[DeviceId, DeviceId] = CanEqual.derived
 
+    @SuppressWarnings(Array("DisableSyntax.asInstanceOf"))
     override def equals(obj: Any): Boolean = obj match
       case that: Export[DeviceId] @unchecked =>
         this.devices == that.devices && this.devices.forall(deviceId => this(deviceId) == that(deviceId)) &&

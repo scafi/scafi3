@@ -79,6 +79,7 @@ object ValueTree:
    */
   def apply[TokenType, Value](underlying: Map[Path, Value]): ValueTree = new ValueTree:
     override def paths: Iterable[Path] = underlying.keys
+    @SuppressWarnings(Array("DisableSyntax.asInstanceOf"))
     override def apply[V](path: Path): V throws NoPathFoundException =
       underlying.get(path) match
         case Some(value) => value.asInstanceOf[V]
