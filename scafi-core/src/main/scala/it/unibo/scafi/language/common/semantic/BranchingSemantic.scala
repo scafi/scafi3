@@ -1,13 +1,13 @@
-package it.unibo.scafi.language.xc.semantic
+package it.unibo.scafi.language.common.semantic
 
-import it.unibo.scafi.language.xc.calculus.ExchangeCalculus
-import it.unibo.scafi.language.syntax.BranchingSyntax
+import it.unibo.scafi.language.common.Branching
+import it.unibo.scafi.language.common.syntax.BranchingSyntax
 
 /**
  * This trait witnesses the fact that the exchange calculus semantics can be used to implement the branching syntax.
  */
-trait BranchingExchangeSemantic extends BranchingSyntax:
-  self: ExchangeCalculus =>
+trait BranchingSemantic extends BranchingSyntax:
+  self: Branching =>
 
   override def branch[T](condition: Boolean)(trueBranch: => T)(falseBranch: => T): T =
     br(condition)(trueBranch)(falseBranch)

@@ -1,6 +1,6 @@
 package it.unibo.scafi.libraries
 
-import it.unibo.scafi.language.syntax.BranchingSyntax
+import it.unibo.scafi.language.common.syntax.BranchingSyntax
 
 /**
  * This library provides domain branching syntax.

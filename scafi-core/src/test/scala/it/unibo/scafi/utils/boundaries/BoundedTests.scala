@@ -1,11 +1,14 @@
-package it.unibo.scafi.abstractions
+package it.unibo.scafi.utils.boundaries
 
-import it.unibo.scafi.UnitTest
-import it.unibo.scafi.utils.boundaries.{ Bounded, UpperBounded }
+import org.scalatest.flatspec.AnyFlatSpecLike
+import org.scalatest.matchers.should
+import org.scalatest.prop.TableDrivenPropertyChecks.forAll
+import org.scalatest.prop.TableFor1
+import org.scalatest.prop.Tables.Table
 
-trait BoundedTests:
-  this: UnitTest =>
+import scala.math.Numeric.Implicits.infixNumericOps
 
+trait BoundedTests extends AnyFlatSpecLike, should.Matchers:
   def one[T: Numeric]: T = summon[Numeric[T]].one
 
   def numbers[T: Numeric]: TableFor1[T] =
@@ -18,7 +21,7 @@ trait BoundedTests:
       summon[Numeric[T]].fromInt(Integer.MIN_VALUE),
     )
 
-  def upperBounded[T: Numeric: UpperBounded](): Unit =
+  def upperBounded[T: {Numeric, UpperBounded}](): Unit =
     val upperBound = summon[UpperBounded[T]].upperBound
 
     it should "provide an upper bound for the type T" in:
@@ -28,7 +31,7 @@ trait BoundedTests:
     it should "provide a value that cannot be exceeded over" in:
       upperBound + one should equal(upperBound)
 
-  def lowerBounded[T: Numeric: Bounded](): Unit =
+  def lowerBounded[T: {Numeric, Bounded}](): Unit =
     val lowerBound = summon[Bounded[T]].lowerBound
 
     it should "provide a lower bound for the type T" in:
@@ -38,7 +41,7 @@ trait BoundedTests:
     it should "provide a value that cannot be exceeded under" in:
       lowerBound - one should equal(lowerBound)
 
-  def bounded[T: Numeric: Bounded](): Unit =
+  def bounded[T: {Numeric, Bounded}](): Unit =
     it should behave like upperBounded[T]()
     it should behave like lowerBounded[T]()
     val bounds = summon[Bounded[T]]

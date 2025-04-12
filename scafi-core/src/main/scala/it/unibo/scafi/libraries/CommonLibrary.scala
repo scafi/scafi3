@@ -29,7 +29,7 @@ object CommonLibrary:
    * @see
    *   [[DeviceAwareAggregateFoundation.self]]
    */
-  def self(using language: AggregateFoundation): language.DeviceId = language.localId
+  def localId(using language: AggregateFoundation): language.DeviceId = language.localId
 
   /**
    * @return
