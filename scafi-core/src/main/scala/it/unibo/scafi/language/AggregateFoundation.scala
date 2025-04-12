@@ -1,7 +1,7 @@
 package it.unibo.scafi.language
 
 import it.unibo.scafi.collections.SafeIterable
-import it.unibo.scafi.utils.{ SharedDataOps, AlignmentManager }
+import it.unibo.scafi.utils.{ AlignmentManager, SharedDataOps }
 
 import cats.Applicative
 
