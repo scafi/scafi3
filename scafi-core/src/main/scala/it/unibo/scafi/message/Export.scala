@@ -32,3 +32,5 @@ object Export:
    */
   def apply[DeviceId](default: ValueTree, overrides: Map[DeviceId, ValueTree]): Export[DeviceId] =
     deviceId => overrides.getOrElse(deviceId, default)
+    
+  given exportCanEqual[T]: CanEqual[Export[T], Export[T]] = CanEqual.derived
