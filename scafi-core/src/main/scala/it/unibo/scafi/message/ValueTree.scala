@@ -99,4 +99,6 @@ object ValueTree:
     override def apply[V](path: Path): V throws NoPathFoundException =
       throw new NoPathFoundException(path)
     override def update[V](path: Path, value: V): ValueTree = ValueTree.apply(Map(path -> value))
+    
+  given valueTreeCanEqual: CanEqual[ValueTree, ValueTree] = CanEqual.derived
 end ValueTree
