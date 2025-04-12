@@ -61,16 +61,6 @@ ThisBuild / libraryDependencies ++= Seq(
   "org.scalatest" %%% "scalatest" % "3.2.19" % Test,
 )
 
-lazy val commonTestSettings = Seq(
-  Test / scalacOptions --= Seq(
-    "-rewrite",
-    "-Wunused:all",
-    "-Wvalue-discard",
-    "-Wnonunit-statement",
-    "-Xcheck-macros",
-  ),
-)
-
 lazy val `scafi-core` = // crossProject(JSPlatform, JVMPlatform, NativePlatform)
 //  .crossType(CrossType.Pure)
 //  .in(file("core"))
@@ -91,7 +81,6 @@ lazy val `scafi-core` = // crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .settings(
     name := "scafi-core",
     sonatypeProfileName := "it.unibo.scafi",
-    commonTestSettings,
   )
 
 val alchemistVersion = "42.1.0"
@@ -105,7 +94,6 @@ lazy val `alchemist-incarnation-scafi3` = project
       "it.unibo.alchemist" % "alchemist-api" % alchemistVersion,
       "it.unibo.alchemist" % "alchemist-test" % alchemistVersion,
     ),
-    commonTestSettings,
   )
 //  .dependsOn(core.jvm)
   .dependsOn(`scafi-core`)
