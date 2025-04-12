@@ -10,4 +10,4 @@ object TestProgram:
   def myProgram(using MyLanguage): Int = evolve(0)(_ + 1)
 
   def myProgram2(using MyLanguage): Double =
-    sensorDistanceTo(self == 0)
+    sensorDistanceTo(localId == 0)

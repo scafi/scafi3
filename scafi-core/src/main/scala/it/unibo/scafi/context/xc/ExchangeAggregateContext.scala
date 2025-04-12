@@ -1,15 +1,18 @@
 package it.unibo.scafi.context.xc
 
 import it.unibo.scafi.context.AggregateContext
+import it.unibo.scafi.context.common.BranchingContext
+import it.unibo.scafi.language.common.Branching
 import it.unibo.scafi.language.xc.calculus.ExchangeCalculus
-import it.unibo.scafi.language.xc.{ ExchangeLanguage, FieldBasedSharedData }
-import it.unibo.scafi.message.{ Import, InboundMessage, OutboundMessage }
+import it.unibo.scafi.language.xc.{ExchangeLanguage, FieldBasedSharedData}
+import it.unibo.scafi.message.{Import, InboundMessage, OutboundMessage}
 import it.unibo.scafi.utils.AlignmentManager
 
 trait ExchangeAggregateContext[ID](
     override val localId: ID,
     override val importFromInboundMessages: Import[ID],
 ) extends AggregateContext,
+      BranchingContext,
       ExchangeLanguage,
       ExchangeCalculus,
       FieldBasedSharedData,
@@ -25,9 +28,6 @@ trait ExchangeAggregateContext[ID](
       val (ret, send) = f(field)
       writeValue(send.default, send.alignedValues)
       ret
-
-  override def br[T](cond: Boolean)(th: => T)(el: => T): T = alignmentScope(s"branch/$cond"): () =>
-    if cond then th else el
 
   override def align[T](token: Any)(body: () => T): T = alignmentScope(token.toString)(body)
 end ExchangeAggregateContext

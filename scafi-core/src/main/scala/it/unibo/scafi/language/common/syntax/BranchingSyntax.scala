@@ -1,4 +1,4 @@
-package it.unibo.scafi.language.syntax
+package it.unibo.scafi.language.common.syntax
 
 import it.unibo.scafi.language.AggregateFoundation
 
@@ -7,7 +7,6 @@ import it.unibo.scafi.language.AggregateFoundation
  * in Scala.
  */
 trait BranchingSyntax:
-  self: AggregateFoundation =>
 
   /**
    * This method is used to split the domain of the aggregate program into two branches.
