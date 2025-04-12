@@ -68,7 +68,7 @@ object ValueTree:
 
   /**
    * Creates a new [[ValueTree]] from the given [[underlying]] map of [[Path]]s and [[Value]]s.
-   * @param underlying
+   * @param from
    *   the map of [[Path]]s and [[Value]]s to create the [[ValueTree]] from.
    * @tparam TokenType
    *   the type of the token used in the [[Path]].
@@ -77,14 +77,14 @@ object ValueTree:
    * @return
    *   a new [[ValueTree]] created from the given map of [[Path]]s and [[Value]]s.
    */
-  def apply[TokenType, Value](underlying: Map[Path, Value]): ValueTree = new ValueTree:
-    override def paths: Iterable[Path] = underlying.keys
+  def apply[TokenType, Value](from: Map[Path, Value]): ValueTree = new ValueTree:
+    override def paths: Iterable[Path] = from.keys
     @SuppressWarnings(Array("DisableSyntax.asInstanceOf"))
     override def apply[V](path: Path): V throws NoPathFoundException =
-      underlying.get(path) match
+      from.get(path) match
         case Some(value) => value.asInstanceOf[V]
         case None => throw new NoPathFoundException(path)
-    override def update[V](path: Path, value: V): ValueTree = ValueTree.apply(underlying + (path -> value))
+    override def update[V](path: Path, value: V): ValueTree = ValueTree.apply(from + (path -> value))
 
     override def equals(obj: Any): Boolean =
       obj match
@@ -93,9 +93,9 @@ object ValueTree:
           catch case _: NoPathFoundException => false
         case _ => false
 
-    override def hashCode(): Int = underlying.hashCode()
+    override def hashCode(): Int = from.hashCode()
 
-    override def toString: String = s"ValueTree(${underlying.mkString(", ")})"
+    override def toString: String = s"ValueTree(${from.mkString(", ")})"
 
   /**
    * Creates an empty [[ValueTree]].
