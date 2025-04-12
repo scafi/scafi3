@@ -18,6 +18,13 @@ trait Export[DeviceId]:
    */
   def apply(deviceId: DeviceId): ValueTree
 
+  /**
+   * All the available [[DeviceId]]s in the [[Export]].
+   * @return
+   *   an iterable of all the available [[DeviceId]]s in the [[Export]].
+   */
+  def devices: Seq[DeviceId]
+
 object Export:
   /**
    * Creates an [[Export]] from a default [[ValueTree]] and a map of [[ValueTree]]s for each [[DeviceId]].
@@ -30,7 +37,19 @@ object Export:
    * @return
    *   an [[Export]] that retrieves the [[ValueTree]] associated to the given [[deviceId]] or the default.
    */
-  def apply[DeviceId](default: ValueTree, overrides: Map[DeviceId, ValueTree]): Export[DeviceId] =
-    deviceId => overrides.getOrElse(deviceId, default)
-    
+  def apply[DeviceId](default: ValueTree, overrides: Map[DeviceId, ValueTree]): Export[DeviceId] = new Export[DeviceId]:
+    override def apply(deviceId: DeviceId): ValueTree = overrides.getOrElse(deviceId, default)
+    override def devices: Seq[DeviceId] = overrides.keys.toSeq
+    given CanEqual[DeviceId, DeviceId] = CanEqual.derived
+
+    override def equals(obj: Any): Boolean = obj match
+      case that: Export[DeviceId] @unchecked =>
+        this.devices == that.devices && this.devices.forall(deviceId => this(deviceId) == that(deviceId)) &&
+        // Retrieve the default ValueTree using a non-existing DeviceId
+        this.apply(Object().asInstanceOf[DeviceId]) == that.apply(Object().asInstanceOf[DeviceId])
+      case _ => false
+
+    override def hashCode(): Int = overrides.hashCode() + default.hashCode()
+
   given exportCanEqual[T]: CanEqual[Export[T], Export[T]] = CanEqual.derived
+end Export

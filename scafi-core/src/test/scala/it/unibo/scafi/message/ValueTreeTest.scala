@@ -52,4 +52,12 @@ class ValueTreeTest extends AnyFlatSpecLike, should.Matchers:
       valueTree(Path("path3"))
     updatedValueTree.paths should contain theSameElementsAs Seq(Path("path1"), Path("path2"), Path("path3"))
     updatedValueTree(Path("path3")) shouldBe "newValue"
+
+  it should "be equal to another ValueTree with the same paths and values" in:
+    val anotherValueTree = ValueTree(Map(Path("path1") -> "value1", Path("path2") -> "value2"))
+    valueTree should equal(anotherValueTree)
+
+  it should "not be equal to another ValueTree with different paths or values" in:
+    val anotherValueTree = ValueTree(Map(Path("path1") -> "value1", Path("path2") -> "differentValue"))
+    valueTree should not equal anotherValueTree
 end ValueTreeTest
