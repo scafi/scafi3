@@ -8,7 +8,7 @@ class ImportTest extends AnyFlatSpecLike, should.Matchers:
     val emptyImport = Import.empty[Int]
     emptyImport.neighbors shouldBe empty
     emptyImport.isEmpty shouldBe true
-    
+
   it should "return the set of neighbors" in:
     val messages = Map(1 -> ValueTree(Map()), 2 -> ValueTree(Map()))
     val importInstance = Import(messages)
