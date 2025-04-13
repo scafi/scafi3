@@ -7,8 +7,10 @@ import it.unibo.scafi.utils.SharedDataOps
 import cats.Applicative
 import cats.syntax.all.*
 
-class AggregateFoundationMock extends AggregateFoundation, FieldMock, DeviceMock:
+class AggregateFoundationMock(deviceId: Int = 0) extends AggregateFoundation, FieldMock, DeviceMock:
   override type SharedData[T] = MockAggregate[T]
+
+  override def localId: DeviceId = deviceId
 
   case class MockAggregate[T](mockedValues: Iterable[T] = Seq()) extends SafeIterable[T]:
     override protected def iterator: Iterator[T] = mockedValues.iterator

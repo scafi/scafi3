@@ -9,11 +9,9 @@ import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should
 
 class BranchingSyntaxCompilationTests extends AnyFlatSpecLike, should.Matchers:
-
-  val branchingContext: BranchingSyntax & AggregateFoundation = new AggregateFoundationMock
+  private val branchingContext: BranchingSyntax & AggregateFoundation = new AggregateFoundationMock
     with BranchingContext
     with AlignmentManager {}
-
   "Branching Syntax" should "compile" in:
     "val _: Int = branchingContext.branch(false)(1)(2)" should compile
     "val _: Int = branchingContext.branch(1)(1)(2)" shouldNot typeCheck
