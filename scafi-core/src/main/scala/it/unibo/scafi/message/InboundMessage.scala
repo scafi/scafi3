@@ -18,7 +18,7 @@ trait InboundMessage:
 
   protected def alignedMessages[Value]: Map[DeviceId, Value] = cachedPaths.dataAt(currentPath)
 
-  override def neighbors: Iterable[DeviceId] = cachedPaths.neighbors
+  override def neighbors: Set[DeviceId] = cachedPaths.neighbors
 
   private class CachedPaths(private val input: Import[DeviceId]):
     private lazy val cachedPaths: Map[Path, Map[DeviceId, Any]] =
@@ -34,12 +34,12 @@ trait InboundMessage:
               case Some(existing) => Some(existing + (deviceId -> valueAtPath))
               case None => Some(Map(deviceId -> valueAtPath))
 
-    lazy val neighbors: Iterable[DeviceId] = input.keySet + localId
+    lazy val neighbors: Set[DeviceId] = input.neighbors + localId
 
     def alignedDevicesAt(tokens: IndexedSeq[InvocationCoordinate]): Iterable[DeviceId] =
       cachedPaths
-        .filter: (p, _) =>
-          p.startsWith(tokens)
+        .filter: (path, _) =>
+          path.startsWith(tokens)
         .values
         .flatMap(_.keySet)
         .toSet + localId
