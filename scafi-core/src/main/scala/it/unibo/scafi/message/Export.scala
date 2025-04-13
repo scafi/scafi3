@@ -23,7 +23,7 @@ trait Export[DeviceId]:
    * @return
    *   an iterable of all the available [[DeviceId]]s in the [[Export]].
    */
-  def devices: Seq[DeviceId]
+  def devices: Set[DeviceId]
 
 object Export:
   /**
@@ -39,7 +39,7 @@ object Export:
    */
   def apply[DeviceId](default: ValueTree, overrides: Map[DeviceId, ValueTree]): Export[DeviceId] = new Export[DeviceId]:
     override def apply(deviceId: DeviceId): ValueTree = overrides.getOrElse(deviceId, default)
-    override def devices: Seq[DeviceId] = overrides.keys.toSeq
+    override def devices: Set[DeviceId] = overrides.keys.toSet
     given CanEqual[DeviceId, DeviceId] = CanEqual.derived
 
     @SuppressWarnings(Array("DisableSyntax.asInstanceOf"))
