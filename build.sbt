@@ -59,6 +59,7 @@ ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
 ThisBuild / libraryDependencies ++= Seq(
   "org.typelevel" %%% "cats-core" % "2.13.0",
   "org.scalatest" %%% "scalatest" % "3.2.19" % Test,
+  "org.scalamock" %%% "scalamock" % "7.1.0" % Test,
 )
 
 lazy val `scafi-core` = // crossProject(JSPlatform, JVMPlatform, NativePlatform)
