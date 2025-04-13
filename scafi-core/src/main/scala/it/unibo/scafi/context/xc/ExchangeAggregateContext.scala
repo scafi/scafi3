@@ -4,8 +4,8 @@ import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.context.common.BranchingContext
 import it.unibo.scafi.language.common.Branching
 import it.unibo.scafi.language.xc.calculus.ExchangeCalculus
-import it.unibo.scafi.language.xc.{ExchangeLanguage, FieldBasedSharedData}
-import it.unibo.scafi.message.{Import, InboundMessage, OutboundMessage}
+import it.unibo.scafi.language.xc.{ ExchangeLanguage, FieldBasedSharedData }
+import it.unibo.scafi.message.{ Import, InboundMessage, OutboundMessage }
 import it.unibo.scafi.utils.AlignmentManager
 
 trait ExchangeAggregateContext[ID](

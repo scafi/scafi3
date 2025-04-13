@@ -5,6 +5,7 @@ import it.unibo.scafi.language.AggregateFoundation
 import it.unibo.scafi.language.common.syntax.BranchingSyntax
 import it.unibo.scafi.language.foundation.AggregateFoundationMock
 import it.unibo.scafi.utils.AlignmentManager
+
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should
 
