@@ -1,4 +1,4 @@
-package it.unibo.scafi.utils
+package it.unibo.scafi.utils.network
 
 import it.unibo.scafi.message.{ Export, Import }
 import it.unibo.scafi.runtime.network.NetworkManager

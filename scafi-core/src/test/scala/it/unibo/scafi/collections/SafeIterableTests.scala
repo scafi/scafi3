@@ -22,7 +22,7 @@ trait SafeIterableTests:
       sut.foldLeft(List[A]())(_ :+ _) shouldBe sut.toIterable.foldLeft(List[A]())(_ :+ _)
       sut.foldRight(List[A]())(_ :: _) shouldBe sut.toIterable.foldRight(List[A]())(_ :: _)
 
-  def safeIterableOfBoundedType[A: Ordering: Bounded](nonEmpty: SafeIterable[A], empty: SafeIterable[A])(using
+  def safeIterableOfBoundedType[A: {Ordering, Bounded}](nonEmpty: SafeIterable[A], empty: SafeIterable[A])(using
       CanEqual[A, A],
   ): Unit =
     it should behave like safeIterable(nonEmpty)

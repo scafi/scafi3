@@ -1,4 +1,4 @@
-package it.unibo.scafi.language.libraries
+package it.unibo.scafi.libraries
 
 import it.unibo.scafi.language.foundation.AggregateFoundationMock
 import it.unibo.scafi.libraries.CommonLibrary.*
