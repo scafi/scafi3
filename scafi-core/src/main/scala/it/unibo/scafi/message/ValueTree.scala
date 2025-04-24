@@ -95,7 +95,8 @@ object ValueTree:
 
     override def hashCode(): Int = from.hashCode()
 
-    override def toString: String = s"ValueTree(${from.mkString(", ")})"
+    override def toString: String =
+      s"ValueTree(${from.map { case (k, v) => s"${k.mkString("/")} -> $v" }.mkString(", ")})"
 
   /**
    * Creates an empty [[ValueTree]].

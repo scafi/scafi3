@@ -52,5 +52,8 @@ object Export:
 
     override def hashCode(): Int = overrides.hashCode() + default.hashCode()
 
+    override def toString: String =
+      s"Export(${overrides.map { case (k, v) => s"$k -> $v" }.mkString(", ")}, default = $default)"
+
   given exportCanEqual[T]: CanEqual[Export[T], Export[T]] = CanEqual.derived
 end Export
