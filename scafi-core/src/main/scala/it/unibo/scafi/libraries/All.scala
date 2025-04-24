@@ -15,3 +15,4 @@ object All:
   export GradientLibrary.{ *, given }
   export MathLibrary.{ *, given }
   export CommonBoundaries.{ *, given }
+  export cats.syntax.all.*
