@@ -46,6 +46,7 @@ ThisBuild / scalacOptions ++= Seq(
   "-feature",
   "-language:strictEquality",
   "-language:implicitConversions",
+  "-language:experimental.saferExceptions",
   "-Wconf:msg=unused value of type org.scalatest.Assertion:s",
   "-Wconf:msg=unused value of type org.scalatest.compatible.Assertion:s",
   "-Wconf:msg=unused value of type org.specs2.specification.core.Fragment:s",
