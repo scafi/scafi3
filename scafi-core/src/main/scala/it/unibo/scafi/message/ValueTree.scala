@@ -2,8 +2,6 @@ package it.unibo.scafi.message
 
 import it.unibo.scafi.message.ValueTree.NoPathFoundException
 
-import language.experimental.saferExceptions
-
 /**
  * For each aggregate operation, the association between a [[Path]] and the local [[Value]] is stored in this data
  * structure.

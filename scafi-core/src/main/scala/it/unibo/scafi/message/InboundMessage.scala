@@ -4,8 +4,6 @@ import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.message.ValueTree.NoPathFoundException
 import it.unibo.scafi.utils.AlignmentManager
 
-import language.experimental.saferExceptions
-
 trait InboundMessage:
   self: AlignmentManager & AggregateContext =>
 
