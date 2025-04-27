@@ -1,6 +1,7 @@
 package it.unibo.scafi.utils.matchers
 
 import it.unibo.scafi.message.{ Export, ValueTree }
+
 import org.scalatest.matchers.{ Matcher, MatchResult }
 
 trait AlignmentMatchers:
