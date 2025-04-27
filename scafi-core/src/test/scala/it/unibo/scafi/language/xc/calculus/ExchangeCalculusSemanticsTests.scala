@@ -1,6 +1,5 @@
 package it.unibo.scafi.language.xc.calculus
 
-import it.unibo.scafi.language.foundation.AggregateFoundationMock
 import it.unibo.scafi.UnitTest
 
 trait ExchangeCalculusSemanticsTests:

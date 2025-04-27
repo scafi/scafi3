@@ -24,9 +24,9 @@ trait AggregateFoundationTests:
       field.map(_.length).fold(0)(_ + _) should be(3)
     it should "provide a way to combine fields" in:
       (field, field).mapN(_ + _).fold("")(_ + _) should be("aabbcc")
-    val intField: lang.SharedData[Int] = lang.mockField(List(1, 2, 3))
-    val intField2: lang.SharedData[Int] = lang.mockField(List(4, 5, 6))
-    val intField3: lang.SharedData[Int] = lang.mockField(List(7, 8, 9))
+//    val _: lang.SharedData[Int] = lang.mockField(List(1, 2, 3))
+//    val _: lang.SharedData[Int] = lang.mockField(List(4, 5, 6))
+//    val _: lang.SharedData[Int] = lang.mockField(List(7, 8, 9))
     it should behave like aggregate(field)
   end aggregateFoundation
 end AggregateFoundationTests

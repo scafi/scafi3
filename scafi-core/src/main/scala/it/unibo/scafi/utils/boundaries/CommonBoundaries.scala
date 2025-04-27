@@ -1,13 +1,11 @@
 package it.unibo.scafi.utils.boundaries
 
-import it.unibo.scafi.utils.boundaries.BoundedGenerator.generateBoundedForTuples
-
 /**
  * Provides common boundaries for the most common types.
  */
 object CommonBoundaries:
 
-  given [T <: Tuple: Ordering]: Bounded[T] = generateBoundedForTuples[T]
+//  given [T <: Tuple: Ordering]: Bounded[T] = generateBoundedForTuples[T]
 
   given Bounded[Double] with
     override def lowerBound: Double = Double.NegativeInfinity
