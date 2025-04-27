@@ -62,7 +62,7 @@ object ValueTree:
    * @param path
    *   the path that was not found.
    */
-  class NoPathFoundException(path: Path) extends Exception
+  class NoPathFoundException(val path: Path) extends Exception
 
   /**
    * Creates a new [[ValueTree]] from the given [[underlying]] map of [[Path]]s and [[Value]]s.

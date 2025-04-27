@@ -30,8 +30,8 @@ ThisBuild / developers := List(
   )
 )
 ThisBuild / scalacOptions ++= Seq(
-//  "-Werror",
-//  "-Wunused:all",
+  "-Werror",
+  "-Wunused:all",
   "-Wvalue-discard",
   "-Wnonunit-statement",
   "-Yexplicit-nulls",
@@ -42,7 +42,7 @@ ThisBuild / scalacOptions ++= Seq(
   "-indent",
   "-unchecked",
   "-explain",
-  "-experimental",
+  "-encoding", "UTF-8",
   "-feature",
   "-language:strictEquality",
   "-language:implicitConversions",
@@ -59,6 +59,7 @@ ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
 
 ThisBuild / libraryDependencies ++= Seq(
   "org.typelevel" %%% "cats-core" % "2.13.0",
+  "org.scalactic" %%% "scalactic" % "3.2.19",
   "org.scalatest" %%% "scalatest" % "3.2.19" % Test,
   "org.scalamock" %%% "scalamock" % "7.1.0" % Test,
 )

@@ -4,7 +4,6 @@ import it.unibo.scafi.message.ValueTree.NoPathFoundException
 
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should
-
 import unsafeExceptions.canThrowAny
 
 class ValueTreeTest extends AnyFlatSpecLike, should.Matchers:
@@ -23,8 +22,8 @@ class ValueTreeTest extends AnyFlatSpecLike, should.Matchers:
 
   it should "create a ValueTree with the given paths and values" in:
     valueTree.paths should contain theSameElementsAs Seq(Path("path1"), Path("path2"))
-    valueTree(Path("path1")) shouldBe "value1"
-    valueTree(Path("path2")) shouldBe "value2"
+    valueTree.apply[String](Path("path1")) shouldBe "value1"
+    valueTree.apply[String](Path("path2")) shouldBe "value2"
 
   it should "return Some(value) when trying to get an existing path" in:
     valueTree.get(Path("path1")) shouldBe Some("value1")
@@ -33,26 +32,26 @@ class ValueTreeTest extends AnyFlatSpecLike, should.Matchers:
   it should "update the value of an existing path" in:
     val updatedValueTree = valueTree.update(Path("path1"), "newValue")
     updatedValueTree.paths should contain theSameElementsAs Seq(Path("path1"), Path("path2"))
-    updatedValueTree(Path("path1")) shouldBe "newValue"
-    updatedValueTree(Path("path2")) shouldBe "value2"
+    updatedValueTree.apply[String](Path("path1")) shouldBe "newValue"
+    updatedValueTree.apply[String](Path("path2")) shouldBe "value2"
 
   it should "not affect the original ValueTree when updating" in:
     val updatedValueTree = valueTree.update(Path("path1"), "newValue")
     valueTree.paths should contain theSameElementsAs Seq(Path("path1"), Path("path2"))
-    valueTree(Path("path1")) shouldBe "value1"
-    valueTree(Path("path2")) shouldBe "value2"
+    valueTree.apply[String](Path("path1")) shouldBe "value1"
+    valueTree.apply[String](Path("path2")) shouldBe "value2"
     updatedValueTree.paths should contain theSameElementsAs Seq(Path("path1"), Path("path2"))
-    updatedValueTree(Path("path1")) shouldBe "newValue"
+    updatedValueTree.apply[String](Path("path1")) shouldBe "newValue"
 
   it should "not affect the original ValueTree when updating a non-existing path" in:
     val updatedValueTree = valueTree.update(Path("path3"), "newValue")
     valueTree.paths should contain theSameElementsAs Seq(Path("path1"), Path("path2"))
-    valueTree(Path("path1")) shouldBe "value1"
-    valueTree(Path("path2")) shouldBe "value2"
+    valueTree.apply[String](Path("path1")) shouldBe "value1"
+    valueTree.apply[String](Path("path2")) shouldBe "value2"
     assertThrows[NoPathFoundException]:
       valueTree(Path("path3"))
     updatedValueTree.paths should contain theSameElementsAs Seq(Path("path1"), Path("path2"), Path("path3"))
-    updatedValueTree(Path("path3")) shouldBe "newValue"
+    updatedValueTree.apply[String](Path("path3")) shouldBe "newValue"
 
   it should "be equal to another ValueTree with the same paths and values" in:
     val anotherValueTree = ValueTree(Map(Path("path1") -> "value1", Path("path2") -> "value2"))

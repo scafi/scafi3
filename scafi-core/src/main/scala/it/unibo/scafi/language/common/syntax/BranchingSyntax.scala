@@ -1,7 +1,5 @@
 package it.unibo.scafi.language.common.syntax
 
-import it.unibo.scafi.language.AggregateFoundation
-
 /**
  * This trait enables the use of branching syntax in the aggregate programs. The syntax is similar to the `if` statement
  * in Scala.
