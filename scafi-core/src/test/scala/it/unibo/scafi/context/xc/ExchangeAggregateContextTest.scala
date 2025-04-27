@@ -5,6 +5,7 @@ import it.unibo.scafi.libraries.All.*
 import it.unibo.scafi.message.ValueTree.NoPathFoundException
 import it.unibo.scafi.utils.AggregateProgramProbe
 import it.unibo.scafi.utils.network.NoNeighborsNetworkManager
+
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should
 
