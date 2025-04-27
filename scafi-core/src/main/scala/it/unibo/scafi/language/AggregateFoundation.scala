@@ -6,6 +6,9 @@ import it.unibo.scafi.utils.SharedDataOps
 import cats.Applicative
 
 trait AggregateFoundation:
+  /**
+   * Abstract type representing the data shared with neighbors.
+   */
   type SharedData[T] <: SafeIterable[T]
 
   /**
