@@ -4,6 +4,7 @@ import it.unibo.scafi.message.ValueTree.NoPathFoundException
 
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should
+
 import unsafeExceptions.canThrowAny
 
 class ValueTreeTest extends AnyFlatSpecLike, should.Matchers:
