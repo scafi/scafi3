@@ -1,4 +1,4 @@
-package it.unibo.scafi.language.xc.calculus
+package it.unibo.scafi.language
 
 import scala.collection.MapView
 
@@ -9,7 +9,7 @@ import scala.collection.MapView
  * @tparam DeviceId
  *   the type of the device id
  */
-trait FieldOps[SharedData[_], DeviceId]:
+trait ShareDataOps[SharedData[_], DeviceId]:
 
   extension [Value](sharedData: SharedData[Value])
 
@@ -53,4 +53,4 @@ trait FieldOps[SharedData[_], DeviceId]:
      */
     def apply(id: DeviceId): Value = sharedData.get(id)
   end extension
-end FieldOps
+end ShareDataOps

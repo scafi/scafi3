@@ -1,6 +1,6 @@
 package it.unibo.scafi.language.xc.calculus
 
-import it.unibo.scafi.language.AggregateFoundation
+import it.unibo.scafi.language.{ AggregateFoundation, ShareDataOps }
 
 /**
  * This trait provides the semantics for the exchange calculus.
@@ -13,9 +13,9 @@ trait ExchangeCalculus extends AggregateFoundation:
    * @return
    *   an instance of NValuesOps
    * @see
-   *   [[FieldOps]]
+   *   [[ShareDataOps]]
    */
-  given fieldOps: FieldOps[SharedData, DeviceId] = scala.compiletime.deferred
+  given fieldOps: ShareDataOps[SharedData, DeviceId] = scala.compiletime.deferred
 
   /**
    * Local values can be considered NValues.
