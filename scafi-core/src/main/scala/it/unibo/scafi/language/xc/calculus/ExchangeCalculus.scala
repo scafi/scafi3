@@ -25,11 +25,6 @@ trait ExchangeCalculus extends AggregateFoundation:
    */
   given convert[T]: Conversion[T, SharedData[T]] = scala.compiletime.deferred
 
-//  /**
-//   * This operator branches the computation into `th` or `el` according to `cond`.
-//   */
-//  protected def br[T](cond: Boolean)(th: => T)(el: => T): T
-
   /**
    * This single operator handles state and message reception/sending.
    *
@@ -42,7 +37,5 @@ trait ExchangeCalculus extends AggregateFoundation:
    * @return
    *   the neighbouring value providing for the next local state
    */
-  protected def xc[T](init: SharedData[T])(
-      f: SharedData[T] => (SharedData[T], SharedData[T]),
-  ): SharedData[T]
+  protected def xc[T](init: SharedData[T])(f: SharedData[T] => (SharedData[T], SharedData[T])): SharedData[T]
 end ExchangeCalculus

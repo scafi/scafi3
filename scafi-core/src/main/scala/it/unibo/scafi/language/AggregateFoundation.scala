@@ -17,7 +17,7 @@ trait AggregateFoundation:
   type DeviceId
 
   /**
-   * Shared data values can be iterated also by ignoring the self value.
+   * Shared data values can be iterated also by ignoring the self-value.
    */
   given sharedDataOps: SharedDataOps[SharedData] = scala.compiletime.deferred
 
