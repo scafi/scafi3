@@ -1,7 +1,7 @@
 package it.unibo.scafi.libraries
 
 import it.unibo.scafi.language.AggregateFoundation
-import it.unibo.scafi.language.xc.syntax.{ ExchangeCalculusSyntax, ReturnSending }
+import it.unibo.scafi.language.xc.syntax.{ ExchangeSyntax, ReturnSending }
 
 /**
  * This library provides the exchange calculus primitive, `exchange`.
@@ -31,10 +31,10 @@ object ExchangeCalculusLibrary:
    * @return
    *   the new aggregate value
    * @see
-   *   [[ReturnSending]] [[ExchangeCalculusSyntax.exchange]]
+   *   [[ReturnSending]] [[ExchangeSyntax.exchange]]
    */
   def exchange[T](using
-      language: AggregateFoundation & ExchangeCalculusSyntax,
+      language: AggregateFoundation & ExchangeSyntax,
   )(initial: language.SharedData[T])(
       f: language.SharedData[T] => ReturnSending[language.SharedData[T]],
   ): language.SharedData[T] = language.exchange(initial)(f)

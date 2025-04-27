@@ -5,7 +5,7 @@ import it.unibo.scafi.language.AggregateFoundation
 /**
  * This trait provides the syntax for the exchange calculus main construct: `exchange`.
  */
-trait ExchangeCalculusSyntax:
+trait ExchangeSyntax:
   self: AggregateFoundation =>
 
   /**
@@ -35,4 +35,4 @@ trait ExchangeCalculusSyntax:
   def exchange[Value](initial: SharedData[Value])(
       f: SharedData[Value] => ReturnSending[SharedData[Value]],
   ): SharedData[Value]
-end ExchangeCalculusSyntax
+end ExchangeSyntax
