@@ -18,14 +18,7 @@ class ExchangeAggregateContextTest
   type Lang = ExchangeAggregateContext[Int]
   private class ExchangeContextTest(id: Int, inbound: Import[Int]) extends ExchangeAggregateContext[Int](id, inbound)
 
-  "ExchangeContext" should behave like branchingSemantic(using
-    ExchangeContextTest(
-      0,
-      Import(
-        Map(1 -> ValueTree.empty),
-      ),
-    ),
-  )
+  "ExchangeContext" should behave like branchingSemantic(using ExchangeContextTest(0, Import.empty))
 
   "Exchange construct" should "return a different value than the one sent" in:
     def programRetSend(using Lang) = exchange(localId) { x => returning(x.map(_ + 1)) send x }.default
