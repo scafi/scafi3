@@ -2,10 +2,10 @@ package it.unibo.scafi.language.fc.syntax
 
 import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.language.AggregateFoundation
-import it.unibo.scafi.utils.network.NoNeighborsNetworkManager
 import it.unibo.scafi.libraries.All.*
 import it.unibo.scafi.runtime.network.NetworkManager
-import it.unibo.scafi.utils.AggregateProgramProbe
+import it.unibo.scafi.test.AggregateProgramProbe
+import it.unibo.scafi.test.network.NoNeighborsNetworkManager
 
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should

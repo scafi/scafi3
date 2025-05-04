@@ -1,4 +1,4 @@
-package it.unibo.scafi.utils
+package it.unibo.scafi.test
 
 trait ScafiTestUtils:
   @SuppressWarnings(Array("DisableSyntax.asInstanceOf", "DisableSyntax.null"))

@@ -1,4 +1,4 @@
-package it.unibo.scafi.utils
+package it.unibo.scafi.test
 
 import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.message.Export
