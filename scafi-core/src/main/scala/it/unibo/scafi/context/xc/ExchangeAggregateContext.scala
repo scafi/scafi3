@@ -5,8 +5,12 @@ import it.unibo.scafi.context.common.BranchingContext
 import it.unibo.scafi.language.xc.calculus.ExchangeCalculus
 import it.unibo.scafi.language.xc.{ ExchangeLanguage, FieldBasedSharedData }
 import it.unibo.scafi.message.{ Import, InboundMessage, OutboundMessage }
+import it.unibo.scafi.runtime.network.NetworkManager
 import it.unibo.scafi.utils.AlignmentManager
 
+/**
+ * @tparam ID
+ */
 trait ExchangeAggregateContext[ID](
     override val localId: ID,
     override val importFromInboundMessages: Import[ID],
@@ -30,3 +34,9 @@ trait ExchangeAggregateContext[ID](
 
   override def align[T](token: Any)(body: () => T): T = alignmentScope(token.toString)(body)
 end ExchangeAggregateContext
+
+object ExchangeAggregateContext:
+  def exchangeContextFactory[ID, Network <: NetworkManager { type DeviceId = ID }](
+      localId: ID,
+      network: Network,
+  ): ExchangeAggregateContext[ID] = new ExchangeAggregateContext[ID](localId, network.receive) {}
