@@ -6,8 +6,8 @@ import it.unibo.scafi.libraries.BranchingLibrary.branch
 import it.unibo.scafi.libraries.CommonLibrary.{ device, localId }
 import it.unibo.scafi.runtime.ScafiEngine
 import it.unibo.scafi.runtime.network.NetworkManager
-import it.unibo.scafi.utils.AggregateProgramProbe
-import it.unibo.scafi.utils.network.NoNeighborsNetworkManager
+import it.unibo.scafi.test.AggregateProgramProbe
+import it.unibo.scafi.test.network.NoNeighborsNetworkManager
 
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should

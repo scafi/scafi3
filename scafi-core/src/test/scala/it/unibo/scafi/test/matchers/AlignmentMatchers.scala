@@ -1,4 +1,4 @@
-package it.unibo.scafi.utils.matchers
+package it.unibo.scafi.test.matchers
 
 import it.unibo.scafi.message.{ Export, ValueTree }
 
