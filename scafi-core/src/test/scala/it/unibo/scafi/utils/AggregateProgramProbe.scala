@@ -1,16 +1,21 @@
 package it.unibo.scafi.utils
 
-import it.unibo.scafi.context.{ AggregateContext, ContextFactory }
+import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.message.Export
-import it.unibo.scafi.utils.network.NoNeighborsNetworkManager
+import it.unibo.scafi.runtime.network.NetworkManager
 
 trait AggregateProgramProbe:
-  def roundForAggregateProgram[Id, Result, Context <: AggregateContext { type DeviceId = Id }](
-      localId: Id,
-      factory: ContextFactory[Id, NoNeighborsNetworkManager[Id], Context],
+  def roundForAggregateProgram[
+      ID,
+      Result,
+      Context <: AggregateContext { type DeviceId = ID },
+  ](
+      localId: ID,
+      network: NetworkManager { type DeviceId = ID },
+      factory: (ID, NetworkManager { type DeviceId = ID }) => Context,
   )(
       aggregateProgram: Context ?=> Result,
-  ): (Result, Export[Id]) =
-    val context = factory(localId, NoNeighborsNetworkManager[Id]())
+  ): (Result, Export[ID]) =
+    val context: Context = factory(localId, network)
     val result = aggregateProgram(using context)
     (result, context.exportFromOutboundMessages)
