@@ -2,7 +2,7 @@ package it.unibo.scafi.message
 
 import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.message.ValueTree.NoPathFoundException
-import it.unibo.scafi.utils.AlignmentManager
+import it.unibo.scafi.utils.{ AlignmentManager, InvocationCoordinate }
 
 trait InboundMessage:
   self: AlignmentManager & AggregateContext =>
@@ -24,7 +24,7 @@ trait InboundMessage:
         case (accumulator, (deviceId, valueTree)) =>
           valueTree.paths.foldLeft(accumulator): (accInner, path) =>
             val valueAtPath =
-              try valueTree(path)
+              try valueTree.apply[Any](path) // Here scala type inference fails badly...
               catch
                 case _: NoPathFoundException =>
                   throw RuntimeException(s"Path: $path not found, this should not happen. Please report this.")

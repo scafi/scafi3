@@ -28,9 +28,9 @@ final class ScafiEngine[
    *   the result of the single round.
    */
   def cycle(): Result =
-    val AggregateResult(result, exportValue) = round()
-    lastExport = exportValue
-    result
+    val cycleResult = round()
+    lastExport = cycleResult.exportResult
+    cycleResult.result
 
   /**
    * Retrieves the last [[Export]] result produced by the engine. If no round has been performed, it returns an empty
