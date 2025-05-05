@@ -1,7 +1,7 @@
 package it.unibo.scafi.runtime
 
 import it.unibo.scafi.context.AggregateContext
-import it.unibo.scafi.message.Export
+import it.unibo.scafi.message.{ Export, ValueTree }
 import it.unibo.scafi.runtime.network.NetworkManager
 
 final class ScafiEngine[
@@ -14,6 +14,7 @@ final class ScafiEngine[
     network: Network,
     factory: (ID, Network) => Context,
 )(program: Context ?=> Result):
+  private var lastExport: Export[ID] = Export(ValueTree.empty, Map.empty)
   private def round(): AggregateResult =
     val ctx: Context = factory(deviceId, network) // Here it is used the network (receive) for generate the context
     val result: Result = program(using ctx)
@@ -26,7 +27,19 @@ final class ScafiEngine[
    * @return
    *   the result of the single round.
    */
-  def cycle(): Result = round().result
+  def cycle(): Result =
+    val AggregateResult(result, exportValue) = round()
+    lastExport = exportValue
+    result
+
+  /**
+   * Retrieves the last [[Export]] result produced by the engine. If no round has been performed, it returns an empty
+   * [[Export]].
+   *
+   * @return
+   *   the last [[Export]].
+   */
+  def lastExportResult: Export[ID] = lastExport
 
   /**
    * Executes the program until the condition is met.
