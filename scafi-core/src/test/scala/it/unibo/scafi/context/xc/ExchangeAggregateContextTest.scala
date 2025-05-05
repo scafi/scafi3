@@ -8,12 +8,14 @@ import it.unibo.scafi.libraries.All.*
 import it.unibo.scafi.test.AggregateProgramProbe
 import it.unibo.scafi.test.network.NoNeighborsNetworkManager
 
+import org.scalatest.Inspectors
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should
 
 class ExchangeAggregateContextTest
     extends AnyFlatSpecLike,
       should.Matchers,
+      Inspectors,
       AggregateProgramProbe,
       BranchingSyntaxTest,
       FieldCalculusSyntaxTest:

@@ -46,7 +46,8 @@ object Grids:
   def mooreGrid[R, Context <: IntAggregateContext](
       sizeX: Int,
       sizeY: Int,
-      factory: (Int, NetworkManager) => Context,
+      factory: (Int, NetworkManager { type DeviceId = Int }) => Context,
+  )(
       program: (Context, Environment[R, Context]) ?=> R,
   ): Environment[R, Context] = Environment[R, Context](
     areConnected = (env, n1, n2) =>
@@ -77,7 +78,8 @@ object Grids:
   def vonNeumannGrid[R, Context <: IntAggregateContext](
       sizeX: Int,
       sizeY: Int,
-      factory: (Int, NetworkManager) => Context,
+      factory: (Int, NetworkManager { type DeviceId = Int }) => Context,
+  )(
       program: (Context, Environment[R, Context]) ?=> R,
   ): Environment[R, Context] = Environment[R, Context](
     areConnected = (env, n1, n2) =>
