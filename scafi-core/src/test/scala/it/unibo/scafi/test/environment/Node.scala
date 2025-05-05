@@ -11,7 +11,7 @@ class Node[R, Context <: AggregateContext { type DeviceId = Int }](
     val environment: Environment[R, Context],
     val id: Int,
     val retain: Int,
-    private val contextFactory: (Int, NetworkManager) => Context,
+    private val contextFactory: (Int, NetworkManager { type DeviceId = Int }) => Context,
     private val program: (Context, Environment[R, Context]) ?=> R,
 ):
   private val nodeNetworkManager = NodeNetworkManager()
