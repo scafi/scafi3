@@ -4,19 +4,20 @@ import scala.collection.mutable
 
 import it.unibo.scafi.message.Path
 
+/**
+ * A coordinate in the stack, representing a specific invocation.
+ *
+ * @param key
+ *   the key identifying the scope.
+ * @param invocationCount
+ *   the invocation index for the given key.
+ */
+case class InvocationCoordinate(key: String, invocationCount: Int):
+  override def toString: String = s"$key.$invocationCount"
+
 trait AlignmentManager:
   private val trace = mutable.Map.empty[Path, Int]
   private val stack = mutable.Stack.empty[InvocationCoordinate]
-
-  /**
-   * A coordinate in the stack, representing a specific invocation.
-   * @param key
-   *   the key identifying the scope.
-   * @param invocationCount
-   *   the invocation index for the given key.
-   */
-  case class InvocationCoordinate(key: String, invocationCount: Int):
-    override def toString: String = s"$key.$invocationCount"
 
   /**
    * Returns the current path of the stack.
