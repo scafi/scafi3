@@ -1,6 +1,6 @@
 package it.unibo.scafi.test.network
 
-import it.unibo.scafi.message.{Export, Import}
+import it.unibo.scafi.message.{ Export, Import }
 import it.unibo.scafi.runtime.network.NetworkManager
 
 /**
