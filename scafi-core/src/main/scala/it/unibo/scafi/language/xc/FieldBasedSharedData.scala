@@ -52,7 +52,9 @@ trait FieldBasedSharedData:
      */
     def apply(id: DeviceId): Value = alignedValues.getOrElse(id, default)
 
-    override def iterator: Iterator[Value] = alignedValues.values.iterator
+    override def iterator: Iterator[Value] = alignedDevices
+      .map(id => neighborValues.getOrElse(id, default))
+      .iterator
     override def toString: String = s"Field($default, $neighborValues)"
   end Field
 
