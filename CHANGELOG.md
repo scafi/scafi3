@@ -1,3 +1,26 @@
+## [1.2.1](https://github.com/scafi/scafi3/compare/v1.2.0...v1.2.1) (2025-05-06)
+
+### Dependency updates
+
+* **core-deps:** update dependency scala to v3.7.0 ([3919422](https://github.com/scafi/scafi3/commit/3919422d5a10fb0fc01b820b4f276a3a4d7754d0))
+* **deps:** update alchemistversion to v42.0.5 ([2b0a95e](https://github.com/scafi/scafi3/commit/2b0a95eb4960b7ef50cf67592dfb099690144fa4))
+* **deps:** update alchemistversion to v42.0.6 ([c6af70d](https://github.com/scafi/scafi3/commit/c6af70d340fdd5128deba332d077f06b7b8ad78e))
+* **deps:** update alchemistversion to v42.0.7 ([358b54b](https://github.com/scafi/scafi3/commit/358b54b6ca3d27836ffe26787dc24b8aab0f09b6))
+* **deps:** update alchemistversion to v42.0.8 ([cba5b2b](https://github.com/scafi/scafi3/commit/cba5b2b4ae8f110b8a847f25ddc41dd0ec3f5a10))
+* **deps:** update alchemistversion to v42.0.9 ([b6ed6b6](https://github.com/scafi/scafi3/commit/b6ed6b6871b889eb7468e9c998512497ffbf7680))
+* **deps:** update alchemistversion to v42.1.0 ([20bae06](https://github.com/scafi/scafi3/commit/20bae06907a815defe687a5ee29a1402535628ba))
+* **deps:** update dependency org.scala-js:sbt-scalajs to v1.19.0 ([9f84696](https://github.com/scafi/scafi3/commit/9f84696337a42a1cd5a47e1f79550c335cc1a3e0))
+* **deps:** update dependency scalafmt to v3.9.5 ([fa6d529](https://github.com/scafi/scafi3/commit/fa6d529da382d75aa835f955f376789c75440a2b))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.126 ([17b3436](https://github.com/scafi/scafi3/commit/17b34368021cdeff04006c88e49e2198e0b084f4))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.127 ([ce72d76](https://github.com/scafi/scafi3/commit/ce72d76b5a31334ba2c1d669a81923012959cb10))
+* **deps:** update node.js to 22.15 ([36edf41](https://github.com/scafi/scafi3/commit/36edf410e7966c7eb999bc1bada02ab81855d4f1))
+
+### Build and continuous integration
+
+* **deps:** update actions/setup-node action to v4.4.0 ([415af86](https://github.com/scafi/scafi3/commit/415af866cd3094706214172ebcd4150eee697ee4))
+* **deps:** update nicolasfara/build-check-deploy-sbt-action action to v1.0.18 ([9750a34](https://github.com/scafi/scafi3/commit/9750a34aa3570de5fedff03cfa04cdc4745b996a))
+* **deps:** update nicolasfara/build-check-deploy-sbt-action action to v1.0.19 ([8efe870](https://github.com/scafi/scafi3/commit/8efe870cdfdff4b814035e82130298a484b99cc6))
+
 ## [1.2.0](https://github.com/scafi/scafi3/compare/v1.1.4...v1.2.0) (2025-04-07)
 
 ### Features
