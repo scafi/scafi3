@@ -61,7 +61,7 @@ ThisBuild / libraryDependencies ++= Seq(
   "org.typelevel" %%% "cats-core" % "2.13.0",
   "org.scalactic" %%% "scalactic" % "3.2.19",
   "org.scalatest" %%% "scalatest" % "3.2.19" % Test,
-  "org.scalamock" %%% "scalamock" % "7.1.0" % Test,
+  "org.scalamock" %%% "scalamock" % "7.3.2" % Test,
 )
 
 lazy val `scafi-core` = // crossProject(JSPlatform, JVMPlatform, NativePlatform)
