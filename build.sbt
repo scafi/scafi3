@@ -1,6 +1,6 @@
 import scala.scalanative.build.*
 
-val scala3Version = "3.7.0"
+val scala3Version = "3.6.4"
 
 ThisBuild / scalaVersion := scala3Version
 ThisBuild / organization := "it.unibo.scafi"
@@ -30,8 +30,8 @@ ThisBuild / developers := List(
   )
 )
 ThisBuild / scalacOptions ++= Seq(
-//  "-Werror",
-//  "-Wunused:all",
+  "-Werror",
+  "-Wunused:all",
   "-Wvalue-discard",
   "-Wnonunit-statement",
   "-Yexplicit-nulls",
@@ -42,9 +42,16 @@ ThisBuild / scalacOptions ++= Seq(
   "-indent",
   "-unchecked",
   "-explain",
+  "-encoding", "UTF-8",
   "-feature",
   "-language:strictEquality",
   "-language:implicitConversions",
+  "-language:experimental.saferExceptions",
+  "-Wconf:msg=unused value of type org.scalatest.Assertion:s",
+  "-Wconf:msg=unused value of type org.scalatest.compatible.Assertion:s",
+  "-Wconf:msg=unused value of type org.specs2.specification.core.Fragment:s",
+  "-Wconf:msg=unused value of type org.specs2.matcher.MatchResult:s",
+  "-Wconf:msg=unused value of type org.scalamock:s",
 )
 ThisBuild / coverageEnabled := true
 ThisBuild / semanticdbEnabled := true
@@ -52,20 +59,12 @@ ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
 
 ThisBuild / libraryDependencies ++= Seq(
   "org.typelevel" %%% "cats-core" % "2.13.0",
+  "org.scalactic" %%% "scalactic" % "3.2.19",
   "org.scalatest" %%% "scalatest" % "3.2.19" % Test,
+  "org.scalamock" %%% "scalamock" % "7.1.0" % Test,
 )
 
-lazy val commonTestSettings = Seq(
-  Test / scalacOptions --= Seq(
-    "-rewrite",
-    "-Wunused:all",
-    "-Wvalue-discard",
-    "-Wnonunit-statement",
-    "-Xcheck-macros",
-  ),
-)
-
-lazy val core = // crossProject(JSPlatform, JVMPlatform, NativePlatform)
+lazy val `scafi-core` = // crossProject(JSPlatform, JVMPlatform, NativePlatform)
 //  .crossType(CrossType.Pure)
 //  .in(file("core"))
 //  .configs()
@@ -83,33 +82,32 @@ lazy val core = // crossProject(JSPlatform, JVMPlatform, NativePlatform)
 //    )
   project
   .settings(
-    name := "core",
+    name := "scafi-core",
     sonatypeProfileName := "it.unibo.scafi",
-    commonTestSettings,
   )
 
-val alchemistVersion = "42.1.0"
-lazy val `alchemist-incarnation` = project
-  .settings(
-    fork := true,
-    name := "alchemist-incarnation",
-    libraryDependencies ++= Seq(
-      "it.unibo.alchemist" % "alchemist" % alchemistVersion,
-      "it.unibo.alchemist" % "alchemist-swingui" % alchemistVersion,
-      "it.unibo.alchemist" % "alchemist-api" % alchemistVersion,
-      "it.unibo.alchemist" % "alchemist-test" % alchemistVersion,
-    ),
-    commonTestSettings,
-  )
-//  .dependsOn(core.jvm)
-  .dependsOn(core)
+
+//val alchemistVersion = "42.1.0"
+//lazy val `alchemist-incarnation-scafi3` = project
+//  .settings(
+//    fork := true,
+//    name := "alchemist-incarnation-scafi3",
+//    libraryDependencies ++= Seq(
+//      "it.unibo.alchemist" % "alchemist" % alchemistVersion,
+//      "it.unibo.alchemist" % "alchemist-swingui" % alchemistVersion,
+//      "it.unibo.alchemist" % "alchemist-api" % alchemistVersion,
+//      "it.unibo.alchemist" % "alchemist-test" % alchemistVersion,
+//    ),
+//  )
+////  .dependsOn(core.jvm)
+//  .dependsOn(`scafi-core`)
 
 
 lazy val root = project
   .in(file("."))
   .enablePlugins(ScalaUnidocPlugin)
 //  .aggregate(core.jvm, core.js, core.native, `alchemist-incarnation`)
-  .aggregate(core, `alchemist-incarnation`)
+  .aggregate(`scafi-core` /*`alchemist-incarnation`*/)
     .settings(
         name := "scafi3",
         publish / skip := true,
