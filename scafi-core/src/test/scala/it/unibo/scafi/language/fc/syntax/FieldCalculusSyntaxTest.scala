@@ -15,7 +15,7 @@ trait FieldCalculusSyntaxTest extends AggregateProgramProbe:
 
   private type Language = AggregateFoundation { type DeviceId = Int } & FieldCalculusSyntax
   private type FieldCalculusContext =
-    AggregateContext { type DeviceId = Int } & AggregateFoundation { type DeviceId = Int } & FieldCalculusSyntax
+    AggregateContext & AggregateFoundation { type DeviceId = Int } & FieldCalculusSyntax
 
   /**
    * Builds an [[AggregateContext]] where no neighbors are defined.

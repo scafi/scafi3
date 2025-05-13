@@ -18,8 +18,7 @@ trait BranchingSyntaxTest extends AggregateProgramProbe:
   self: AnyFlatSpecLike & should.Matchers & Inspectors =>
 
   private type BranchingContext =
-    AggregateContext { type DeviceId = Int } & AggregateFoundation { type DeviceId = Int } & BranchingSyntax &
-      FieldCalculusSyntax
+    AggregateContext & AggregateFoundation { type DeviceId = Int } & BranchingSyntax & FieldCalculusSyntax
 
   def branchSpecification[Context <: BranchingContext](
       contextFactory: (Int, NetworkManager { type DeviceId = Int }) => Context,

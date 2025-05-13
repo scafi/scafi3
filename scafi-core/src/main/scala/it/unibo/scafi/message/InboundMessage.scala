@@ -1,13 +1,12 @@
 package it.unibo.scafi.message
 
 import it.unibo.scafi.context.AggregateContext
+import it.unibo.scafi.language.AggregateFoundation
 import it.unibo.scafi.message.ValueTree.NoPathFoundException
 import it.unibo.scafi.utils.{ AlignmentManager, InvocationCoordinate }
 
 trait InboundMessage:
-  self: AlignmentManager & AggregateContext =>
-
-  type DeviceId
+  self: AlignmentManager & AggregateContext & AggregateFoundation =>
 
   private lazy val cachedPaths = new CachedPaths(importFromInboundMessages)
 

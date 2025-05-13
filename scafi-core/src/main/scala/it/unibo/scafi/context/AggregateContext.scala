@@ -6,8 +6,6 @@ import it.unibo.scafi.message.{ Export, Import }
 trait AggregateContext:
   self: AggregateFoundation =>
 
-  type DeviceId
-
   /**
    * Based on the current context, produces an [[Export]] to be sent to the neighbors.
    * @return

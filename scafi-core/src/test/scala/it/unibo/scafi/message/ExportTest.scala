@@ -18,15 +18,15 @@ class ExportTest extends AnyFlatSpecLike, should.Matchers:
       Path("key3") -> "overridden3",
     ),
   )
-  "ExportTest" should "be created from a default ValueTree and empty overrides" in:
+  "An Export object" should "be created from a default ValueTree and empty overrides" in:
     val exp = Export[Int](defaultValue, Map.empty)
     exp(0) shouldBe defaultValue
 
-  it should "return the default ValueTree when deviceId is not present in the overrides" in:
+  it should "returns the default ValueTree when deviceId is not present in the overrides" in:
     val exp = Export[Int](defaultValue, Map.empty)
     exp(1) shouldBe defaultValue
 
-  it should "return the overridden ValueTree when deviceId is present in the overrides" in:
+  it should "returns the overridden ValueTree when deviceId is present in the overrides" in:
     val exp = Export[Int](defaultValue, Map(1 -> overriddenValue))
     exp(1) shouldBe overriddenValue
     exp(0) shouldBe defaultValue

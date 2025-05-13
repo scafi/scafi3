@@ -1,14 +1,12 @@
 package it.unibo.scafi.message
 
 import scala.collection.mutable
-
 import it.unibo.scafi.context.AggregateContext
+import it.unibo.scafi.language.AggregateFoundation
 import it.unibo.scafi.utils.AlignmentManager
 
 trait OutboundMessage:
-  self: AlignmentManager & AggregateContext =>
-
-  type DeviceId
+  self: AlignmentManager & AggregateContext & AggregateFoundation =>
 
   private val registeredMessages = mutable.Map.empty[Path, MapWithDefault[DeviceId, Any]]
 
