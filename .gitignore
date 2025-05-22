@@ -9,8 +9,14 @@ target
 /.bloop
 /.metals
 
+# Bloop
+.bloop/
+
 # IDEs
 /.idea
 /.vscode
 
 node_modules/
+
+# macOS
+.DS_Store
