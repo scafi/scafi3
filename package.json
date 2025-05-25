@@ -3,7 +3,7 @@
   "description": "A minimal template for a multiplatform Scala project",
   "author": "Nicolas Farabegoli (https://nicolasfarabegoli.it)",
   "devDependencies": {
-    "semantic-release-preconfigured-conventional-commits": "1.1.129"
+    "semantic-release-preconfigured-conventional-commits": "1.1.130"
   },
   "engines": {
     "node": "22.16"
