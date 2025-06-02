@@ -10,4 +10,3 @@ trait JVMTypes extends PortableTypes:
 
   override type Function1[T1, R] = T1 => R
   override given [T1, R] => Conversion[Function1[T1, R], T1 => R] = _.apply
-

@@ -2,7 +2,7 @@ package it.unibo.scafi.api
 
 trait PortableTypes:
   export monocle.Iso
-  export scala.scalajs.js.annotation.{JSExport, JSExportAll}
+  export scala.scalajs.js.annotation.{ JSExport, JSExportAll }
   export it.unibo.scafi.utils.api.IsoUtils.given
 
   type Map[K, V]
