@@ -63,6 +63,8 @@ lazy val commonDependencies =
   libraryDependencies ++= Seq(
     "org.typelevel" %%% "cats-core" % "2.13.0",
     "org.scalactic" %%% "scalactic" % "3.2.19",
+    "dev.optics" %%% "monocle-core" % "3.3.0",
+    "dev.optics" %%% "monocle-macro" % "3.3.0",
     "org.scalatest" %%% "scalatest" % "3.2.19" % Test,
   )
 
@@ -100,7 +102,7 @@ lazy val `scafi-core` = crossProject(JSPlatform, JVMPlatform, NativePlatform)
 lazy val `scafi-mp-api` = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Full)
   .in(file("scafi-mp-api"))
-  .dependsOn(`scafi-core`)
+  .dependsOn(`scafi-core` % "compile->compile;test->test")
   .nativeSettings(commonNativeSettings)
   .jsSettings(commonJsSettings)
   .settings(commonDependencies)
