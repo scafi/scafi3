@@ -13,7 +13,7 @@ trait PortableXCApi:
     ctx: ADTs =>
 
     override type Language = AggregateFoundation { type DeviceId = PortableDeviceId } &
-      language.xc.syntax.ExchangeSyntax
+      language.xc.syntax.ExchangeSyntax & language.xc.FieldBasedSharedData
 
     override type PortableDeviceId = Int
     override given (using language: Language): Iso[PortableDeviceId, language.DeviceId] = Iso.id
