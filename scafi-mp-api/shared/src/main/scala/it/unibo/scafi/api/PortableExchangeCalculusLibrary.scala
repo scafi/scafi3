@@ -7,7 +7,7 @@ trait PortableExchangeCalculusLibrary extends PortableCommonLibrary:
 
   import it.unibo.scafi.language.xc.syntax.{ ExchangeSyntax, ReturnSending }
 
-  override type Language <: AggregateFoundation { type DeviceId = PortableDeviceId } & ExchangeSyntax
+  override type Language <: AggregateFoundation & ExchangeSyntax
 
   @JSExport
   def exchange[T](using
