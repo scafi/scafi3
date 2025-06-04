@@ -17,11 +17,10 @@ class JVMApiTest extends AnyFlatSpec with should.Matchers with Inspectors:
   "Trivial program" should "work" in:
     type Lang = AggregateFoundation { type DeviceId = Int } & ExchangeSyntax & ExchangeCalculus & FieldBasedSharedData
 
-    def aggregateProgram(using l: Lang) =
-      val res: l.SharedData[PortableDeviceId] =
-        exchange(localId: l.SharedData[PortableDeviceId]): n =>
-          (n, n)
-      res.values
+    def aggregateProgram(using Lang) =
+      exchange(localId): n =>
+        (n, n)
+      .values
 
     val env = mooreGrid(3, 3, exchangeContextFactory)(aggregateProgram)
     env.cycleInOrder()
