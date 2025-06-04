@@ -1,6 +1,9 @@
 package it.unibo.scafi.api
 
-object JSXCApi extends PortableXCApi {}
+import scala.scalajs.js.annotation.JSExportTopLevel
 
-// @JSExportTopLevel("XC")
-// object JSInterface extends Interface with ADTs with JSTypes
+@JSExportTopLevel("Api")
+object JSXCApi extends PortableXCApi:
+
+  @JSExport("Interface")
+  object JSInterface extends Interface with ADTs with JSTypes with PortableFieldBasedAggregateLibrary {}
