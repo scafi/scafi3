@@ -10,8 +10,7 @@ object Api extends PortableXCApi:
     override given [T](using language: Language): Iso[PortableSharedData[T], language.SharedData[T]] =
       Iso[PortableSharedData[T], language.SharedData[T]](data =>
         val localValue: language.SharedData[T] = data.default
-        val neighbors = data.neighborValues
-        neighbors.foldLeft(localValue)((f, n) => f.set(n._1, n._2)),
+        data.neighborValues.foldLeft(localValue)((f, n) => f.set(n._1, n._2)),
       )(identity)
 
     given [T](using language: Language): Conversion[T, PortableSharedData[T]] = language.convert

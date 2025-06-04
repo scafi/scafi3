@@ -2,7 +2,6 @@ package it.unibo.scafi.api
 
 import it.unibo.scafi.language.AggregateFoundation
 import it.unibo.scafi.language.xc.syntax.ExchangeSyntax
-import it.unibo.scafi.language.xc.calculus.ExchangeCalculus
 import it.unibo.scafi.api.Api.Interface.{ *, given }
 import it.unibo.scafi.test.environment.Grids.mooreGrid
 import it.unibo.scafi.context.xc.ExchangeAggregateContext.exchangeContextFactory
@@ -15,9 +14,9 @@ import org.scalatest.Inspectors
 class JVMApiTest extends AnyFlatSpec with should.Matchers with Inspectors:
 
   "Trivial program" should "work" in:
-    type Lang = AggregateFoundation { type DeviceId = Int } & ExchangeSyntax & ExchangeCalculus & FieldBasedSharedData
+    type Language = AggregateFoundation { type DeviceId = Int } & ExchangeSyntax & FieldBasedSharedData
 
-    def aggregateProgram(using Lang) =
+    def aggregateProgram(using Language) =
       exchange(localId): n =>
         (n, n)
       .values
