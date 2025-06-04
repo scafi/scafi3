@@ -1,5 +1,10 @@
 package it.unibo.scafi.api
 
+/**
+ * This trait defines portable types among different platforms that can be used, along with their Scala conversions, to
+ * build the agnostic API. Actual platform-specific implementations of the API should incarnate these types with the
+ * appropriate platform-specific types and provide, for each of them, the required conversions.
+ */
 trait PortableTypes:
   export monocle.Iso
   export scala.scalajs.js.annotation.{ JSExport, JSExportAll }

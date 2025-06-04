@@ -1,5 +1,8 @@
 package it.unibo.scafi.api
 
+/**
+ * Provides JVM-specific implementations for the portable types.
+ */
 trait JVMTypes extends PortableTypes:
 
   override type Map[K, V] = collection.Map[K, V]

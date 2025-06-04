@@ -1,5 +1,8 @@
 package it.unibo.scafi.api
 
+/**
+ * Provides JavaScript-specific implementations for the portable types.
+ */
 trait JSTypes extends PortableTypes:
   import scalajs.js
 

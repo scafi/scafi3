@@ -1,5 +1,8 @@
 package it.unibo.scafi.api
 
+/**
+ * The XC entry point language- and platform-agnostic library.
+ */
 trait PortableXCApi extends PortableApi:
   import it.unibo.scafi.language.xc
 

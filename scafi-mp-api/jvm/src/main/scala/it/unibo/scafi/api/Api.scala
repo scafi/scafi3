@@ -1,5 +1,8 @@
 package it.unibo.scafi.api
 
+/**
+ * The JVM entry point library, aggregating all the portable libraries.
+ */
 object Api extends PortableXCApi:
   self =>
 

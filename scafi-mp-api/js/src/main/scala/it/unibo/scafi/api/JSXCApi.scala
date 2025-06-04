@@ -6,4 +6,4 @@ import scala.scalajs.js.annotation.JSExportTopLevel
 object JSXCApi extends PortableXCApi:
 
   @JSExport("Interface")
-  object JSInterface extends Interface with ADTs with JSTypes with PortableFieldBasedAggregateLibrary {}
+  object JSInterface extends Interface with ADTs with JSTypes with PortableFieldBasedAggregateLibrary
