@@ -2,10 +2,11 @@ package it.unibo.scafi.api
 
 import it.unibo.scafi.language.AggregateFoundation
 import it.unibo.scafi.language.xc.syntax.ExchangeSyntax
-import it.unibo.scafi.api.Api.Interface.{ *, given }
+import it.unibo.scafi.api.Api.{ *, given }
 import it.unibo.scafi.test.environment.Grids.mooreGrid
 import it.unibo.scafi.context.xc.ExchangeAggregateContext.exchangeContextFactory
 import it.unibo.scafi.language.xc.FieldBasedSharedData
+import it.unibo.scafi.language.common.syntax.BranchingSyntax
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
@@ -14,12 +15,12 @@ import org.scalatest.Inspectors
 class JVMApiTest extends AnyFlatSpec with should.Matchers with Inspectors:
 
   "Trivial program" should "work" in:
-    type Language = AggregateFoundation { type DeviceId = Int } & ExchangeSyntax & FieldBasedSharedData
+    type Lang = AggregateFoundation { type DeviceId = Int } & ExchangeSyntax & FieldBasedSharedData & BranchingSyntax
 
-    def aggregateProgram(using Language) =
+    def aggregateProgram(using Lang) =
       exchange(localId): n =>
         (n, n)
-      .values
+      .neighborValues
 
     val env = mooreGrid(3, 3, exchangeContextFactory)(aggregateProgram)
     env.cycleInOrder()

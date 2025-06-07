@@ -6,11 +6,11 @@ trait PortableFieldBasedAggregateLibrary extends PortableCommonLibrary:
 
   override type Language <: AggregateFoundation & FieldBasedSharedData { type DeviceId = PortableDeviceId }
 
+  override type PortableSharedData[Value] = PortableField[Value]
+
   @JSExport("Field")
   @JSExportAll
   case class PortableField[Value](default: Value, neighborValues: Map[PortableDeviceId, Value])
-
-  override type PortableSharedData[Value] = PortableField[Value]
 
   override given [Value](using language: Language): Iso[PortableSharedData[Value], language.SharedData[Value]] =
     Iso[PortableSharedData[Value], language.SharedData[Value]](pf =>
