@@ -7,5 +7,6 @@ trait PortableBranchingLibrary extends PortableLibrary:
 
   override type Language <: AggregateFoundation & BranchingSyntax
 
+  @JSExport
   def branch[T](using language: Language)(condition: Boolean)(thenBranch: => T)(elseBranch: => T): T =
     language.branch(condition)(thenBranch)(elseBranch)
