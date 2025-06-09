@@ -14,11 +14,10 @@ import org.scalatest.wordspec.AnyWordSpec
 
 class JVMApiTest extends AnyWordSpec with should.Matchers with Inspectors:
 
-  "A simple aggregate program" when:
-    "return sending tts local id" should:
-      "work on JVM with portable libraries without syntactic changes w.r.t. plain Scala code" in:
-        type Lang = AggregateFoundation { type DeviceId = Int } & ExchangeSyntax & FieldBasedSharedData &
-          BranchingSyntax
+  "Aggregate programs" should:
+    "work on JVM platform with portable libraries without syntactic changes w.r.t. Scala ones" when:
+      "a simple aggregate program is run" in:
+        type Lang = AggregateFoundation { type DeviceId = Int } & ExchangeSyntax & FieldBasedSharedData
 
         def aggregateProgram(using Lang) =
           exchange(localId): n =>
@@ -32,9 +31,7 @@ class JVMApiTest extends AnyWordSpec with should.Matchers with Inspectors:
           forAll(field.toMap): (nid, nvalue) =>
             nvalue shouldBe (if nid <= id then nid else id)
 
-  "Branching operation" when:
-    "partitioning the network based on a condition" should:
-      "work on JVM with portable libraries without syntactic changes w.r.t. plain Scala code" in:
+      "branching domain operation is run" in:
         type Lang = AggregateFoundation { type DeviceId = Int } & ExchangeSyntax & FieldBasedSharedData &
           BranchingSyntax
 

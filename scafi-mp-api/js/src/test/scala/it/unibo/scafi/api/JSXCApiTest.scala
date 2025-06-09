@@ -6,7 +6,6 @@ import it.unibo.scafi.language.xc.FieldBasedSharedData
 import it.unibo.scafi.api.JSXCLibrary.{ *, given }
 import it.unibo.scafi.test.environment.Grids.mooreGrid
 import it.unibo.scafi.context.xc.ExchangeAggregateContext.exchangeContextFactory
-import it.unibo.scafi.language.common.syntax.BranchingSyntax
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
@@ -15,7 +14,7 @@ import org.scalatest.Inspectors
 class JSXCApiTest extends AnyFlatSpec with should.Matchers with Inspectors:
 
   "Trivial program" should "work" in:
-    type Lang = AggregateFoundation { type DeviceId = Int } & ExchangeSyntax & FieldBasedSharedData & BranchingSyntax
+    type Lang = AggregateFoundation { type DeviceId = Int } & ExchangeSyntax & FieldBasedSharedData
 
     def aggregateProgram(using Lang) =
       exchange(PortableField(localId, scalajs.js.Map.empty)): n =>

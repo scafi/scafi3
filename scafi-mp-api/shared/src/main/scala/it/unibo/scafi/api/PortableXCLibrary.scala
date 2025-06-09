@@ -5,13 +5,7 @@ package it.unibo.scafi.api
  */
 trait PortableXCLibrary
     extends PortableCommonLibrary
-    with PortableExchangeCalculusLibrary
-    with PortableBranchingLibrary:
+    with PortableBranchingLibrary
+    with PortableExchangeCalculusLibrary:
   ctx: PortableTypes =>
-  import it.unibo.scafi.language
-
-  override type Language = AggregateFoundation { type DeviceId = PortableDeviceId } &
-    language.xc.syntax.ExchangeSyntax & language.xc.FieldBasedSharedData & language.common.syntax.BranchingSyntax
-
   override type PortableDeviceId = Int
-  override given (using language: Language): Iso[PortableDeviceId, language.DeviceId] = Iso.id
