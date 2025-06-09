@@ -16,6 +16,6 @@ trait PortableFieldBasedSharedData extends PortableLibrary:
     Iso[PortableSharedData[T], language.SharedData[T]](pf =>
       val field: language.SharedData[T] = pf.default
       pf.neighborValues.foldLeft(field)((f, n) => f.set(n._1, n._2)),
-    )(f => PortableField(f.default, f.values.toMap))
+    )(f => PortableField(f.default, f.neighborValues))
 
 end PortableFieldBasedSharedData
