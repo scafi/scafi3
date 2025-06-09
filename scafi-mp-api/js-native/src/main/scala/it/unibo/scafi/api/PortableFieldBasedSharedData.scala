@@ -1,6 +1,9 @@
 package it.unibo.scafi.api
 
-trait PortableFieldBasedAggregateLibrary extends PortableCommonLibrary:
+/**
+ * A portable definition of a field-based shared data structure, useful for non-jvm platforms.
+ */
+trait PortableFieldBasedSharedData extends PortableCommonLibrary:
   ctx: PortableTypes =>
   import it.unibo.scafi.language.xc.FieldBasedSharedData
 
@@ -17,4 +20,4 @@ trait PortableFieldBasedAggregateLibrary extends PortableCommonLibrary:
       val field: language.SharedData[Value] = pf.default
       pf.neighborValues.foldLeft(field)((f, n) => f.set(n._1, n._2)),
     )(f => PortableField(f.default, f.values.toMap))
-end PortableFieldBasedAggregateLibrary
+end PortableFieldBasedSharedData

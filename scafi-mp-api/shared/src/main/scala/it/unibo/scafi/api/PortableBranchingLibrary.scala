@@ -1,9 +1,12 @@
 package it.unibo.scafi.api
 
-import it.unibo.scafi.language.common.syntax.BranchingSyntax
-
+/**
+ * The portable library providing domain branching syntax.
+ */
 trait PortableBranchingLibrary extends PortableLibrary:
   ctx: PortableTypes =>
+
+  import it.unibo.scafi.language.common.syntax.BranchingSyntax
 
   override type Language <: AggregateFoundation & BranchingSyntax
 

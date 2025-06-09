@@ -2,7 +2,7 @@ package it.unibo.scafi.api
 
 import it.unibo.scafi.language.AggregateFoundation
 import it.unibo.scafi.language.xc.syntax.ExchangeSyntax
-import it.unibo.scafi.api.Api.{ *, given }
+import it.unibo.scafi.api.XCLibrary.{ *, given }
 import it.unibo.scafi.test.environment.Grids.mooreGrid
 import it.unibo.scafi.context.xc.ExchangeAggregateContext.exchangeContextFactory
 import it.unibo.scafi.language.xc.FieldBasedSharedData

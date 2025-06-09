@@ -3,7 +3,10 @@ package it.unibo.scafi.api
 /**
  * The XC entry point language- and platform-agnostic library.
  */
-trait PortableXCApi extends PortableCommonLibrary with PortableExchangeCalculusLibrary with PortableBranchingLibrary:
+trait PortableXCLibrary
+    extends PortableCommonLibrary
+    with PortableExchangeCalculusLibrary
+    with PortableBranchingLibrary:
   ctx: PortableTypes =>
   import it.unibo.scafi.language
 

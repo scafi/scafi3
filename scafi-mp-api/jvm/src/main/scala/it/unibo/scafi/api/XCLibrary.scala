@@ -3,7 +3,7 @@ package it.unibo.scafi.api
 /**
  * The JVM entry point library, aggregating all the portable libraries.
  */
-object Api extends PortableXCApi with JVMTypes:
+object XCLibrary extends PortableXCLibrary with JVMTypes:
   import it.unibo.scafi.language.ShareDataOps
 
   override type PortableSharedData[Value] = Language#SharedData[Value]
@@ -23,4 +23,4 @@ object Api extends PortableXCApi with JVMTypes:
         override def values: MapView[PortableDeviceId, Value] = language.fieldOps.values(sharedData)
         override def set(id: PortableDeviceId, value: Value): PortableSharedData[Value] =
           language.fieldOps.set(sharedData)(id, value)
-end Api
+end XCLibrary

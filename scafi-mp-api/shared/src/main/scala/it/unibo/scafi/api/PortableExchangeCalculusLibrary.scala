@@ -2,6 +2,9 @@ package it.unibo.scafi.api
 
 import scala.util.chaining.scalaUtilChainingOps
 
+/**
+ * The portable library providing the exchange calculus primitive, `exchange`.
+ */
 trait PortableExchangeCalculusLibrary extends PortableCommonLibrary:
   ctx: PortableTypes =>
 
