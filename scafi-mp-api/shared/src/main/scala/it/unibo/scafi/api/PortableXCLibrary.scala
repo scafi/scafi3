@@ -8,4 +8,3 @@ trait PortableXCLibrary
     with PortableBranchingLibrary
     with PortableExchangeCalculusLibrary:
   ctx: PortableTypes =>
-  override type PortableDeviceId = Int

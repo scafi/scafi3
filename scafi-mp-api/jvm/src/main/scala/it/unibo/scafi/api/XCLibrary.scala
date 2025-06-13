@@ -1,26 +1,26 @@
-package it.unibo.scafi.api
+// package it.unibo.scafi.api
 
-/**
- * The JVM entry point library, aggregating all the portable libraries.
- */
-object XCLibrary extends PortableXCLibrary with JVMTypes:
-  import it.unibo.scafi.language.ShareDataOps
+// /**
+//  * The JVM entry point library, aggregating all the portable libraries.
+//  */
+// object XCLibrary extends PortableXCLibrary with JVMTypes:
+//   import it.unibo.scafi.language.ShareDataOps
 
-  override type PortableSharedData[Value] = Language#SharedData[Value]
-  override given [T](using language: Language): Iso[PortableSharedData[T], language.SharedData[T]] =
-    Iso[PortableSharedData[T], language.SharedData[T]](data =>
-      val localValue: language.SharedData[T] = data.default
-      data.neighborValues.foldLeft(localValue)((f, n) => f.set(n._1, n._2)),
-    )(identity)
+//   override type PortableSharedData[Value] = Language#SharedData[Value]
+//   override given [T](using language: Language): Iso[PortableSharedData[T], language.SharedData[T]] =
+//     Iso[PortableSharedData[T], language.SharedData[T]](data =>
+//       val localValue: language.SharedData[T] = data.default
+//       data.neighborValues.foldLeft(localValue)((f, n) => f.set(n._1, n._2)),
+//     )(identity)
 
-  given [T](using language: Language): Conversion[T, PortableSharedData[T]] = language.convert
+//   given [T](using language: Language): Conversion[T, PortableSharedData[T]] = language.convert
 
-  given [T](using language: Language): ShareDataOps[PortableSharedData, PortableDeviceId] =
-    new ShareDataOps[PortableSharedData, PortableDeviceId]:
-      import scala.collection.MapView
-      extension [Value](sharedData: PortableSharedData[Value])
-        override def default: Value = language.fieldOps.default(sharedData)
-        override def values: MapView[PortableDeviceId, Value] = language.fieldOps.values(sharedData)
-        override def set(id: PortableDeviceId, value: Value): PortableSharedData[Value] =
-          language.fieldOps.set(sharedData)(id, value)
-end XCLibrary
+//   given [T](using language: Language): ShareDataOps[PortableSharedData, PortableDeviceId] =
+//     new ShareDataOps[PortableSharedData, PortableDeviceId]:
+//       import scala.collection.MapView
+//       extension [Value](sharedData: PortableSharedData[Value])
+//         override def default: Value = language.fieldOps.default(sharedData)
+//         override def values: MapView[PortableDeviceId, Value] = language.fieldOps.values(sharedData)
+//         override def set(id: PortableDeviceId, value: Value): PortableSharedData[Value] =
+//           language.fieldOps.set(sharedData)(id, value)
+// end XCLibrary

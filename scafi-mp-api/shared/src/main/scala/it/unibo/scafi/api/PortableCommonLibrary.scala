@@ -7,5 +7,4 @@ trait PortableCommonLibrary extends PortableLibrary:
   ctx: PortableTypes =>
 
   @JSExport
-  def localId(using language: AggregateFoundation { type DeviceId = PortableDeviceId }): PortableDeviceId =
-    language.localId
+  def localId = language.localId
