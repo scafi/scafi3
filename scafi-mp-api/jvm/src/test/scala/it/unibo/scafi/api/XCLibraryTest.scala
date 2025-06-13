@@ -23,13 +23,12 @@ class XCLibraryTest extends AnyWordSpec with should.Matchers with Inspectors:
         def xcAggregateProgram(using Lang) =
           exchange(localId): n =>
             (n, n)
-          .neighborValues
 
         val env = mooreGrid(3, 3, exchangeContextFactory)(xcAggregateProgram)
         env.cycleInOrder()
         env.cycleInReverseOrder()
         forAll(env.status): (id, field) =>
-          forAll(field.toMap): (nid, nvalue) =>
+          forAll(field.neighborValues): (nid, nvalue) =>
             nvalue shouldBe (if nid <= id then nid else id)
 
       "domain branching operation is run" in:

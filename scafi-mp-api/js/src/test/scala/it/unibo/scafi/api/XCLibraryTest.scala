@@ -28,7 +28,7 @@ class XCLibraryTest extends AnyWordSpec with should.Matchers with Inspectors:
         env.cycleInOrder()
         env.cycleInReverseOrder()
         forAll(env.status): (id, field) =>
-          forAll(field.neighborValues.toSeq): (nid, nvalue) =>
+          forAll(field.neighborValues.toMap): (nid, nvalue) =>
             nvalue shouldBe (if nid <= id then nid else id)
 
       "domain branching operation is run" in:
