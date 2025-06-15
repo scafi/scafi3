@@ -12,6 +12,7 @@ class XCLibrary(using
     AggregateFoundation & ExchangeSyntax & BranchingSyntax & FieldBasedSharedData { type DeviceId = Int },
 ) extends PortableXCLibrary
     with PortableFieldBasedSharedData
+    with PortableBranchingLibrary
     with JSTypes:
 
   override type Language = AggregateFoundation & ExchangeSyntax & BranchingSyntax & FieldBasedSharedData:

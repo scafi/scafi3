@@ -9,18 +9,18 @@ import org.scalatest.Inspectors
 import org.scalatest.wordspec.AnyWordSpec
 
 class XCLibraryTest extends AnyWordSpec with should.Matchers with Inspectors:
-//  import XCLibraryTest.*
+  import XCLibraryTest.*
 
   "Aggregate programs" should:
     "work on JS platform using portable libraries" when:
       "a simple exchange-based aggregate program is run" in:
-        def aggregateProgram(language: XCLibrary): scalajs.js.Map[Int, Int] =
-          language
-            .exchange(language.PortableField(language.localId, scalajs.js.Map.empty)): n =>
+        def aggregateProgram(lang: XCLibrary): scalajs.js.Map[Int, Int] =
+          lang
+            .exchange(lang.of(lang.localId)): n =>
               (n, n)
             .neighborValues
 
-        val env = mooreGrid[scalajs.js.Map[Int, Int], ExchangeAggregateContext[Int]](3, 3, exchangeContextFactory):
+        val env = mooreGrid(3, 3, exchangeContextFactory):
           aggregateProgram(XCLibrary())
 
         env.cycleInOrder()
@@ -29,23 +29,21 @@ class XCLibraryTest extends AnyWordSpec with should.Matchers with Inspectors:
           forAll(field.toMap): (nid, nvalue) =>
             nvalue shouldBe (if nid <= id then nid else id)
 
-      // "domain branching operation is run" in:
-      //   type Lang = AggregateFoundation { type DeviceId = Int } & ExchangeSyntax & FieldBasedSharedData &
-      //     BranchingSyntax
+      "domain branching operation is run" in:
+        def aggregateProgram(lang: XCLibrary) =
+          lang.branch(lang.localId.isEven) {
+            lang.exchange(lang.of(true))(n => (n, n))
+          } {
+            lang.exchange(lang.of(false))(n => (n, n))
+          }
 
-      //   def branchAggregateProgram(using Lang) =
-      //     branch(localId.isEven) {
-      //       exchange(PortableField(true, scalajs.js.Map.empty))(n => (n, n))
-      //     } {
-      //       exchange(PortableField(false, scalajs.js.Map.empty))(n => (n, n))
-      //     }
-
-      //   val env = mooreGrid(3, 3, exchangeContextFactory)(branchAggregateProgram)
-      //   env.cycleInOrder()
-      //   env.cycleInReverseOrder()
-      //   forAll(env.status): (id, result) =>
-      //     val alignedNeighbors = env.neighborsOf(env.nodes.find(_.id == id).get).map(_.id).filter(_.hasSameParityAs(id))
-      //     result.neighborValues.toMap should contain theSameElementsAs alignedNeighbors.map(_ -> id.isEven)
+        val env = mooreGrid(3, 3, exchangeContextFactory):
+          aggregateProgram(XCLibrary())
+        env.cycleInOrder()
+        env.cycleInReverseOrder()
+        forAll(env.status): (id, result) =>
+          val alignedNeighbors = env.neighborsOf(env.nodes.find(_.id == id).get).map(_.id).filter(_.hasSameParityAs(id))
+          result.neighborValues.toMap should contain theSameElementsAs alignedNeighbors.map(_ -> id.isEven)
 end XCLibraryTest
 
 object XCLibraryTest:

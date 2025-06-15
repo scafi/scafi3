@@ -14,6 +14,9 @@ trait PortableFieldBasedSharedData extends PortableLibrary:
   @JSExportAll
   case class PortableField[Value](default: Value, neighborValues: Map[PortableDeviceId, Value])
 
+  @JSExport
+  def of[Value](default: Value): PortableField[Value] = PortableField(default, Map.empty)
+
   override type PortableSharedData[Value] = PortableField[Value]
 
   override given [T](using language: Language): Iso[PortableSharedData[T], language.SharedData[T]] =
