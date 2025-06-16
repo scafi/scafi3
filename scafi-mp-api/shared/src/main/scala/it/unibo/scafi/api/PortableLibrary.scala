@@ -1,19 +1,29 @@
 package it.unibo.scafi.api
 
 /**
- * The root base trait for all portable library components.
+ * The root base trait for all portable libraries.
  */
 trait PortableLibrary:
   ctx: PortableTypes =>
   export it.unibo.scafi.language.AggregateFoundation
 
-  type Language <: AggregateFoundation:
-    type DeviceId = PortableDeviceId
+  /**
+   * The language type comprising all the needed syntaxes needed to implement the library logic.
+   */
+  type Language <: AggregateFoundation
 
-  given language: Language = compiletime.deferred
+  /**
+   * The [[Language]] instance used by the library to which delegate the syntax operations.
+   */
+  val language: Language
 
-  type PortableDeviceId
-  given (using language: Language): Iso[PortableDeviceId, language.DeviceId] = compiletime.deferred
-
+  /**
+   * An equivalent definition of the [[language.SharedData]] data structure portable across platforms.
+   */
   type PortableSharedData[Value]
-  given [T](using language: Language): Iso[PortableSharedData[T], language.SharedData[T]] = compiletime.deferred
+
+  /**
+   * [[PortableSharedData]] is isomorphic to [[language.SharedData]].
+   */
+  given [T]: Iso[PortableSharedData[T], language.SharedData[T]] = compiletime.deferred
+end PortableLibrary

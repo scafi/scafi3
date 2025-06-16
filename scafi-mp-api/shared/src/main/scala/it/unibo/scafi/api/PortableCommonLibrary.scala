@@ -7,4 +7,4 @@ trait PortableCommonLibrary extends PortableLibrary:
   ctx: PortableTypes =>
 
   @JSExport
-  def localId: PortableDeviceId = language.localId
+  def localId: language.DeviceId = language.localId

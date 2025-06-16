@@ -9,15 +9,11 @@ import it.unibo.scafi.language.common.syntax.BranchingSyntax
 
 @JSExportTopLevel("Api")
 class XCLibrary(using
-    AggregateFoundation & ExchangeSyntax & BranchingSyntax & FieldBasedSharedData { type DeviceId = Int },
+    lang: AggregateFoundation & ExchangeSyntax & BranchingSyntax & FieldBasedSharedData,
 ) extends PortableXCLibrary
     with PortableFieldBasedSharedData
     with PortableBranchingLibrary
     with JSTypes:
+  override type Language = AggregateFoundation & ExchangeSyntax & BranchingSyntax & FieldBasedSharedData
 
-  override type Language = AggregateFoundation & ExchangeSyntax & BranchingSyntax & FieldBasedSharedData:
-    type DeviceId = Int
-
-  override type PortableDeviceId = Int
-
-  override given (using language: Language): Iso[PortableDeviceId, language.DeviceId] = Iso.id
+  override val language: Language = lang

@@ -15,15 +15,14 @@ class XCLibraryTest extends AnyWordSpec with should.Matchers with Inspectors:
   "Aggregate programs" should:
     "work on JS platform using portable libraries" when:
       "a simple exchange-based aggregate program is run" in:
-        def aggregateProgram(lang: XCLibrary): scalajs.js.Map[Int, Int] =
-          lang
-            .exchange(lang.of(lang.localId)): n =>
+        def aggregateProgram(library: XCLibrary) =
+          library
+            .exchange(library.of(library.localId)): n =>
               returnSending(n)
             .neighborValues
+            .map(_.asInts)
 
-        val env = mooreGrid(3, 3, exchangeContextFactory):
-          aggregateProgram(XCLibrary())
-
+        val env = mooreGrid(3, 3, exchangeContextFactory)(aggregateProgram(XCLibrary()))
         env.cycleInOrder()
         env.cycleInReverseOrder()
         forAll(env.status): (id, field) =>
@@ -38,8 +37,7 @@ class XCLibraryTest extends AnyWordSpec with should.Matchers with Inspectors:
             lang.exchange(lang.of(false))(n => returnSending(n))
           }
 
-        val env = mooreGrid(3, 3, exchangeContextFactory):
-          aggregateProgram(XCLibrary())
+        val env = mooreGrid(3, 3, exchangeContextFactory)(aggregateProgram(XCLibrary()))
         env.cycleInOrder()
         env.cycleInReverseOrder()
         forAll(env.status): (id, result) =>
@@ -48,6 +46,14 @@ class XCLibraryTest extends AnyWordSpec with should.Matchers with Inspectors:
 end XCLibraryTest
 
 object XCLibraryTest:
-  extension (id: Int)
-    def isEven: Boolean = id % 2 == 0
-    def hasSameParityAs(other: Int): Boolean = id.isEven == other.isEven
+  extension (id: Any)
+    def isEven: Boolean = id.asInt % 2 == 0
+    def hasSameParityAs(other: Any): Boolean = id.asInt.isEven == other.asInt.isEven
+
+  extension (x: (Any, Any)) def asInts: (Int, Int) = (x._1.asInt, x._2.asInt)
+
+  extension (x: Any)
+    def asInt: Int = x match
+      case i: Int => i
+      case _ => throw new IllegalArgumentException(s"Cannot convert $x to Int")
+end XCLibraryTest

@@ -7,19 +7,18 @@ trait PortableFieldBasedSharedData extends PortableLibrary:
   ctx: PortableTypes & PortableExchangeCalculusLibrary =>
   import it.unibo.scafi.language.xc.FieldBasedSharedData
 
-  override type Language <: AggregateFoundation & ExchangeSyntax & FieldBasedSharedData:
-    type DeviceId = PortableDeviceId
+  override type Language <: AggregateFoundation & ExchangeSyntax & FieldBasedSharedData
 
   @JSExport("Field")
   @JSExportAll
-  case class PortableField[Value](default: Value, neighborValues: Map[PortableDeviceId, Value])
+  case class PortableField[Value](default: Value, neighborValues: Map[language.DeviceId, Value])
 
   @JSExport
   def of[Value](default: Value): PortableField[Value] = PortableField(default, Map.empty)
 
   override type PortableSharedData[Value] = PortableField[Value]
 
-  override given [T](using language: Language): Iso[PortableSharedData[T], language.SharedData[T]] =
+  override given [T]: Iso[PortableSharedData[T], language.SharedData[T]] =
     Iso[PortableSharedData[T], language.SharedData[T]](pf =>
       val field = language.sharedDataApplicative.pure(pf.default)
       pf.neighborValues.foldLeft(field)((f, n) => f.set(n._1, n._2)),
