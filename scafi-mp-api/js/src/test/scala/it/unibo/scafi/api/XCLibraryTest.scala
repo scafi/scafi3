@@ -3,6 +3,7 @@ package it.unibo.scafi.api
 import it.unibo.scafi.test.environment.Grids.mooreGrid
 import it.unibo.scafi.context.xc.ExchangeAggregateContext.exchangeContextFactory
 import it.unibo.scafi.context.xc.ExchangeAggregateContext
+import it.unibo.scafi.api.ReturnSending.returnSending
 
 import org.scalatest.matchers.should
 import org.scalatest.Inspectors
@@ -17,7 +18,7 @@ class XCLibraryTest extends AnyWordSpec with should.Matchers with Inspectors:
         def aggregateProgram(lang: XCLibrary): scalajs.js.Map[Int, Int] =
           lang
             .exchange(lang.of(lang.localId)): n =>
-              (n, n)
+              returnSending(n)
             .neighborValues
 
         val env = mooreGrid(3, 3, exchangeContextFactory):
@@ -32,9 +33,9 @@ class XCLibraryTest extends AnyWordSpec with should.Matchers with Inspectors:
       "domain branching operation is run" in:
         def aggregateProgram(lang: XCLibrary) =
           lang.branch(lang.localId.isEven) {
-            lang.exchange(lang.of(true))(n => (n, n))
+            lang.exchange(lang.of(true))(n => returnSending(n))
           } {
-            lang.exchange(lang.of(false))(n => (n, n))
+            lang.exchange(lang.of(false))(n => returnSending(n))
           }
 
         val env = mooreGrid(3, 3, exchangeContextFactory):
