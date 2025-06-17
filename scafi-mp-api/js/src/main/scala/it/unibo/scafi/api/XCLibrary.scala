@@ -10,10 +10,7 @@ import it.unibo.scafi.language.common.syntax.BranchingSyntax
 @JSExportTopLevel("Api")
 class XCLibrary(using
     lang: AggregateFoundation & ExchangeSyntax & BranchingSyntax & FieldBasedSharedData,
-) extends PortableXCLibrary
+) extends FullPortableLibrary
     with PortableFieldBasedSharedData
     with PortableBranchingLibrary
-    with JSTypes:
-  override type Language = AggregateFoundation & ExchangeSyntax & BranchingSyntax & FieldBasedSharedData
-
-  override val language: Language = lang
+    with JSTypes

@@ -18,7 +18,7 @@ trait PortableLibrary:
   val language: Language
 
   /**
-   * An equivalent definition of the [[language.SharedData]] data structure portable across platforms.
+   * A semantically equivalent definition of the [[language.SharedData]] data structure portable across platforms.
    */
   type PortableSharedData[Value]
 
