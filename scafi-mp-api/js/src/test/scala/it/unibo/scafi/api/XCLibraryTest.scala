@@ -17,7 +17,7 @@ class XCLibraryTest extends AnyWordSpec with should.Matchers with Inspectors:
       "a simple exchange-based aggregate program is run" in:
         def aggregateProgram(library: XCLibrary) =
           library
-            .exchange(library.of(library.localId)): n =>
+            .exchange(library.PortableField.of(library.localId)): n =>
               returnSending(n)
             .neighborValues
             .map(_.asInts)
@@ -32,9 +32,9 @@ class XCLibraryTest extends AnyWordSpec with should.Matchers with Inspectors:
       "domain branching operation is run" in:
         def aggregateProgram(lang: XCLibrary) =
           lang.branch(lang.localId.isEven) {
-            lang.exchange(lang.of(true))(n => returnSending(n))
+            lang.exchange(lang.PortableField.of(true))(n => returnSending(n))
           } {
-            lang.exchange(lang.of(false))(n => returnSending(n))
+            lang.exchange(lang.PortableField.of(false))(n => returnSending(n))
           }
 
         val env = mooreGrid(3, 3, exchangeContextFactory)(aggregateProgram(XCLibrary()))

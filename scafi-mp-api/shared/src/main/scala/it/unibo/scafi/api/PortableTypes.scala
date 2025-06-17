@@ -7,7 +7,7 @@ package it.unibo.scafi.api
  */
 trait PortableTypes:
   export monocle.Iso
-  export scala.scalajs.js.annotation.{ JSExport, JSExportAll }
+  export scala.scalajs.js.annotation.{ JSExport, JSExportAll, JSExportTopLevel }
   export it.unibo.scafi.utils.api.IsoUtils.given
 
   /**

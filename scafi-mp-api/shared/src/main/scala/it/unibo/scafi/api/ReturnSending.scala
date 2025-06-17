@@ -1,7 +1,6 @@
 package it.unibo.scafi.api
 
-import scala.scalajs.js.annotation.JSExportTopLevel
-import scala.scalajs.js.annotation.JSExport
+import scala.scalajs.js.annotation.{ JSExport, JSExportTopLevel }
 
 @JSExportTopLevel("ReturnSending")
 case class ReturnSending[+Value](returning: Value, sending: Value)

@@ -9,13 +9,12 @@ trait PortableFieldBasedSharedData extends PortableLibrary:
 
   override type Language <: AggregateFoundation & ExchangeSyntax & FieldBasedSharedData
 
-  @JSExport("Field")
   @JSExportAll
-  case class PortableField[Value](default: Value, neighborValues: Map[language.DeviceId, Value]):
-    def this(default: Value) = this(default, Map.empty)
+  case class PortableField[Value](default: Value, neighborValues: Map[language.DeviceId, Value])
 
-  @JSExport
-  def of[Value](default: Value): PortableField[Value] = PortableField(default, Map.empty)
+  @JSExport("Field")
+  object PortableField:
+    def of[Value](default: Value): PortableField[Value] = PortableField(default, Map.empty)
 
   override type PortableSharedData[Value] = PortableField[Value]
 

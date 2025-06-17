@@ -7,7 +7,7 @@ import it.unibo.scafi.language.xc.syntax.ExchangeSyntax
 /**
  * Aggregates all the portable libraries in a singe entry point trait.
  * @param lang
- *   the language instance providing the needed syntaxes for all the libraries.
+ *   the language instance providing the necessary syntaxes for all the libraries.
  */
 trait FullPortableLibrary[L <: AggregateFoundation & BranchingSyntax & ExchangeSyntax](using lang: L)
     extends PortableCommonLibrary
