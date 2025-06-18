@@ -9,8 +9,8 @@ import org.scalatest.matchers.should
 import org.scalatest.Inspectors
 import org.scalatest.wordspec.AnyWordSpec
 
-class XCLibraryTest extends AnyWordSpec with should.Matchers with Inspectors:
-  import XCLibraryTest.*
+class FullLibraryTest extends AnyWordSpec with should.Matchers with Inspectors:
+  import FullLibraryTest.*
 
   "Aggregate programs" should:
     "work on JS platform using portable libraries" when:
@@ -43,9 +43,9 @@ class XCLibraryTest extends AnyWordSpec with should.Matchers with Inspectors:
         forAll(env.status): (id, result) =>
           val alignedNeighbors = env.neighborsOf(env.nodes.find(_.id == id).get).map(_.id).filter(_.hasSameParityAs(id))
           result.neighborValues.toMap should contain theSameElementsAs alignedNeighbors.map(_ -> id.isEven)
-end XCLibraryTest
+end FullLibraryTest
 
-object XCLibraryTest:
+object FullLibraryTest:
   extension (id: Any)
     def isEven: Boolean = id.asInt % 2 == 0
     def hasSameParityAs(other: Any): Boolean = id.asInt.isEven == other.asInt.isEven
@@ -56,4 +56,3 @@ object XCLibraryTest:
     def asInt: Int = x match
       case i: Int => i
       case _ => throw new IllegalArgumentException(s"Cannot convert $x to Int")
-end XCLibraryTest
