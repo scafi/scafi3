@@ -21,6 +21,7 @@ trait PortableFieldBasedSharedData extends PortableLibrary:
   @JSExportAll
   case class Field[Value](default: Value, neighborValues: Map[language.DeviceId, Value])
 
+  @JSExport
   @JSExportAll
   object Field:
     /**
