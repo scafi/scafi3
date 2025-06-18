@@ -5,14 +5,14 @@ class CommonLibraryTest extends JSLibraryTest:
   "Aggregate programs" should:
     "work on JS platform using common library" when:
       "localId is used" in:
-        def aggregateProgram(library: FullLibrary) = library.localId
+        def aggregateProgram(lang: FullLibrary) = lang.localId
 
         val (_, status) = test(aggregateProgram)
         forAll(status): (id, result) =>
           (result: Int) shouldBe id
 
       "device is used" in:
-        def aggregateProgram(library: FullLibrary) = library.device
+        def aggregateProgram(lang: FullLibrary) = lang.device
 
         val (env, status) = test(aggregateProgram)
         forAll(status): (id, result) =>

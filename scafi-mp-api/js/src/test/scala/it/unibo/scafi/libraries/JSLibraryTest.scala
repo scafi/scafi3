@@ -31,7 +31,7 @@ trait JSLibraryTest extends AnyWordSpec with should.Matchers with Inspectors:
   type Program[R] = (ExchangeAggregateContext[ID], Environment[R, ExchangeAggregateContext[ID]]) ?=> R
 
   inline def test[R](program: FullLibrary => R): (Environment[R, ExchangeAggregateContext[ID]], Map[Int, R]) =
-    testIn[R](mooreGrid(3, 3, exchangeContextFactory))(program)
+    testIn[R](mooreGrid(sizeX = 3, sizeY = 3, exchangeContextFactory))(program)
 
   def testIn[R](testEnvironment: Program[R] => Environment[R, ExchangeAggregateContext[ID]])(
       program: FullLibrary => R,
