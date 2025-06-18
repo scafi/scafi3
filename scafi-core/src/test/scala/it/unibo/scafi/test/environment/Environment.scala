@@ -79,6 +79,16 @@ class Environment[R, Context <: AggregateContext { type DeviceId = Int }](
     positions.get(node)
 
   /**
+   * Retrieves the neighbors of a node identified by its unique identifier.
+   *
+   * @param id
+   *   The unique identifier of the node for which neighbors are to be found.
+   * @return
+   *   An [[Option]] containing a [[Set]] of neighboring nodes or [[None]] if no node matches the given id.
+   */
+  def neighborsOf(id: Int): Option[Set[Node[R, Context]]] = nodes.find(_.id == id).map(neighborsOf)
+
+  /**
    * Retrieves the neighbors of a given node in the environment.
    *
    * @param node

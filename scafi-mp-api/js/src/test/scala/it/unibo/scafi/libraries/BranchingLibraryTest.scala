@@ -14,7 +14,11 @@ class BranchingLibraryTest extends JSLibraryTest:
 
         val (env, status) = test(aggregateProgram)
         forAll(status): (id, result) =>
-          val alignedNeighbors = env.neighborsOf(id).map(_.id).filter(_.hasSameParityAs(id))
+          val alignedNeighbors = env
+            .neighborsOf(id)
+            .getOrElse(fail(s"Node with id $id not found!"))
+            .map(_.id)
+            .filter(_.hasSameParityAs(id))
           result.neighborValues.toMap should contain theSameElementsAs alignedNeighbors.map(_ -> id.isEven)
 
   extension (id: Int)

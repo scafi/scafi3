@@ -17,5 +17,6 @@ class CommonLibraryTest extends JSLibraryTest:
         val (env, status) = test(aggregateProgram)
         forAll(status): (id, result) =>
           val itself = id -> id
-          val neighbors = env.neighborsOf(id).map(_.id)
+          val neighbors = env.neighborsOf(id).getOrElse(fail(s"Node with id $id not found!")).map(_.id)
           result.neighborValues.toMap should contain theSameElementsAs neighbors.map(id => id -> id) + itself
+end CommonLibraryTest
