@@ -6,5 +6,16 @@ package it.unibo.scafi.api
 trait PortableCommonLibrary extends PortableLibrary:
   ctx: PortableTypes =>
 
+  /**
+   * @return
+   *   the device id of the current device
+   */
   @JSExport
   def localId: language.DeviceId = language.localId
+
+  /**
+   * @return
+   *   the aggregate value of all aligned device identifiers (including the current device)
+   */
+  @JSExport
+  def device: SharedData[language.DeviceId] = language.device

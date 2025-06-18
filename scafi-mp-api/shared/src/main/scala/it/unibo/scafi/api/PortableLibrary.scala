@@ -8,7 +8,7 @@ trait PortableLibrary:
   export it.unibo.scafi.language.AggregateFoundation
 
   /**
-   * The language type comprising all the needed syntaxes needed to implement the library logic.
+   * The language type comprising all the needed syntaxes needed to implement the library functionalities.
    */
   type Language <: AggregateFoundation
 
@@ -18,12 +18,12 @@ trait PortableLibrary:
   val language: Language
 
   /**
-   * A semantically equivalent definition of the [[language.SharedData]] data structure portable across platforms.
+   * A portable, semantically equivalent definition of the [[language.SharedData]] data structure.
    */
-  type PortableSharedData[Value]
+  type SharedData[Value]
 
   /**
-   * [[PortableSharedData]] is isomorphic to [[language.SharedData]].
+   * [[SharedData]] is isomorphic to [[language.SharedData]].
    */
-  given [T]: Iso[PortableSharedData[T], language.SharedData[T]] = compiletime.deferred
+  given [T]: Iso[SharedData[T], language.SharedData[T]] = compiletime.deferred
 end PortableLibrary

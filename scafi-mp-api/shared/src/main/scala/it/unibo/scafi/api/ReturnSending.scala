@@ -2,17 +2,53 @@ package it.unibo.scafi.api
 
 import scala.scalajs.js.annotation.{ JSExport, JSExportTopLevel }
 
+/**
+ * Syntax sugar to return and send a value at the same time.
+ * @param returning
+ *   the value to return
+ * @param sending
+ *   the value to send
+ */
 @JSExportTopLevel("ReturnSending")
 case class ReturnSending[+Value](returning: Value, sending: Value)
 
 object ReturnSending:
 
-  case class Continuation[Value](value: Value):
-    @JSExport("send")
-    def send(sending: Value): ReturnSending[Value] = ReturnSending(value, sending)
+  /**
+   * An object of this class enables the syntax to send a different value from the one to return.
+   * @param returning
+   *   the value to return
+   */
+  case class Continuation[+Value](returning: Value):
 
+    /**
+     * The value to send.
+     * @param send
+     *   the value to send
+     * @return
+     *   a [[ReturnSending]] instance with the value to return and the value to send
+     */
+    @JSExport
+    infix def send[SendValue >: Value](send: SendValue): ReturnSending[SendValue] = ReturnSending(returning, send)
+
+  /**
+   * The value to return. It enables the syntax to send a different value from the one to return, using the `send`
+   * method of the [[Continuation]] class.
+   * @param value
+   *   the value to return
+   * @return
+   *   an instance of the [[Continuation]] class, on which the `send` method can be called
+   */
   @JSExportTopLevel("returning")
-  def returning[Value](value: Value): Continuation[Value] = Continuation(value)
+  inline def returning[Value](value: Value): Continuation[Value] = Continuation(value)
 
+  /**
+   * Alias for `ReturnSending(value, value)`.
+   * @param value
+   *   the value to return and send
+   * @return
+   *   a [[ReturnSending]] instance with the same value for returning and sending
+   */
   @JSExportTopLevel("returnSending")
-  def returnSending[Value](value: Value): ReturnSending[Value] = ReturnSending(value, value)
+  inline def returnSending[Value](value: Value): ReturnSending[Value] = ReturnSending(value, value)
+end ReturnSending

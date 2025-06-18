@@ -15,14 +15,14 @@ class XCLibraryTest extends AnyWordSpec with should.Matchers with Inspectors:
   "Aggregate programs" should:
     "work on JS platform using portable libraries" when:
       "a simple exchange-based aggregate program is run" in:
-        def aggregateProgram(library: XCLibrary) =
+        def aggregateProgram(library: FullLibrary) =
           library
             .exchange(library.PortableField.of(library.localId)): n =>
               returnSending(n)
             .neighborValues
             .map(_.asInts)
 
-        val env = mooreGrid(3, 3, exchangeContextFactory)(aggregateProgram(XCLibrary()))
+        val env = mooreGrid(3, 3, exchangeContextFactory)(aggregateProgram(FullLibrary()))
         env.cycleInOrder()
         env.cycleInReverseOrder()
         forAll(env.status): (id, field) =>
@@ -30,14 +30,14 @@ class XCLibraryTest extends AnyWordSpec with should.Matchers with Inspectors:
             nvalue shouldBe (if nid <= id then nid else id)
 
       "domain branching operation is run" in:
-        def aggregateProgram(lang: XCLibrary) =
+        def aggregateProgram(lang: FullLibrary) =
           lang.branch(lang.localId.isEven) {
             lang.exchange(lang.PortableField.of(true))(n => returnSending(n))
           } {
             lang.exchange(lang.PortableField.of(false))(n => returnSending(n))
           }
 
-        val env = mooreGrid(3, 3, exchangeContextFactory)(aggregateProgram(XCLibrary()))
+        val env = mooreGrid(3, 3, exchangeContextFactory)(aggregateProgram(FullLibrary()))
         env.cycleInOrder()
         env.cycleInReverseOrder()
         forAll(env.status): (id, result) =>
