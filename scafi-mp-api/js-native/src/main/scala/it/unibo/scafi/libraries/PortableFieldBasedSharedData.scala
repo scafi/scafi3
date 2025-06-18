@@ -1,4 +1,4 @@
-package it.unibo.scafi.api
+package it.unibo.scafi.libraries
 
 /**
  * A portable definition of a field-based `SharedData` structure, useful for non-jvm platforms.

@@ -1,4 +1,4 @@
-package it.unibo.scafi.api
+package it.unibo.scafi.libraries
 
 /**
  * This trait defines portable types among different platforms, along with their Scala conversions. Actual
@@ -8,7 +8,7 @@ package it.unibo.scafi.api
 trait PortableTypes:
   export monocle.Iso
   export scala.scalajs.js.annotation.{ JSExport, JSExportAll, JSExportTopLevel }
-  export it.unibo.scafi.utils.api.IsoUtils.given
+  export it.unibo.scafi.utils.libraries.IsoUtils.given
 
   /**
    * A portable Map that can be used across different platforms.

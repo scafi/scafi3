@@ -1,4 +1,4 @@
-package it.unibo.scafi.api
+package it.unibo.scafi.libraries
 
 /**
  * The portable library providing common utility functions that are often used in programs and libraries.

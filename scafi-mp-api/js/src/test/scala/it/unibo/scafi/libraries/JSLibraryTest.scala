@@ -1,4 +1,4 @@
-package it.unibo.scafi.api
+package it.unibo.scafi.libraries
 
 import scala.util.Try
 
@@ -15,7 +15,7 @@ import scafi.context.xc.ExchangeAggregateContext.exchangeContextFactory
 
 @SuppressWarnings(Array("scalafix:DisableSyntax.asInstanceOf"))
 trait JSLibraryTest extends AnyWordSpec with should.Matchers with Inspectors:
-  export scafi.api.ReturnSending.returnSending
+  export ReturnSending.returnSending
 
   type ID = Int
 

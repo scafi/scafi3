@@ -1,4 +1,4 @@
-package it.unibo.scafi.api
+package it.unibo.scafi.libraries
 
 import scala.util.chaining.scalaUtilChainingOps
 
