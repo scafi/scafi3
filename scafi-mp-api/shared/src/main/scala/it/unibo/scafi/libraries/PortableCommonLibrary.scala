@@ -15,7 +15,7 @@ trait PortableCommonLibrary extends PortableLibrary:
 
   /**
    * @return
-   *   the aggregate value of all aligned device identifiers (including the current device)
+   *   the aggregate value of device identifiers of aligned devices (including the current device)
    */
   @JSExport
   def device: SharedData[language.DeviceId] = language.device

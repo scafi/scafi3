@@ -14,5 +14,3 @@ class ExchangeCalculusLibraryTest extends JSLibraryTest:
         forAll(status): (id, field) =>
           forAll(field.toMap): (nid, nvalue) =>
             nvalue shouldBe (if nid <= id then nid else id)
-
-end ExchangeCalculusLibraryTest

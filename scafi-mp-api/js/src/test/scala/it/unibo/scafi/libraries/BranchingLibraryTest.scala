@@ -1,6 +1,6 @@
 package it.unibo.scafi.libraries
 
-class FullLibraryTest extends JSLibraryTest:
+class BranchingLibraryTest extends JSLibraryTest:
 
   "Aggregate programs" should:
     "work on JS platform using portable libraries" when:
@@ -11,6 +11,7 @@ class FullLibraryTest extends JSLibraryTest:
           } {
             lang.exchange(lang.Field.of(false))(n => returnSending(n))
           }
+
         val (env, status) = test(aggregateProgram)
         forAll(status): (id, result) =>
           val alignedNeighbors = env.neighborsOf(env.nodes.find(_.id == id).get).map(_.id).filter(_.hasSameParityAs(id))
@@ -19,4 +20,4 @@ class FullLibraryTest extends JSLibraryTest:
   extension (id: Int)
     def isEven: Boolean = id % 2 == 0
     def hasSameParityAs(other: Int): Boolean = id.isEven == other.isEven
-end FullLibraryTest
+end BranchingLibraryTest
