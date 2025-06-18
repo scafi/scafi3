@@ -3,7 +3,7 @@ package it.unibo.scafi.libraries
 class ExchangeCalculusLibraryTest extends JSLibraryTest:
 
   "Aggregate programs" should:
-    "work on JS platform using portable libraries" when:
+    "work on JS platform using exchange library" when:
       "a simple exchange-based aggregate program is run" in:
         def aggregateProgram(library: FullLibrary) =
           library

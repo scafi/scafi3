@@ -3,7 +3,7 @@ package it.unibo.scafi.libraries
 class CommonLibraryTest extends JSLibraryTest:
 
   "Aggregate programs" should:
-    "work on JS platform using common portable library" when:
+    "work on JS platform using common library" when:
       "localId is used" in:
         def aggregateProgram(library: FullLibrary) = library.localId
 
@@ -17,5 +17,5 @@ class CommonLibraryTest extends JSLibraryTest:
         val (env, status) = test(aggregateProgram)
         forAll(status): (id, result) =>
           val itself = id -> id
-          val neighbors = env.neighborsOf(env.nodes.find(_.id == id).get).map(_.id)
+          val neighbors = env.neighborsOf(id).map(_.id)
           result.neighborValues.toMap should contain theSameElementsAs neighbors.map(id => id -> id) + itself

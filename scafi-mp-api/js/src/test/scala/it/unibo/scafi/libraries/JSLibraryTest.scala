@@ -12,6 +12,7 @@ import scafi.context.xc.ExchangeAggregateContext
 import scafi.test.environment.Environment
 import scafi.test.environment.Grids.mooreGrid
 import scafi.context.xc.ExchangeAggregateContext.exchangeContextFactory
+import scafi.test.environment.Node
 
 @SuppressWarnings(Array("scalafix:DisableSyntax.asInstanceOf"))
 trait JSLibraryTest extends AnyWordSpec with should.Matchers with Inspectors:
@@ -40,4 +41,8 @@ trait JSLibraryTest extends AnyWordSpec with should.Matchers with Inspectors:
     env.cycleInOrder()
     env.cycleInReverseOrder()
     (env, env.status)
+
+  extension [R](env: Environment[R, ExchangeAggregateContext[ID]])
+    def neighborsOf(id: ID): Set[Node[R, ExchangeAggregateContext[ID]]] =
+      env.neighborsOf(env.nodes.find(_.id == id).getOrElse(fail(s"Node with id $id not found in the environment.")))
 end JSLibraryTest

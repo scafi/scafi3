@@ -3,7 +3,7 @@ package it.unibo.scafi.libraries
 class BranchingLibraryTest extends JSLibraryTest:
 
   "Aggregate programs" should:
-    "work on JS platform using portable libraries" when:
+    "work on JS platform using branching library" when:
       "domain branching operation is run" in:
         def aggregateProgram(lang: FullLibrary) =
           lang.branch(lang.localId.isEven) {
@@ -14,7 +14,7 @@ class BranchingLibraryTest extends JSLibraryTest:
 
         val (env, status) = test(aggregateProgram)
         forAll(status): (id, result) =>
-          val alignedNeighbors = env.neighborsOf(env.nodes.find(_.id == id).get).map(_.id).filter(_.hasSameParityAs(id))
+          val alignedNeighbors = env.neighborsOf(id).map(_.id).filter(_.hasSameParityAs(id))
           result.neighborValues.toMap should contain theSameElementsAs alignedNeighbors.map(_ -> id.isEven)
 
   extension (id: Int)
