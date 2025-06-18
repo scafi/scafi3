@@ -1,5 +1,7 @@
 package it.unibo.scafi.api
 
+import scala.util.Try
+
 import it.unibo.scafi
 
 import org.scalatest.matchers.should
@@ -10,7 +12,6 @@ import scafi.context.xc.ExchangeAggregateContext
 import scafi.test.environment.Environment
 import scafi.test.environment.Grids.mooreGrid
 import scafi.context.xc.ExchangeAggregateContext.exchangeContextFactory
-import scala.util.Try
 
 @SuppressWarnings(Array("scalafix:DisableSyntax.asInstanceOf"))
 trait JSLibraryTest extends AnyWordSpec with should.Matchers with Inspectors:
