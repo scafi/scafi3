@@ -1,8 +1,9 @@
 package it.unibo.scafi.utils
 
 import scala.concurrent.Future
-import it.unibo.scafi.utils.Channel.ChannelClosedException
 import scala.concurrent.Promise
+
+import it.unibo.scafi.utils.Channel.ChannelClosedException
 
 /**
  * The read-side projection of a channel one can poll or take items from in a non-blocking way, allowing to work in both

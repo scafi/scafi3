@@ -3,8 +3,9 @@ package it.unibo.scafi.utils
 import org.scalatest.propspec.AnyPropSpec
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import org.scalatest.matchers.should
-import unsafeExceptions.canThrowAny
 import org.scalatest.concurrent.ScalaFutures
+
+import unsafeExceptions.canThrowAny
 
 class ChannelSpecification
     extends AnyPropSpec
