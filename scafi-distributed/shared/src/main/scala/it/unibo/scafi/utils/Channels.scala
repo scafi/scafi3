@@ -1,7 +1,6 @@
 package it.unibo.scafi.utils
 
 import scala.concurrent.Future
-import scala.concurrent.Promise
 
 import it.unibo.scafi.utils.Channel.ChannelClosedException
 
@@ -100,33 +99,35 @@ object Channel:
   def sendable[T]: SendableChannel[T] = apply.asSendable
 
   private class ChannelImpl[T] extends Channel[T]:
+    import scala.concurrent.Promise
+    import scala.util.chaining.scalaUtilChainingOps
+
     private var closed: Boolean = false
     private val buffer = collection.mutable.Queue.empty[T]
     private val waiters = collection.mutable.Queue.empty[Promise[T]]
 
-    override def push(item: T): Unit throws ChannelClosedException =
+    override def push(item: T): Unit throws ChannelClosedException = synchronized:
       if closed then throw ChannelClosedException("No more items can be pushed.")
-      else if waiters.nonEmpty then (waiters.dequeue.success(item): Unit)
-      else buffer.enqueue(item)
+      else if waiters.nonEmpty then waiters.dequeue.success(item): Unit
+      else buffer.enqueue(item): Unit
 
-    override def poll: Option[T] = Option.when(buffer.nonEmpty)(buffer.dequeue())
+    override def poll: Option[T] = synchronized:
+      Option.when(buffer.nonEmpty)(buffer.dequeue())
 
-    override def take: Future[T] = poll match
-      case Some(value) => Future.successful(value)
-      case None if closed => Future.failed(ChannelClosedException("No more available items."))
-      case None =>
-        val promise = Promise[T]()
-        waiters.enqueue(promise)
-        promise.future
+    override def take: Future[T] = synchronized:
+      poll match
+        case Some(value) => Future.successful(value)
+        case None if closed => Future.failed(ChannelClosedException("No more available items."))
+        case None => Promise[T]().tap(waiters.enqueue).future
 
-    override def close(): Unit throws ChannelClosedException =
+    override def close(): Unit throws ChannelClosedException = synchronized:
       if closed then throw ChannelClosedException()
       else
         closed = true
-        waiters.foreach(_.failure(ChannelClosedException()))
-        waiters.clear()
+        waiters.drain.foreach(_.failure(ChannelClosedException()))
 
-    override def isClosed: Boolean = closed
+    extension [T](q: collection.mutable.Queue[T]) def drain: Seq[T] = q.dequeueAll(_ => true)
+
+    override def isClosed: Boolean = synchronized(closed)
   end ChannelImpl
-
 end Channel
