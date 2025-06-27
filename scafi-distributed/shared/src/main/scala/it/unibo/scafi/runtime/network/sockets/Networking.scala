@@ -15,4 +15,5 @@ trait Networking[+MessageIn, -MessageOut]:
   trait Connection extends AutoCloseable with ConnectionState:
     def send(msg: MessageOut): Future[Unit]
 
-  trait ConnectionListener extends AutoCloseable with ConnectionState
+  trait ConnectionListener extends AutoCloseable with ConnectionState:
+    def boundPort: Port

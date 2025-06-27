@@ -9,3 +9,5 @@ class JVMNativeSocketNetworkingTest extends NetworkingTest with SocketNetworking
   override given ExecutionContext = ExecutionContext.global
 
   it should behave like anInboundConnectionListener(networking)
+
+  it should behave like anOutboundConnection(networking)

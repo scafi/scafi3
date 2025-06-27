@@ -6,3 +6,7 @@ trait InetTypes:
   type Port = Int
 
   type Endpoint = (Address, Port)
+
+object InetTypes:
+
+  val localhost = "localhost"
