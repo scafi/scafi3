@@ -7,9 +7,11 @@ trait SocketNetworkingBehavior:
 
   given ExecutionContext = compiletime.deferred
 
+  private val FreePort = 0
+
   def anInboundConnectionListener(networking: => Networking[String, String] & InetTypes) =
     it should "be initializable on a specific port" in:
-      val connectionListener = networking.in(port = 5050)(_ => ())
+      val connectionListener = networking.in(FreePort)(_ => ())
       whenReady(connectionListener): conn =>
         conn.isOpen shouldBe true
         conn.close()
