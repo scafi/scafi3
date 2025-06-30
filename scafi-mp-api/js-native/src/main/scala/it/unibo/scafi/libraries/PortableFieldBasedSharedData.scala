@@ -1,11 +1,12 @@
 package it.unibo.scafi.libraries
 
+import it.unibo.scafi.language.xc.FieldBasedSharedData
+
 /**
  * A portable definition of a field-based `SharedData` structure, useful for non-jvm platforms.
  */
 trait PortableFieldBasedSharedData extends PortableLibrary:
   self: PortableTypes & PortableExchangeCalculusLibrary =>
-  import it.unibo.scafi.language.xc.FieldBasedSharedData
 
   override type Language <: AggregateFoundation & ExchangeSyntax & FieldBasedSharedData
 

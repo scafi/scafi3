@@ -28,7 +28,7 @@ trait JSLibraryTest extends AnyWordSpec with should.Matchers with Inspectors:
     case i: Int => i
     case x => fail(s"JavaScript runtime value $x cannot be converted to ID.")
 
-  type Program[R] = (ExchangeAggregateContext[ID], Environment[R, ExchangeAggregateContext[ID]]) ?=> R
+  type Program[Result] = (ExchangeAggregateContext[ID], Environment[Result, ExchangeAggregateContext[ID]]) ?=> Result
 
   inline def test[R](program: FullLibrary => R): (Environment[R, ExchangeAggregateContext[ID]], Map[Int, R]) =
     testIn[R](mooreGrid(sizeX = 3, sizeY = 3, exchangeContextFactory))(program)

@@ -9,12 +9,12 @@ import it.unibo.scafi.language.xc.syntax.ExchangeSyntax
  * @param lang
  *   the language instance providing the necessary syntaxes for all the libraries.
  */
-trait FullPortableLibrary[L <: AggregateFoundation & BranchingSyntax & ExchangeSyntax](using lang: L)
+trait FullPortableLibrary[Lang <: AggregateFoundation & BranchingSyntax & ExchangeSyntax](using lang: Lang)
     extends PortableCommonLibrary
     with PortableBranchingLibrary
     with PortableExchangeCalculusLibrary:
   ctx: PortableTypes =>
 
-  override type Language = L
+  override type Language = Lang
 
   override val language: Language = lang
