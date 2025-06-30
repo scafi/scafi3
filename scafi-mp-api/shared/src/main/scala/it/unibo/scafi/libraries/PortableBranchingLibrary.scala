@@ -4,7 +4,7 @@ package it.unibo.scafi.libraries
  * The portable library providing domain branching syntax.
  */
 trait PortableBranchingLibrary extends PortableLibrary:
-  ctx: PortableTypes =>
+  self: PortableTypes =>
   import it.unibo.scafi.language.common.syntax.BranchingSyntax
 
   override type Language <: AggregateFoundation & BranchingSyntax
