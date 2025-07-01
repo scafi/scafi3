@@ -4,6 +4,8 @@ import scala.concurrent.ExecutionContext
 
 import it.unibo.scafi.runtime.network.sockets.InetTypes.localhost
 
+import org.scalatest.time.{ Seconds, Span }
+
 trait SocketNetworkingBehavior:
   this: NetworkingTest =>
 
@@ -16,19 +18,6 @@ trait SocketNetworkingBehavior:
         conn.isOpen shouldBe true
         conn.close()
         conn.isOpen shouldBe false
-
-    it should "be able to accept incoming connections from remote endpoints" in:
-      val receivedMessages = scala.collection.mutable.ListBuffer.empty[String]
-      val msg = "Hello, Scafi!"
-      val exchange = for
-        server <- networking.in(FreePort)(receivedMessages.addOne)
-        client <- networking.out((localhost, server.boundPort))
-        _ <- client.send(msg)
-        _ = client.close()
-      yield ()
-      whenReady(exchange): _ =>
-        receivedMessages should contain theSameElementsAs Seq(msg)
-  end anInboundConnectionListener
 
   def anOutboundConnection(networking: => Networking[String, String] & InetTypes) =
     it should "be able to connect to an available remote endpoint" in:
@@ -48,6 +37,21 @@ trait SocketNetworkingBehavior:
             or include("Could not connect to address") // JVM
         )
   end anOutboundConnection
+
+  def both(networking: => Networking[String, String] & InetTypes) =
+    it should "be able to accept incoming connections from remote endpoints" in:
+      given PatienceConfig = PatienceConfig(timeout = Span(1, Seconds))
+      val receivedMessages = scala.collection.mutable.ListBuffer.empty[String]
+      val msg = "Hello, Scafi!"
+      val exchange = for
+        server <- networking.in(FreePort)(receivedMessages.addOne)
+        client <- networking.out((localhost, server.boundPort))
+        _ <- client.send(msg)
+      yield (server, client)
+      whenReady(exchange): (server, client) =>
+        eventually(receivedMessages should contain theSameElementsAs Seq(msg))
+        server.close()
+        client.close()
 
   private val FreePort = 0
   private val nop: Any => Unit = _ => ()
