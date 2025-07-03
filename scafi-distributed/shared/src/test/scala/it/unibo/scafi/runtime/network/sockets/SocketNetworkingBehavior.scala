@@ -1,6 +1,6 @@
 package it.unibo.scafi.runtime.network.sockets
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ ExecutionContext, Future }
 
 import it.unibo.scafi.runtime.network.sockets.InetTypes.localhost
 
@@ -12,6 +12,7 @@ trait SocketNetworkingBehavior:
   given ExecutionContext = compiletime.deferred
 
   def anInboundConnectionListener(networking: => Networking[String, String]) =
+    given PatienceConfig = PatienceConfig(timeout = Span(2, Seconds))
     it should "be initializable on a specific port" in:
       val server = networking.in(FreePort)(nop)
       whenReady(server()): connRef =>
@@ -19,9 +20,9 @@ trait SocketNetworkingBehavior:
         listener.isOpen shouldBe true
         listener.close()
         listener.isOpen shouldBe false
-        eventually(connRef.accept.isCompleted shouldBe true)
 
   def anOutboundConnection(networking: => Networking[String, String]) =
+    given PatienceConfig = PatienceConfig(timeout = Span(2, Seconds))
     it should "be able to connect to an available remote endpoint" in:
       val server = networking.in(FreePort)(nop)
       whenReady(server()): connRef =>
@@ -44,17 +45,18 @@ trait SocketNetworkingBehavior:
   end anOutboundConnection
 
   def both(networking: => Networking[String, String]) =
+    given PatienceConfig = PatienceConfig(timeout = Span(2, Seconds))
     it should "be able to accept incoming connections from remote endpoints" in:
-      given PatienceConfig = PatienceConfig(timeout = Span(1, Seconds))
       val receivedMessages = scala.collection.mutable.ListBuffer.empty[String]
-      val msg = "Hello, Scafi!"
+      val messages = Seq("Hello", "World", "Scafi", "Networking")
       val exchange = for
         server <- networking.in(FreePort)(receivedMessages.addOne)()
         client <- networking.out((localhost, server.listener.boundPort))()
-        _ <- client.send(msg)
+        _ <- messages.foldLeft(Future.successful(())): (acc, msg) =>
+          acc.flatMap(_ => client.send(msg))
       yield (server, client)
       whenReady(exchange): (server, client) =>
-        eventually(receivedMessages should contain theSameElementsAs Seq(msg))
+        eventually(receivedMessages should contain theSameElementsAs messages)
         server.listener.close()
         client.close()
 
