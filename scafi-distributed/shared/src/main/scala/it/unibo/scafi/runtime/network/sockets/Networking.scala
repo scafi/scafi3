@@ -22,7 +22,7 @@ trait Networking[+MessageIn, -MessageOut] extends InetTypes:
   def out(endpoint: Endpoint): () => Future[Connection]
 
   /**
-   * A deferred connections [[Listener]] factory that listens for incoming connections on a specific port.
+   * A deferred connection [[Listener]] factory that listens for incoming connections on a specific port.
    * @param port
    *   the port to listen on.
    * @param onReceive

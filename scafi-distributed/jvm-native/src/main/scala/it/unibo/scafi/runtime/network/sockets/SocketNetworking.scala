@@ -10,15 +10,14 @@ import scala.LazyList.continually
 import it.unibo.scafi.runtime.network.Serializable
 import it.unibo.scafi.runtime.network.Serializable.*
 
-trait SocketNetworking[T: Serializable](using ec: ExecutionContext, conf: SocketConfiguration)
-    extends Networking[T, T]
-    with InetTypes:
+trait SocketNetworking[Message: Serializable](using ec: ExecutionContext, conf: SocketConfiguration)
+    extends Networking[Message, Message]:
 
   override def out(endpoint: (Address, Port)): () => Future[Connection] = () =>
     for
       socket <- Future.fromTry(Try(Socket(endpoint._1, endpoint._2)))
       conn = new Connection:
-        override def send(msg: T): Future[Unit] = Future:
+        override def send(msg: Message): Future[Unit] = Future:
           val serializedMsg = serialize(msg)
           val sendChannel = DataOutputStream(socket.getOutputStream)
           sendChannel.writeInt(serializedMsg.length)
@@ -27,7 +26,7 @@ trait SocketNetworking[T: Serializable](using ec: ExecutionContext, conf: Socket
         override def isOpen: Boolean = !socket.isClosed
     yield conn
 
-  override def in(port: Port)(onReceive: T => Unit): () => Future[ListenerRef] = () =>
+  override def in(port: Port)(onReceive: Message => Unit): () => Future[ListenerRef] = () =>
     for
       server <- Future.fromTry(Try(ServerSocket(port)))
       serve = (client: Socket) =>

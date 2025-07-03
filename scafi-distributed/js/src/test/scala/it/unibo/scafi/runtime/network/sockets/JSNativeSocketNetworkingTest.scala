@@ -1,14 +1,12 @@
 package it.unibo.scafi.runtime.network.sockets
 
-import java.util.concurrent.ForkJoinPool
-
 import scala.concurrent.ExecutionContext
 
-class JVMNativeSocketNetworkingTest extends SocketNetworkingBehavior:
-
-  override given executionContext: ExecutionContext = ExecutionContext.fromExecutor(ForkJoinPool())
+class JSNativeSocketNetworkingTest extends SocketNetworkingBehavior:
 
   given SocketConfiguration = SocketConfiguration.basic
+
+  override given executionContext: ExecutionContext = scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 
   val networking = new SocketNetworking[String] {}
 
