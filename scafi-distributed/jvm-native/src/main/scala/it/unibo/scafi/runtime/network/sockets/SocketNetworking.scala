@@ -2,6 +2,7 @@ package it.unibo.scafi.runtime.network.sockets
 
 import java.net.{ ServerSocket, Socket, SocketException }
 import java.io.{ DataInputStream, DataOutputStream }
+import java.nio.ByteBuffer
 
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.*
@@ -17,12 +18,15 @@ trait SocketNetworking[Message: Serializable](using ec: ExecutionContext, conf: 
     for
       socket <- Future.fromTry(Try(Socket(endpoint._1, endpoint._2)))
       conn = new Connection:
+        private val sendChannel = DataOutputStream(socket.getOutputStream)
         override def send(msg: Message): Future[Unit] = Future:
           val serializedMsg = serialize(msg)
-          val sendChannel = DataOutputStream(socket.getOutputStream)
-          sendChannel.writeInt(serializedMsg.length)
-          sendChannel.write(serializedMsg)
-        override def close(): Unit = socket.close()
+          val buffer = ByteBuffer.allocate(Integer.BYTES + serializedMsg.length)
+          buffer.putInt(serializedMsg.length)
+          buffer.put(serializedMsg)
+          sendChannel.write(buffer.array())
+          sendChannel.flush()
+        override def close(): Unit = (sendChannel :: socket :: Nil).foreach(_.close)
         override def isOpen: Boolean = !socket.isClosed
     yield conn
 

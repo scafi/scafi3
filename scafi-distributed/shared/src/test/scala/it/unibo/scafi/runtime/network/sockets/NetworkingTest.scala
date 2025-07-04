@@ -13,10 +13,7 @@ import org.scalatest.compatible.Assertion
 
 trait NetworkingTest extends AsyncFlatSpec with should.Matchers:
 
-  def eventually(
-      timeout: FiniteDuration = 1.second,
-      interval: FiniteDuration = 100.millis,
-  )(assertion: => Assertion): Future[Assertion] =
+  def eventually(timeout: FiniteDuration, interval: FiniteDuration)(assertion: => Assertion): Future[Assertion] =
     val deadline = timeout.fromNow
     def poll(): Future[Assertion] = Future(assertion)
       .flatMap(Future.successful)

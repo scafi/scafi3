@@ -42,8 +42,7 @@ trait SocketNetworkingBehavior extends NetworkingTest:
         server <- networking.in(FreePort)(msg => receivedMessages.add(msg): Unit)()
         client <- networking.out((localhost, server.listener.boundPort))()
         _ <- messages.foldLeft(Future.unit)((acc, msg) => acc.flatMap(_ => client.send(msg)))
-        assertion <- eventually(timeout = 2.seconds):
-          receivedMessages.forEach(println)
+        assertion <- eventually(timeout = 2.seconds, interval = 250.millis):
           receivedMessages should contain theSameElementsInOrderAs messages
       yield assertion
 

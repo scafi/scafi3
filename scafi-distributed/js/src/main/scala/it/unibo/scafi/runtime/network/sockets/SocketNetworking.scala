@@ -4,11 +4,15 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 import scala.concurrent.{ ExecutionContext, Future, Promise }
 import scala.scalajs.js.typedarray.{ ArrayBuffer, DataView, Uint8Array }
+import scala.util.boundary
+import scala.util.boundary.break
 
 import it.unibo.scafi.runtime.network.Serializable
 import it.unibo.scafi.runtime.network.Serializable.*
 
-trait SocketNetworking[Message: Serializable](using ec: ExecutionContext) extends Networking[Message, Message]:
+@SuppressWarnings(Array("scalafix:DisableSyntax.asInstanceOf"))
+trait SocketNetworking[Message: Serializable](using ec: ExecutionContext, conf: SocketConfiguration)
+    extends Networking[Message, Message]:
 
   object Events:
     val connect = "connect"
@@ -26,13 +30,13 @@ trait SocketNetworking[Message: Serializable](using ec: ExecutionContext) extend
         if !isOpen then Future.failed(IllegalStateException("Connection is closed!"))
         else
           val promise = Promise[Unit]()
-          val bytes = serialize(msg)
-          val buffer = new ArrayBuffer(4 + bytes.length)
+          val serializedMsg = serialize(msg)
+          val buffer = new ArrayBuffer(4 + serializedMsg.length)
           val view = new DataView(buffer)
-          view.setUint32(0, bytes.length)
+          view.setUint32(0, serializedMsg.length)
           val data = new Uint8Array(buffer)
-          for i <- bytes.indices do data(i + 4) = bytes(i)
-          socket.write(data)(err => if err eq null then promise.trySuccess(()) else promise.tryFailure(Exception(err)))
+          for i <- serializedMsg.indices do data(4 + i) = serializedMsg(i)
+          socket.write(data)(Option(_).fold(promise.trySuccess(()))(err => promise.tryFailure(Exception(err))))
           promise.future
     val promisedConnection = Promise[Connection]()
     val socket = Net.connect(endpoint._2, endpoint._1)
@@ -45,14 +49,17 @@ trait SocketNetworking[Message: Serializable](using ec: ExecutionContext) extend
   override def in(port: Int)(onReceive: Message => Unit): () => Future[ListenerRef] = () =>
     val connListenerPromise = Promise[Listener]()
     val acceptPromise = Promise[Unit]()
-    def react(data: Uint8Array): Unit =
-      val view = new DataView(data.buffer, data.byteOffset, data.byteLength)
-      if data.byteLength >= 4 then
-        val length = view.getUint32(0) // body length
-        if data.byteLength >= 4 + length then
-          val bytes = new Array[Byte](data.length - 4)
-          for i <- 0 until bytes.length do bytes(i) = data(i + 4).toByte
-          onReceive(deserialize(bytes))
+    def react(data: Uint8Array): Unit = boundary:
+      var offset = 0
+      while data.byteLength - offset >= 4 do
+        val view = new DataView(data.buffer, data.byteOffset + offset, data.byteLength - offset)
+        val msgLen = view.getUint32(0).toInt
+        if msgLen <= 0 || msgLen > data.byteLength - offset - 4 || msgLen > conf.maxMessageSize then break(())
+        val messageBytes = new Uint8Array(data.buffer, data.byteOffset + offset + 4, msgLen)
+        val bytes = new Array[Byte](msgLen)
+        for i <- 0 until msgLen do bytes(i) = messageBytes(i).toByte
+        onReceive(deserialize(bytes))
+        offset += 4 + msgLen
     val serverSocket = Net.createServer(_.on(data)(data => react(data.asInstanceOf[Uint8Array])))
     val listener = new Listener:
       private val open = AtomicBoolean(true)
