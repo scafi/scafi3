@@ -46,6 +46,17 @@ trait SocketNetworkingBehavior extends NetworkingTest:
           receivedMessages should contain theSameElementsInOrderAs messages
       yield assertion
 
+    it should "forbid sending messages too large" ignore:
+      val tooLargeMessage = "A" * 65_536
+      for
+        server <- networking.in(FreePort)(nop)()
+        client <- networking.out((localhost, server.listener.boundPort))()
+        _ <- client.send(tooLargeMessage)
+        assertion <- eventually(timeout = 500.millis, interval = 100.millis):
+          client.isOpen shouldBe false
+      yield assertion
+  end both
+
   private val FreePort = 0
   private val nop: Any => Unit = _ => ()
 end SocketNetworkingBehavior
