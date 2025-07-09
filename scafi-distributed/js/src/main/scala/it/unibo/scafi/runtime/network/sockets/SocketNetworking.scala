@@ -67,9 +67,9 @@ trait SocketNetworking[Message: Serializable](using ExecutionContext, SocketConf
       buffer.remove(0, Integer.BYTES + length)
       msgBytes
 
-    override val accept: Future[Unit] = acceptPromise.future
+    override def accept: Future[Unit] = acceptPromise.future
 
-    override def boundPort: Port = serverSocket.address().port
+    override def boundPort: Port = serverSocket.address().port.assume
 
     override def close(): Unit =
       open = false

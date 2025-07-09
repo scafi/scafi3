@@ -5,7 +5,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.concurrent.duration.DurationInt
 
-import it.unibo.scafi.runtime.network.sockets.InetTypes.localhost
+import it.unibo.scafi.runtime.network.sockets.InetTypes.*
 
 trait SocketNetworkingBehavior extends NetworkingTest:
 
@@ -21,15 +21,15 @@ trait SocketNetworkingBehavior extends NetworkingTest:
     it should "be able to connect to an available remote endpoint" in:
       for
         server <- networking.in(FreePort)(nop).run()
-        client <- networking.out(endpoint = (localhost, server.listener.boundPort)).run()
+        client <- networking.out(Endpoint(Localhost, server.listener.boundPort)).run()
       yield
         client.isOpen shouldBe true
         client.close()
         client.isOpen shouldBe false
 
     it should "fail to connect to an unavailable remote endpoint" in:
-      val nonExistentServerPort = 5050
-      val client = networking.out(endpoint = (localhost, nonExistentServerPort))
+      val nonExistentServerPort: Port = 5050
+      val client = networking.out(Endpoint(Localhost, nonExistentServerPort))
       client.run().failed map:
         _ shouldBe a[Throwable]
         // ex.getMessage should (include("Connection refused") or include("Could not connect to address"))
@@ -40,7 +40,7 @@ trait SocketNetworkingBehavior extends NetworkingTest:
       val messages = Seq("Hello", "World", "Scafi", "Networking")
       for
         server <- networking.in(FreePort)(msg => receivedMessages.add(msg): Unit).run()
-        client <- networking.out((localhost, server.listener.boundPort)).run()
+        client <- networking.out(Endpoint(Localhost, server.listener.boundPort)).run()
         _ <- messages.foldLeft(Future.unit)((acc, msg) => acc.flatMap(_ => client.send(msg)))
         assertion <- eventually(timeout = 2.seconds, interval = 250.millis):
           receivedMessages should contain theSameElementsInOrderAs messages
@@ -50,13 +50,12 @@ trait SocketNetworkingBehavior extends NetworkingTest:
       val tooLargeMessage = "A" * 65_536
       for
         server <- networking.in(FreePort)(nop).run()
-        client <- networking.out((localhost, server.listener.boundPort)).run()
+        client <- networking.out(Endpoint(Localhost, server.listener.boundPort)).run()
         _ <- client.send(tooLargeMessage)
         assertion <- eventually(timeout = 500.millis, interval = 100.millis):
           client.isOpen shouldBe false
       yield assertion
   end both
 
-  private val FreePort = 0
   private val nop: Any => Unit = _ => ()
 end SocketNetworkingBehavior

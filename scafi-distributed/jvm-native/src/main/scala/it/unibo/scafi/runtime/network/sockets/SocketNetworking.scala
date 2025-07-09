@@ -45,6 +45,6 @@ trait SocketNetworking[Message: Serializable](using ExecutionContext, SocketConf
           client.getInputStream.readNBytes(length)
         override def close(): Unit = server.close()
         override def isOpen: Boolean = !server.isClosed
-        override def boundPort: Port = server.getLocalPort
+        override def boundPort: Port = server.getLocalPort.assume
     yield ListenerRef(listener, listener.accept)
 end SocketNetworking

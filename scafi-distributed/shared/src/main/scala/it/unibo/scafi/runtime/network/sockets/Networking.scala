@@ -11,7 +11,8 @@ import it.unibo.scafi.utils.Task
  * @tparam MessageOut
  *   the outgoing message type to remote processes.
  */
-trait Networking[+MessageIn, -MessageOut] extends InetTypes:
+trait Networking[+MessageIn, -MessageOut]:
+  export InetTypes.*
 
   /**
    * A deferred [[Connection]] factory to a remote endpoint.
@@ -64,7 +65,7 @@ trait Networking[+MessageIn, -MessageOut] extends InetTypes:
    * @param listener
    *   the listener managing the incoming connections.
    * @param accept
-   *   the `Future` representing the asynchronous task that accepts and handles incoming connections for this listener.
+   *   the `Future` representing the asynchronous task accepting and handling incoming connections for this listener.
    */
   case class ListenerRef(listener: Listener, accept: Future[Unit])
 

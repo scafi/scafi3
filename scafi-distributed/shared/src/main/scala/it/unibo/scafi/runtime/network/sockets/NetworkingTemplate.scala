@@ -35,8 +35,6 @@ trait NetworkingTemplate[Message: Serializable](using conf: SocketConfiguration)
    *   the [[Releasable]] client socket type.
    */
   trait ListenerTemplate[Socket: Releasable](onReceive: Message => Unit) extends Listener:
-    val accept: Future[Unit]
-
     def serve(using Socket) = continually(validate(readMessageLength))
       .takeWhile(_.isSuccess)
       .collect { case Success(value) => value }
@@ -68,5 +66,13 @@ trait NetworkingTemplate[Message: Serializable](using conf: SocketConfiguration)
      *   an `Array[Byte]` containing the message data.
      */
     def readMessage(length: Int)(using client: Socket): Array[Byte]
+
+    /**
+     * @return
+     *   the `Future` representing the async task accepting and handling incoming connections.
+     * @see
+     *   [[ListenerRef]]
+     */
+    def accept: Future[Unit]
   end ListenerTemplate
 end NetworkingTemplate
