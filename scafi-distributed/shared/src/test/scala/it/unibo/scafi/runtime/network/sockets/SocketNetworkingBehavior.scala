@@ -12,7 +12,7 @@ trait SocketNetworkingBehavior extends NetworkingTest:
   def anInboundConnectionListener(networking: => Networking[String, String])(using ExecutionContext): Unit =
     it should "be able to be initialized on a free port" in:
       val server = networking.in(FreePort)(nop)
-      server() map: ref =>
+      server.run() map: ref =>
         ref.listener.isOpen shouldBe true
         ref.listener.close()
         ref.listener.isOpen shouldBe false
@@ -20,8 +20,8 @@ trait SocketNetworkingBehavior extends NetworkingTest:
   def anOutboundConnection(networking: => Networking[String, String]): Unit =
     it should "be able to connect to an available remote endpoint" in:
       for
-        server <- networking.in(FreePort)(nop)()
-        client <- networking.out(endpoint = (localhost, server.listener.boundPort))()
+        server <- networking.in(FreePort)(nop).run()
+        client <- networking.out(endpoint = (localhost, server.listener.boundPort)).run()
       yield
         client.isOpen shouldBe true
         client.close()
@@ -30,7 +30,7 @@ trait SocketNetworkingBehavior extends NetworkingTest:
     it should "fail to connect to an unavailable remote endpoint" in:
       val nonExistentServerPort = 5050
       val client = networking.out(endpoint = (localhost, nonExistentServerPort))
-      client().failed map:
+      client.run().failed map:
         _ shouldBe a[Throwable]
         // ex.getMessage should (include("Connection refused") or include("Could not connect to address"))
 
@@ -39,8 +39,8 @@ trait SocketNetworkingBehavior extends NetworkingTest:
       val receivedMessages = CopyOnWriteArrayList[String]()
       val messages = Seq("Hello", "World", "Scafi", "Networking")
       for
-        server <- networking.in(FreePort)(msg => receivedMessages.add(msg): Unit)()
-        client <- networking.out((localhost, server.listener.boundPort))()
+        server <- networking.in(FreePort)(msg => receivedMessages.add(msg): Unit).run()
+        client <- networking.out((localhost, server.listener.boundPort)).run()
         _ <- messages.foldLeft(Future.unit)((acc, msg) => acc.flatMap(_ => client.send(msg)))
         assertion <- eventually(timeout = 2.seconds, interval = 250.millis):
           receivedMessages should contain theSameElementsInOrderAs messages
@@ -49,8 +49,8 @@ trait SocketNetworkingBehavior extends NetworkingTest:
     it should "forbid sending messages too large" ignore:
       val tooLargeMessage = "A" * 65_536
       for
-        server <- networking.in(FreePort)(nop)()
-        client <- networking.out((localhost, server.listener.boundPort))()
+        server <- networking.in(FreePort)(nop).run()
+        client <- networking.out((localhost, server.listener.boundPort)).run()
         _ <- client.send(tooLargeMessage)
         assertion <- eventually(timeout = 500.millis, interval = 100.millis):
           client.isOpen shouldBe false

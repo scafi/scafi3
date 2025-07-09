@@ -3,6 +3,7 @@ package it.unibo.scafi.runtime.network.sockets
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
 import scala.scalajs.js.typedarray.Uint8Array
+import scala.util.Using.Releasable
 
 /**
  * Node.js emitter of events that can be listened to.
@@ -112,6 +113,10 @@ end Server
 @js.native
 trait Socket extends EventEmitter:
 
+  def remoteAddress: String = js.native
+
+  def remotePort: Int = js.native
+
   /**
    * Sends data on the socket.
    * @param buffer
@@ -143,6 +148,11 @@ trait Socket extends EventEmitter:
   def destroyed: Boolean = js.native
 end Socket
 
+object Socket:
+
+  given Releasable[Socket] with
+    override def release(resource: Socket): Unit = resource.destroy()
+
 object EventEmitter:
 
   extension (socket: Socket)
@@ -153,6 +163,8 @@ object EventEmitter:
      *   the function to be called when data is received on the socket.
      */
     infix def onData(listener: js.Function1[Uint8Array, Unit]): Unit = socket.on("data")(listener)
+
+    infix def onceClose(listener: Boolean => Unit): Unit = socket.once("close")(listener)
 
     /**
      * Registers a one-time listener for the `connect` event.

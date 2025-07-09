@@ -3,12 +3,16 @@ package it.unibo.scafi.runtime.network.sockets
 import java.nio.ByteBuffer
 
 import scala.concurrent.Future
+import scala.LazyList.continually
+import scala.util.{ Failure, Success, Try }
+import scala.util.Using.Releasable
 
 import it.unibo.scafi.runtime.network.Serializable
 import it.unibo.scafi.runtime.network.Serializable.*
 
-trait NetworkingTemplate[Message: Serializable] extends Networking[Message, Message]:
+trait NetworkingTemplate[Message: Serializable](using conf: SocketConfiguration) extends Networking[Message, Message]:
 
+  /** An abstract connection template with pre-cooked `send` logic. */
   trait ConnectionTemplate extends Connection:
     override def send(msg: Message): Future[Unit] =
       val serializedMsg = serialize(msg)
@@ -16,4 +20,53 @@ trait NetworkingTemplate[Message: Serializable] extends Networking[Message, Mess
       val data = lengthBytes ++ serializedMsg
       write(data)
 
+    /**
+     * Writes the given buffer over the underlying connection.
+     * @param buffer
+     *   the data to be sent.
+     * @return
+     *   a `Future` that completes when the data has been sent successfully, or fails with the reason of the failure.
+     */
     def write(buffer: Array[Byte]): Future[Unit]
+
+  /**
+   * A connection listener template with pre-cooked message serving logic.
+   * @tparam Socket
+   *   the [[Releasable]] client socket type.
+   */
+  trait ListenerTemplate[Socket: Releasable](onReceive: Message => Unit) extends Listener:
+    val accept: Future[Unit]
+
+    def serve(using Socket) = continually(validate(readMessageLength))
+      .takeWhile(_.isSuccess)
+      .collect { case Success(value) => value }
+      .filter(_ > 0)
+      .map(readMessage andThen deserialize)
+      .foreach(onReceive)
+
+    private def validate(msgLen: Try[Int])(using client: Socket): Try[Int] = msgLen.flatMap: rawLen =>
+      Try(rawLen ensuring (_ < conf.maxMessageSize)).recoverWith: err =>
+        Socket.release(client)
+        Failure(err)
+
+    /**
+     * Reads the length of the next message from the client socket.
+     * @param client
+     *   the client socket to read from.
+     * @return
+     *   a `Try` containing the length of the message, or a failure if reading fails.
+     */
+    def readMessageLength(using client: Socket): Try[Int]
+
+    /**
+     * Reads a message of the specified length from the client socket.
+     * @param length
+     *   the length of the message to read.
+     * @param client
+     *   the client socket to read from.
+     * @return
+     *   an `Array[Byte]` containing the message data.
+     */
+    def readMessage(length: Int)(using client: Socket): Array[Byte]
+  end ListenerTemplate
+end NetworkingTemplate

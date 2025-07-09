@@ -2,6 +2,8 @@ package it.unibo.scafi.runtime.network.sockets
 
 import scala.concurrent.Future
 
+import it.unibo.scafi.utils.Task
+
 /**
  * Networking platform-independent abstraction for connection-oriented communication.
  * @tparam MessageIn
@@ -19,7 +21,7 @@ trait Networking[+MessageIn, -MessageOut] extends InetTypes:
    *   a function that, when invoked, attempt to establish a connection, returning a `Future` that successfully
    *   completes with the established connection, or fails with the reason of the failure in case of errors.
    */
-  def out(endpoint: Endpoint): () => Future[Connection]
+  def out(endpoint: Endpoint): Task[Connection]
 
   /**
    * A deferred connection [[Listener]] factory that listens for incoming connections on a specific port.
@@ -33,7 +35,7 @@ trait Networking[+MessageIn, -MessageOut] extends InetTypes:
    * @see
    *   ListenerRef
    */
-  def in(port: Port)(onReceive: MessageIn => Unit): () => Future[ListenerRef]
+  def in(port: Port)(onReceive: MessageIn => Unit): Task[ListenerRef]
 
   /**
    * Represents the state of a connection oriented resource.
