@@ -13,17 +13,14 @@ object InetTypes:
   // IP addresses validation is performed using https://www.ditig.com/validating-ipv4-and-ipv6-addresses-with-regexp
 
   /** An IPv4 address. */
-  type IPv4 = DescribedAs[
-    Match["^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$"],
-    "Must be a valid IPv4 address consisting of four decimal numbers (0-255) separated by dots, e.g., 192.168.1.1.",
-  ]
+  type IPv4 = DescribedAs[Match["^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$"], "Must be a valid IPv4 address."]
 
   /** An IPv6 address. */
   type IPv6 = DescribedAs[
     Match[
       "^((?:[0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4}|(?:[0-9A-Fa-f]{1,4}:){1,7}:|:(?::[0-9A-Fa-f]{1,4}){1,7}|(?:[0-9A-Fa-f]{1,4}:){1,6}:[0-9A-Fa-f]{1,4}|(?:[0-9A-Fa-f]{1,4}:){1,5}(?::[0-9A-Fa-f]{1,4}){1,2}|(?:[0-9A-Fa-f]{1,4}:){1,4}(?::[0-9A-Fa-f]{1,4}){1,3}|(?:[0-9A-Fa-f]{1,4}:){1,3}(?::[0-9A-Fa-f]{1,4}){1,4}|(?:[0-9A-Fa-f]{1,4}:){1,2}(?::[0-9A-Fa-f]{1,4}){1,5}|[0-9A-Fa-f]{1,4}:(?:(?::[0-9A-Fa-f]{1,4}){1,6})|:(?:(?::[0-9A-Fa-f]{1,4}){1,6}))$",
     ],
-    "Must be a valid IPv6 address with eight groups of hexadecimal digits, optionally compressed with ::, or IPv4-mapped IPv6.",
+    "Must be a valid IPv6 address.",
   ]
 
   /** A valid hostname. */
@@ -36,9 +33,9 @@ object InetTypes:
 
   /** A valid network address, either an IPv4, IPv6 address, or a valid hostname. */
   type Address = String :|
-    DescribedAs[IPv4 | IPv6 | Hostname, "A valid IP address, either IPv4 or IPv6, or a hostname."]
+    DescribedAs[IPv4 | IPv6 | Hostname, "Must be a valid IP address, either IPv4 or IPv6, or a hostname."]
 
-  /** A network port number. Valid values are in the range [0, 65535). */
+  /** A network port number. Valid values are in the range [0, 65,535). */
   type Port = Int :| Interval.ClosedOpen[0, 65_536]
 
   /**

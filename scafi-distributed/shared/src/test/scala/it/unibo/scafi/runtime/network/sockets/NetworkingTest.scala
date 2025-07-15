@@ -15,11 +15,9 @@ trait NetworkingTest extends AsyncFlatSpec with should.Matchers:
 
   def eventually(timeout: FiniteDuration, interval: FiniteDuration)(assertion: => Assertion): Future[Assertion] =
     val deadline = timeout.fromNow
-    def poll(): Future[Assertion] = Future(assertion)
-      .flatMap(Future.successful)
-      .recoverWith:
-        case _ if !deadline.isOverdue() => after(interval)(poll())
-        case e => Future.failed(TimeoutException(s"Condition not met in ${timeout.toMillis} ms: ${e.getMessage}"))
+    def poll(): Future[Assertion] = Future(assertion).recoverWith:
+      case _ if !deadline.isOverdue() => after(interval)(poll())
+      case e => Future.failed(TimeoutException(s"Condition not met in ${timeout.toMillis} ms: ${e.getMessage}"))
     poll()
 
   def after[T](duration: FiniteDuration)(todo: => Future[T]): Future[T] =

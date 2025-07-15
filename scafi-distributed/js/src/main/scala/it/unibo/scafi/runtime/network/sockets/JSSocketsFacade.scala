@@ -8,7 +8,7 @@ import scala.util.Using.Releasable
 /**
  * Node.js emitter of events that can be listened to.
  * @see
- *   https://nodejs.org/api/events.html#class-eventemitter
+ *   [[https://nodejs.org/api/events.html#class-eventemitter nodejs documentation]]
  */
 @js.native
 trait EventEmitter extends js.Object:
@@ -42,7 +42,7 @@ end EventEmitter
  * A facade for the Node.js `net` module, which provides an asynchronous network API for creating stream-based TCP or
  * IPC servers and clients.
  * @see
- *   https://nodejs.org/api/net.html#net
+ *   [[https://nodejs.org/api/net.html#net nodejs documentation]]
  */
 @js.native
 @JSImport("net", JSImport.Namespace)
@@ -72,7 +72,7 @@ end Net
 /**
  * An [[EventEmitter]] abstraction used to create a TCP or IPC server.
  * @see
- *   https://nodejs.org/api/net.html#class-netserver
+ *   [[https://nodejs.org/api/net.html#class-netserver nodejs documentation]]
  */
 @js.native
 trait Server extends EventEmitter:
@@ -108,13 +108,15 @@ end Server
 /**
  * An [[EventEmitter]] abstraction of a TCP socket or a streaming IPC endpoint.
  * @see
- *   https://nodejs.org/api/net.html#class-netsocket
+ *   [[https://nodejs.org/api/net.html#class-netsocket nodejs documentation]]
  */
 @js.native
 trait Socket extends EventEmitter:
 
+  /** @return the string representation of the remote IP address. */
   def remoteAddress: String = js.native
 
+  /** @return the remote port. */
   def remotePort: Int = js.native
 
   /**
@@ -161,17 +163,29 @@ object EventEmitter:
      * Registers a listener for the `data` event.
      * @param listener
      *   the function to be called when data is received on the socket.
+     * @return
+     *   the socket instance itself.
      */
-    infix def onData(listener: js.Function1[Uint8Array, Unit]): Unit = socket.on("data")(listener)
+    infix def onData(listener: js.Function1[Uint8Array, Unit]): Socket = socket.on("data")(listener)
 
-    infix def onceClose(listener: Boolean => Unit): Unit = socket.once("close")(listener)
+    /**
+     * Registers a one-time listener for the `close` event.
+     * @param listener
+     *   the function to be called when the socket is closed.
+     * @return
+     *   the socket instance itself.
+     */
+    infix def onceClose(listener: Boolean => Unit): Socket = socket.once("close")(listener)
 
     /**
      * Registers a one-time listener for the `connect` event.
      * @param listener
      *   the function to be called when the socket connects.
+     * @return
+     *   the socket instance itself.
      */
-    infix def onceConnect(listener: () => Unit): Unit = socket.on("connect")(listener)
+    infix def onceConnect(listener: () => Unit): Socket = socket.on("connect")(listener)
+  end extension
 
   extension (emitter: Socket | Server)
 
@@ -179,6 +193,8 @@ object EventEmitter:
      * Registers a listener for the `error` event.
      * @param listener
      *   the function to be called when an error occurs on the socket.
+     * @return
+     *   the emitter instance itself.
      */
-    infix def onError(listener: js.Function1[js.Error, Unit]): Unit = emitter.on("error")(listener)
+    infix def onError(listener: js.Function1[js.Error, Unit]): emitter.type = emitter.on("error")(listener)
 end EventEmitter

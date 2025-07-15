@@ -25,6 +25,7 @@ trait SocketNetworkingBehavior extends NetworkingTest:
       yield
         client.isOpen shouldBe true
         client.close()
+        server.listener.close()
         client.isOpen shouldBe false
 
     it should "fail to connect to an unavailable remote endpoint" in:
@@ -32,7 +33,6 @@ trait SocketNetworkingBehavior extends NetworkingTest:
       val client = networking.out(Endpoint(Localhost, nonExistentServerPort))
       client.run().failed map:
         _ shouldBe a[Throwable]
-        // ex.getMessage should (include("Connection refused") or include("Could not connect to address"))
 
   def both(networking: => Networking[String, String]) =
     it should "be able to accept incoming connections from remote endpoints" in:
@@ -45,9 +45,10 @@ trait SocketNetworkingBehavior extends NetworkingTest:
         _ = client.close()
         assertion <- eventually(timeout = 2.seconds, interval = 250.millis):
           receivedMessages should contain theSameElementsInOrderAs messages
+        _ = server.listener.close()
       yield assertion
 
-    it should "forbid sending messages too large" ignore:
+    it should "close connections with clients attempting to flood the server" in:
       val tooLargeMessage = "A" * 65_536
       for
         server <- networking.in(FreePort)(nop).run()
@@ -55,6 +56,7 @@ trait SocketNetworkingBehavior extends NetworkingTest:
         _ <- client.send(tooLargeMessage)
         assertion <- eventually(timeout = 500.millis, interval = 100.millis):
           client.isOpen shouldBe false
+        _ = server.listener.close()
       yield assertion
   end both
 

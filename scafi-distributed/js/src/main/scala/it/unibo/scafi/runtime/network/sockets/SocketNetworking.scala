@@ -13,7 +13,7 @@ import it.unibo.scafi.runtime.network.Serializable
 import it.unibo.scafi.runtime.network.sockets.EventEmitter.*
 import it.unibo.scafi.utils.Task
 
-trait SocketNetworking[Message: Serializable](using ExecutionContext, SocketConfiguration)
+trait SocketNetworking[Message: Serializable](using ec: ExecutionContext, conf: SocketConfiguration)
     extends NetworkingTemplate[Message]:
 
   override def out(endpoint: Endpoint) = Task[Connection]:
@@ -32,16 +32,16 @@ trait SocketNetworking[Message: Serializable](using ExecutionContext, SocketConf
 
   private def createSocket(endpoint: Endpoint): Future[Socket] = fromPromise: p =>
     val socket = Net.connect(endpoint._2, endpoint._1)
-    socket.onceConnect(() => p.trySuccess(socket): Unit)
-    socket.onError(err => p.tryFailure(Exception(err.message)).pipe(_ => socket.destroy()))
+    socket
+      .onceConnect(() => p.trySuccess(socket): Unit)
+      .onError(err => p.tryFailure(Exception(err.message)).pipe(_ => socket.destroy())): Unit
 
   override def in(port: Port)(onReceive: Message => Unit) = Task[ListenerRef]:
     val listener = ServerSocketListener(onReceive)
     fromPromise[Listener]: p =>
-      listener.serverSocket.onError: err =>
-        p.tryFailure(Exception(err.message)): Unit
-        listener.serverSocket.close()
-      listener.serverSocket.listen(port)(() => p.trySuccess(listener): Unit)
+      listener.serverSocket
+        .onError(err => p.tryFailure(Exception(err.message)).pipe(_ => listener.serverSocket.close()))
+        .listen(port)(() => p.trySuccess(listener): Unit)
     .map(ListenerRef(_, listener.accept))
 
   private class ServerSocketListener(onReceive: Message => Unit) extends ListenerTemplate[Socket](onReceive):
@@ -50,11 +50,13 @@ trait SocketNetworking[Message: Serializable](using ExecutionContext, SocketConf
     private val sendChannels = js.Map[Socket, ArrayBuffer[Byte]]()
 
     val serverSocket: Server = Net.createServer: socket =>
-      socket.onData: chunk =>
-        val buffer = sendChannels.getOrElseUpdate(socket, ArrayBuffer[Byte]())
-        for i <- 0 until chunk.length do buffer += chunk(i).toByte
-        serve(using socket)
-      socket.onceClose(_ => sendChannels.remove(socket): Unit)
+      socket
+        .setTimeout(conf.inactivityTimeout.toIntMillis)(() => socket.destroy())
+        .onData: chunk =>
+          val buffer = sendChannels.getOrElseUpdate(socket, ArrayBuffer[Byte]())
+          for i <- 0 until chunk.length do buffer += chunk(i).toByte
+          serve(using socket)
+        .onceClose(_ => sendChannels.remove(socket): Unit): Unit
 
     override def readMessageLength(using client: Socket): Try[Int] =
       val channel = sendChannels(client)

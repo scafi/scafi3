@@ -11,7 +11,7 @@ import it.unibo.scafi.runtime.network.Serializable
 import it.unibo.scafi.runtime.network.Serializable.*
 import it.unibo.scafi.utils.Task
 
-trait SocketNetworking[Message: Serializable](using ExecutionContext, SocketConfiguration)
+trait SocketNetworking[Message: Serializable](using ec: ExecutionContext, conf: SocketConfiguration)
     extends NetworkingTemplate[Message]:
 
   override def out(endpoint: Endpoint) = Task:
@@ -37,7 +37,9 @@ trait SocketNetworking[Message: Serializable](using ExecutionContext, SocketConf
               case Failure(_: SocketException) => false
               case _ => true
             .collect { case Success(c) => c }
-            .foreach(s => Future(serve(using s)))
+            .foreach: s =>
+              s.setSoTimeout(conf.inactivityTimeout.toIntMillis)
+              Future(serve(using s))
 
         override def readMessageLength(using client: Socket): Try[Int] =
           Try(DataInputStream(client.getInputStream).readInt).filter(_ > -1)

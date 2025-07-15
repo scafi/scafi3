@@ -19,8 +19,8 @@ trait Networking[+MessageIn, -MessageOut]:
    * @param endpoint
    *   the remote [[Endpoint]] to connect to.
    * @return
-   *   a function that, when invoked, attempt to establish a connection, returning a `Future` that successfully
-   *   completes with the established connection, or fails with the reason of the failure in case of errors.
+   *   a deferred computation that, when run, attempt to establish a connection, returning a `Future` that successfully
+   *   completes with the established connection, or fails in case of errors.
    */
   def out(endpoint: Endpoint): Task[Connection]
 
@@ -31,10 +31,10 @@ trait Networking[+MessageIn, -MessageOut]:
    * @param onReceive
    *   the callback to invoke when a message is received.
    * @return
-   *   a function that, when invoked, attempts to create a connection listener, returning a `Future` that successfully
-   *   completes with the [[ListenerRef]], or fails with the failure reason in case of errors.
+   *   a deferred computation that, when run, attempts to create a connection listener, returning a `Future` that
+   *   successfully completes with the [[ListenerRef]], or fails in case of errors.
    * @see
-   *   ListenerRef
+   *   [[ListenerRef]]
    */
   def in(port: Port)(onReceive: MessageIn => Unit): Task[ListenerRef]
 
@@ -56,7 +56,7 @@ trait Networking[+MessageIn, -MessageOut]:
      * @param msg
      *   the message to send.
      * @return
-     *   a `Future` that completes when the message has been sent successfully, or fails with the reason of the failure.
+     *   a `Future` that completes when the message has been sent successfully, or fails in case of errors.
      */
     def send(msg: MessageOut): Future[Unit]
 

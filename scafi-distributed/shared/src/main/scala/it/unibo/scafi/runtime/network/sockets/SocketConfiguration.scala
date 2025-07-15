@@ -16,8 +16,13 @@ trait SocketConfiguration:
 object SocketConfiguration:
 
   /**
-   * A basic socket configuration with a maximum message size of 65,536 bytes and an inactivity timeout of 30 seconds.
+   * A basic socket configuration with a maximum message size of 65,536 bytes and an inactivity timeout of 60 seconds.
    */
   def basic: SocketConfiguration = new SocketConfiguration:
     override val maxMessageSize: Int = 65_536
-    override val inactivityTimeout: FiniteDuration = 30.seconds
+    override val inactivityTimeout: FiniteDuration = 60.seconds
+
+extension (duration: FiniteDuration)
+  def toIntMillis: Int =
+    val millisDuration = duration.toMillis
+    if millisDuration > Int.MaxValue then Int.MaxValue else millisDuration.toInt
