@@ -10,14 +10,18 @@ import it.unibo.scafi.utils.Async
 import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest.matchers.should
 import org.scalatest.compatible.Assertion
+import org.scalatest.concurrent.PatienceConfiguration
+import org.scalatest.time.{ Millis, Seconds, Span }
 
-trait NetworkingTest extends AsyncFlatSpec with should.Matchers:
+trait NetworkingTest extends AsyncFlatSpec with should.Matchers with PatienceConfiguration:
 
-  def eventually(timeout: FiniteDuration, interval: FiniteDuration)(assertion: => Assertion): Future[Assertion] =
-    val deadline = timeout.fromNow
+  given PatienceConfig = PatienceConfig(timeout = Span(1, Seconds), interval = Span(100, Millis))
+
+  def eventually(assertion: => Assertion)(using patience: PatienceConfig): Future[Assertion] =
+    val deadline = patience.timeout.fromNow
     def poll(): Future[Assertion] = Future(assertion).recoverWith:
-      case _ if !deadline.isOverdue() => after(interval)(poll())
-      case e => Future.failed(TimeoutException(s"Condition not met in ${timeout.toMillis} ms: ${e.getMessage}"))
+      case _ if !deadline.isOverdue() => after(patience.interval)(poll())
+      case e => Future.failed(TimeoutException(s"Condition not met in ${patience.timeout.toMillis}ms: ${e.getMessage}"))
     poll()
 
   def after[T](duration: FiniteDuration)(todo: => Future[T]): Future[T] =
