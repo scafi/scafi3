@@ -22,4 +22,9 @@ trait NetworkingTest extends AsyncFlatSpec with should.Matchers:
 
   def after[T](duration: FiniteDuration)(todo: => Future[T]): Future[T] =
     Async.operations.sleep(duration).flatMap(_ => todo)
+
+  extension [T](f: Future[T])
+    infix def verify(assertion: T => Assertion): Future[Assertion] = f.map(assertion)
+    infix def verifying(assertion: => Future[Assertion]): Future[Assertion] = verifying(_ => assertion)
+    infix def verifying(assertion: T => Future[Assertion]): Future[Assertion] = f.flatMap(assertion)
 end NetworkingTest

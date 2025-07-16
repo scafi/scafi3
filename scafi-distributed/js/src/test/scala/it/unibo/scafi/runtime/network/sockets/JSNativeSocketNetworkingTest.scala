@@ -8,10 +8,10 @@ class JSNativeSocketNetworkingTest extends SocketNetworkingBehavior:
 
   override given executionContext: ExecutionContext = scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 
-  val networking = new SocketNetworking[String] {}
+  given Networking[Message, Message] = new SocketNetworking[String] {}
 
-  it should behave like anInboundConnectionListener(networking)
+  it should behave like anInboundConnectionListener
 
-  it should behave like anOutboundConnection(networking)
+  it should behave like anOutboundConnection
 
-  it should behave like both(networking)
+  it should behave like both
