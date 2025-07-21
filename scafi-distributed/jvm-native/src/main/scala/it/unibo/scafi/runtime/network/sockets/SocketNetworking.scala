@@ -7,12 +7,12 @@ import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.{ Failure, Success, Try }
 import scala.LazyList.continually
 
-import it.unibo.scafi.runtime.network.Serializable
-import it.unibo.scafi.runtime.network.Serializable.*
+import it.unibo.scafi.runtime.network.Codable
+import it.unibo.scafi.runtime.network.Codable.*
 import it.unibo.scafi.utils.Task
 
-trait SocketNetworking[Message: Serializable](using ec: ExecutionContext, conf: SocketConfiguration)
-    extends NetworkingTemplate[Message]:
+trait SocketNetworking[Message: Codable](using ec: ExecutionContext, conf: SocketConfiguration)
+    extends NetworkingTemplate[Message, Message]:
 
   override def out(endpoint: Endpoint) = Task:
     for

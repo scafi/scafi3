@@ -9,12 +9,12 @@ import scala.collection.mutable.ArrayBuffer
 import scala.util.Try
 import scala.util.chaining.scalaUtilChainingOps
 
-import it.unibo.scafi.runtime.network.Serializable
+import it.unibo.scafi.runtime.network.Codable
 import it.unibo.scafi.runtime.network.sockets.EventEmitter.*
 import it.unibo.scafi.utils.Task
 
-trait SocketNetworking[Message: Serializable](using ec: ExecutionContext, conf: SocketConfiguration)
-    extends NetworkingTemplate[Message]:
+trait SocketNetworking[Message: Codable](using ec: ExecutionContext, conf: SocketConfiguration)
+    extends NetworkingTemplate[Message, Message]:
 
   override def out(endpoint: Endpoint) = Task[Connection]:
     for

@@ -7,15 +7,16 @@ import scala.LazyList.continually
 import scala.util.{ Failure, Success, Try }
 import scala.util.Using.Releasable
 
-import it.unibo.scafi.runtime.network.Serializable
-import it.unibo.scafi.runtime.network.Serializable.*
+import it.unibo.scafi.runtime.network.{ Decodable, Encodable }
+import it.unibo.scafi.runtime.network.Codable.*
 
-trait NetworkingTemplate[Message: Serializable](using conf: SocketConfiguration) extends Networking[Message, Message]:
+trait NetworkingTemplate[+MessageIn: Decodable, -MessageOut: Encodable](using conf: SocketConfiguration)
+    extends Networking[MessageIn, MessageOut]:
 
   /** An abstract connection template with pre-cooked `send` logic. */
   trait ConnectionTemplate extends Connection:
-    override def send(msg: Message): Future[Unit] =
-      val serializedMsg = serialize(msg)
+    override def send(msg: MessageOut): Future[Unit] =
+      val serializedMsg = encode(msg)
       val lengthBytes = ByteBuffer.allocate(Integer.BYTES).putInt(serializedMsg.length).array()
       val data = lengthBytes ++ serializedMsg
       write(data)
@@ -34,12 +35,12 @@ trait NetworkingTemplate[Message: Serializable](using conf: SocketConfiguration)
    * @tparam Socket
    *   the [[Releasable]] client socket type.
    */
-  trait ListenerTemplate[Socket: Releasable](onReceive: Message => Unit) extends Listener:
+  trait ListenerTemplate[Socket: Releasable](onReceive: MessageIn => Unit) extends Listener:
     def serve(using Socket) = continually(validate(readMessageLength))
       .takeWhile(_.isSuccess)
       .collect { case Success(value) => value }
       .filter(_ > 0)
-      .map(readMessage andThen deserialize)
+      .map(readMessage andThen decode)
       .foreach(onReceive)
 
     private def validate(msgLen: Try[Int])(using client: Socket): Try[Int] = msgLen.flatMap: rawLen =>

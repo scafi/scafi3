@@ -4,13 +4,15 @@ import java.util.concurrent.ForkJoinPool
 
 import scala.concurrent.ExecutionContext
 
+import it.unibo.scafi.runtime.network.Codable.given
+
 class JVMNativeSocketNetworkingTest extends SocketNetworkingBehavior:
 
   override given executionContext: ExecutionContext = ExecutionContext.fromExecutor(ForkJoinPool())
 
   given SocketConfiguration = SocketConfiguration.basic
 
-  given Networking[Message, Message] = new SocketNetworking[String] {}
+  given Networking[Message, Message] = new SocketNetworking[Message] {}
 
   it should behave like anInboundConnectionListener
 
