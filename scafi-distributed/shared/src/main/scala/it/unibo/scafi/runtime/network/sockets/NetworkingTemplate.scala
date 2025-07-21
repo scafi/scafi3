@@ -10,8 +10,11 @@ import scala.util.Using.Releasable
 import it.unibo.scafi.runtime.network.{ Decodable, Encodable }
 import it.unibo.scafi.runtime.network.Codable.*
 
-trait NetworkingTemplate[+MessageIn: Decodable, -MessageOut: Encodable](using conf: SocketConfiguration)
-    extends Networking[MessageIn, MessageOut]:
+trait NetworkingTemplate(using conf: SocketConfiguration) extends Networking:
+
+  override type MessageIn: Decodable
+
+  override type MessageOut: Encodable
 
   /** An abstract connection template with pre-cooked `send` logic. */
   trait ConnectionTemplate extends Connection:

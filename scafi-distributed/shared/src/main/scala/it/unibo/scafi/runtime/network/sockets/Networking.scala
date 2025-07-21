@@ -6,13 +6,15 @@ import it.unibo.scafi.utils.Task
 
 /**
  * Networking platform-independent abstraction for connection-oriented communication.
- * @tparam MessageIn
- *   the incoming message type from remote processes.
- * @tparam MessageOut
- *   the outgoing message type to remote processes.
  */
-trait Networking[+MessageIn, -MessageOut]:
+trait Networking:
   export InetTypes.*
+
+  /** The incoming message type from remote processes. */
+  type MessageIn
+
+  /** The outgoing message type to remote processes. */
+  type MessageOut
 
   /**
    * A deferred [[Connection]] factory to a remote endpoint.

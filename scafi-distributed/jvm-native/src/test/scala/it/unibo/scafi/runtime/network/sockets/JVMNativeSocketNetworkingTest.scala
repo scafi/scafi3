@@ -12,7 +12,9 @@ class JVMNativeSocketNetworkingTest extends SocketNetworkingBehavior:
 
   given SocketConfiguration = SocketConfiguration.basic
 
-  given Networking[Message, Message] = new SocketNetworking[Message] {}
+  given PlainTextNetworking = new SocketNetworking:
+    override type MessageIn = String
+    override type MessageOut = String
 
   it should behave like anInboundConnectionListener
 

@@ -8,20 +8,23 @@ import it.unibo.scafi.runtime.network.sockets.InetTypes.*
 
 trait SocketNetworkingBehavior extends NetworkingTest:
 
-  type Message = String
+  type PlainTextNetworking = Networking & {
+    type MessageIn = String
+    type MessageOut = String
+  }
 
-  def anInboundConnectionListener(using networking: Networking[Message, Message])(using ExecutionContext): Unit =
+  def anInboundConnectionListener(using net: Networking)(using ExecutionContext): Unit =
     it should "be able to be initialized on a free port" in:
-      val server = networking.in(FreePort)(nop)
+      val server = net.in(FreePort)(nop)
       server.run() verify: ref =>
         ref.listener.isOpen shouldBe true
         ref.listener.close()
         ref.listener.isOpen shouldBe false
 
-  def anOutboundConnection(using networking: Networking[Message, Message]): Unit =
+  def anOutboundConnection(using net: Networking): Unit =
     it should "fail to connect to an unavailable remote endpoint" in:
       val nonExistentServerPort: Port = 5050
-      val client = networking.out(Endpoint(Localhost, nonExistentServerPort))
+      val client = net.out(Endpoint(Localhost, nonExistentServerPort))
       client.run().failed map:
         _ shouldBe a[Throwable]
 
@@ -31,9 +34,9 @@ trait SocketNetworkingBehavior extends NetworkingTest:
         client.close()
         client.isOpen shouldBe false
 
-  def both(using networking: Networking[Message, Message]) =
+  def both(using net: PlainTextNetworking) =
     it should "be able to accept incoming connections from remote endpoints" in:
-      val receivedMessages = CopyOnWriteArrayList[String]()
+      val receivedMessages = CopyOnWriteArrayList[net.MessageIn]()
       val messages = Seq("Hello", "World", "Scafi", "Networking")
       usingServer(msg => receivedMessages.add(msg): Unit):
         _ send messages verifying eventually(receivedMessages should contain theSameElementsInOrderAs messages)
@@ -44,8 +47,8 @@ trait SocketNetworkingBehavior extends NetworkingTest:
         client send Seq(tooLargeMessage) verifying eventually(client.isOpen shouldBe false)
 
   private def usingServer[Result](using
-      net: Networking[Message, Message],
-  )(onMessage: Message => Unit)(todo: net.Connection => Future[Result]) =
+      net: Networking,
+  )(onMessage: net.MessageIn => Unit)(todo: net.Connection => Future[Result]) =
     for
       server <- net.in(FreePort)(onMessage).run()
       client <- net.out(Endpoint(Localhost, server.listener.boundPort)).run()
@@ -54,8 +57,8 @@ trait SocketNetworkingBehavior extends NetworkingTest:
       _ = server.listener.close()
     yield result
 
-  extension (using net: Networking[Message, Message])(client: net.Connection)
-    infix def send(messages: Seq[Message]) =
+  extension (using net: Networking)(client: net.Connection)
+    infix def send(messages: Seq[net.MessageOut]) =
       messages.foldLeft(Future.unit)((acc, msg) => acc.flatMap(_ => client.send(msg)))
 
   private val nop: Any => Unit = _ => ()

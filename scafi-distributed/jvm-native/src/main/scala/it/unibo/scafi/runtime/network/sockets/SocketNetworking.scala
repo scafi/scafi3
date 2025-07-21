@@ -7,12 +7,10 @@ import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.{ Failure, Success, Try }
 import scala.LazyList.continually
 
-import it.unibo.scafi.runtime.network.Codable
 import it.unibo.scafi.runtime.network.Codable.*
 import it.unibo.scafi.utils.Task
 
-trait SocketNetworking[Message: Codable](using ec: ExecutionContext, conf: SocketConfiguration)
-    extends NetworkingTemplate[Message, Message]:
+trait SocketNetworking(using ec: ExecutionContext, conf: SocketConfiguration) extends NetworkingTemplate:
 
   override def out(endpoint: Endpoint) = Task:
     for
@@ -27,7 +25,7 @@ trait SocketNetworking[Message: Codable](using ec: ExecutionContext, conf: Socke
         override def isOpen: Boolean = !socket.isClosed && Try(synchronized(sendChannel.write(0))).isSuccess
     yield conn
 
-  override def in(port: Port)(onReceive: Message => Unit) = Task[ListenerRef]:
+  override def in(port: Port)(onReceive: MessageIn => Unit) = Task[ListenerRef]:
     for
       server <- Future(ServerSocket(port))
       listener = new ListenerTemplate[Socket](onReceive):

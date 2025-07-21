@@ -9,12 +9,10 @@ import scala.collection.mutable.ArrayBuffer
 import scala.util.Try
 import scala.util.chaining.scalaUtilChainingOps
 
-import it.unibo.scafi.runtime.network.Codable
 import it.unibo.scafi.runtime.network.sockets.EventEmitter.*
 import it.unibo.scafi.utils.Task
 
-trait SocketNetworking[Message: Codable](using ec: ExecutionContext, conf: SocketConfiguration)
-    extends NetworkingTemplate[Message, Message]:
+trait SocketNetworking(using ec: ExecutionContext, conf: SocketConfiguration) extends NetworkingTemplate:
 
   override def out(endpoint: Endpoint) = Task[Connection]:
     for
@@ -36,7 +34,7 @@ trait SocketNetworking[Message: Codable](using ec: ExecutionContext, conf: Socke
       .onceConnect(() => p.trySuccess(socket): Unit)
       .onError(err => p.tryFailure(Exception(err.message)).pipe(_ => socket.destroy())): Unit
 
-  override def in(port: Port)(onReceive: Message => Unit) = Task[ListenerRef]:
+  override def in(port: Port)(onReceive: MessageIn => Unit) = Task[ListenerRef]:
     val listener = ServerSocketListener(onReceive)
     fromPromise[Listener]: p =>
       listener.serverSocket
@@ -44,7 +42,7 @@ trait SocketNetworking[Message: Codable](using ec: ExecutionContext, conf: Socke
         .listen(port)(() => p.trySuccess(listener): Unit)
     .map(ListenerRef(_, listener.accept))
 
-  private class ServerSocketListener(onReceive: Message => Unit) extends ListenerTemplate[Socket](onReceive):
+  private class ServerSocketListener(onReceive: MessageIn => Unit) extends ListenerTemplate[Socket](onReceive):
     private var open = true
     private val acceptPromise: Promise[Unit] = Promise[Unit]()
     private val sendChannels = js.Map[Socket, ArrayBuffer[Byte]]()
