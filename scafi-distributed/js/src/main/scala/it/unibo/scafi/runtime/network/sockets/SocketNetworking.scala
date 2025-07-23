@@ -29,7 +29,7 @@ trait SocketNetworking(using ec: ExecutionContext, conf: SocketConfiguration) ex
     yield conn
 
   private def createSocket(endpoint: Endpoint): Future[Socket] = fromPromise: p =>
-    val socket = Net.connect(endpoint._2, endpoint._1)
+    val socket = Net.connect(endpoint.port, endpoint.address)
     socket
       .onceConnect(() => p.trySuccess(socket): Unit)
       .onError(err => p.tryFailure(Exception(err.message)).pipe(_ => socket.destroy())): Unit
