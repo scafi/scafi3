@@ -1,7 +1,9 @@
 package it.unibo.scafi.runtime.network
 
-/** A set of neighbors' device identifiers. */
-opaque type Neighborhood[DeviceId] = Set[DeviceId]
+/**
+ * A set of neighbors' device identifiers.
+ */
+type Neighborhood[DeviceId] = Set[DeviceId]
 
 object Neighborhood:
 
@@ -10,8 +12,16 @@ object Neighborhood:
   def empty[DeviceId]: Neighborhood[DeviceId] = Set.empty[DeviceId]
 
 /**
- * A neighborhood resolver, namely a function that in any given moment returns the current [[Neighborhood]].
- * @tparam DeviceId
- *   the type of the neighbors device identifiers.
+ * A neighborhood resolver is responsible for resolving all the neighbors of a device based on some criteria.
  */
-trait NeighborhoodResolver[DeviceId] extends (() => Neighborhood[DeviceId])
+trait NeighborhoodResolver:
+
+  /** The type of device identifiers. */
+  type DeviceId
+
+  /**
+   * Resolves the neighborhood of the calling device.
+   * @return
+   *   the neighborhood of the device.
+   */
+  def resolve(): Neighborhood[DeviceId]
