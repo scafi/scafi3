@@ -5,12 +5,6 @@ package it.unibo.scafi.runtime.network
  */
 type Neighborhood[DeviceId] = Set[DeviceId]
 
-object Neighborhood:
-
-  def apply[DeviceId](ids: Iterable[DeviceId]): Neighborhood[DeviceId] = Set.from(ids)
-
-  def empty[DeviceId]: Neighborhood[DeviceId] = Set.empty[DeviceId]
-
 /**
  * A neighborhood resolver is responsible for resolving all the neighbors of a device based on some criteria.
  */

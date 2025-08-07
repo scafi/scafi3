@@ -30,7 +30,7 @@ trait SocketBasedNetworkManager(using ExecutionContext) extends NetworkManager:
 
   override def receive: Import[DeviceId] = Import(inValues.asScala.toMap)
 
-  private def client(connections: Map[Endpoint, Connection])(using ExecutionContext): Future[Unit] =
+  private def client(connections: Map[Endpoint, Connection]): Future[Unit] =
     for
       msg <- outChannel.take
       neighbors <- Future.successful(reachableNeighbors)

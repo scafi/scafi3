@@ -43,7 +43,7 @@ object Codable:
    * Encode the given message into an array of bytes using a contextually available `Encodable` instance.
    * @param message
    *   the message to encode.
-   * @param s
+   * @param e
    *   the contextually available `Encodable` instance for the message type.
    * @tparam Message
    *   the type of the message to encode.
