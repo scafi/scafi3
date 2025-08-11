@@ -8,10 +8,16 @@ import it.unibo.scafi.runtime.network.sockets.InetTypes.*
 
 trait SocketNetworkingBehavior extends NetworkingTest:
 
+  given SocketConfiguration = SocketConfiguration.basic
+
   type PlainTextNetworking = Networking & {
     type MessageIn = String
     type MessageOut = String
   }
+
+  given PlainTextNetworking = new SocketNetworking:
+    override type MessageIn = String
+    override type MessageOut = String
 
   def anInboundConnectionListener(using net: Networking)(using ExecutionContext): Unit =
     it should "be able to be initialized on a free port" in:

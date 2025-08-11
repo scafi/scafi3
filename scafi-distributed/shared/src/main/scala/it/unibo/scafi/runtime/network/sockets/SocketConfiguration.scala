@@ -23,6 +23,6 @@ object SocketConfiguration:
     override val inactivityTimeout: FiniteDuration = 60.seconds
 
 extension (duration: FiniteDuration)
-  def toIntMillis: Int =
+  private[sockets] def toIntMillis: Int =
     val millisDuration = duration.toMillis
     if millisDuration > Int.MaxValue then Int.MaxValue else millisDuration.toInt

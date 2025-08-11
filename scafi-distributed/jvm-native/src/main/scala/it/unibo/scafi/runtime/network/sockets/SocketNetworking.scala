@@ -7,7 +7,6 @@ import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.{ Failure, Success, Try }
 import scala.LazyList.continually
 
-import it.unibo.scafi.runtime.network.Codable.*
 import it.unibo.scafi.utils.Task
 
 trait SocketNetworking(using ec: ExecutionContext, conf: SocketConfiguration) extends NetworkingTemplate:

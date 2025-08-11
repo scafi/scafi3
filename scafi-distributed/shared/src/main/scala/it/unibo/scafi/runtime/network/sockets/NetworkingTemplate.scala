@@ -7,14 +7,14 @@ import scala.LazyList.continually
 import scala.util.{ Failure, Success, Try }
 import scala.util.Using.Releasable
 
-import it.unibo.scafi.runtime.network.{ Decodable, Encodable }
-import it.unibo.scafi.runtime.network.Codable.*
+import it.unibo.scafi.message.{ BinaryDecodable, BinaryEncodable }
+import it.unibo.scafi.message.Codable.*
 
 trait NetworkingTemplate(using conf: SocketConfiguration) extends Networking:
 
-  override type MessageIn: Decodable
+  override type MessageIn: BinaryDecodable
 
-  override type MessageOut: Encodable
+  override type MessageOut: BinaryEncodable
 
   /** An abstract connection template with pre-cooked `send` logic. */
   trait ConnectionTemplate extends Connection:

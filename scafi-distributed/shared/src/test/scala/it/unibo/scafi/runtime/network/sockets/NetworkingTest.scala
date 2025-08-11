@@ -5,6 +5,7 @@ import java.util.concurrent.TimeoutException
 import scala.concurrent.duration.*
 import scala.concurrent.Future
 
+import it.unibo.scafi.message.{ Codable, Codables }
 import it.unibo.scafi.utils.Async
 
 import org.scalatest.flatspec.AsyncFlatSpec
@@ -14,6 +15,8 @@ import org.scalatest.concurrent.PatienceConfiguration
 import org.scalatest.time.{ Millis, Seconds, Span }
 
 trait NetworkingTest extends AsyncFlatSpec with should.Matchers with PatienceConfiguration:
+
+  given Codable[String, Array[Byte]] = Codables.forStringsInBinaryFormat
 
   given PatienceConfig = PatienceConfig(timeout = Span(1, Seconds), interval = Span(100, Millis))
 

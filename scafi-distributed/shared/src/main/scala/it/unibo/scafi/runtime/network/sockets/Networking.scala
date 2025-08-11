@@ -6,6 +6,8 @@ import it.unibo.scafi.utils.Task
 
 /**
  * Networking platform-independent abstraction for connection-oriented communication.
+ *
+ * TODO: rename with ConnectionOrientedNetworking or similar.
  */
 trait Networking:
   export InetTypes.*

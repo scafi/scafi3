@@ -52,4 +52,6 @@ object InetTypes:
 
   /** The port used to instruct the operating system to assign a free ephemeral port. */
   val FreePort: Port = 0
+
+  given CanEqual[Endpoint, Endpoint] = CanEqual.derived
 end InetTypes

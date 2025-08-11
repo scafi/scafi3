@@ -63,6 +63,9 @@ lazy val commonDependencies =
     "org.typelevel" %%% "cats-core" % "2.13.0",
     "org.scalactic" %%% "scalactic" % "3.2.19",
     "io.github.iltotore" %%% "iron" % "3.0.2",
+    "io.bullet" %%% "borer-core" % "1.16.1",
+    "io.bullet" %%% "borer-derivation" % "1.16.1",
+    "com.outr" %%% "scribe" % "3.17.0",
     "org.scalatest" %%% "scalatest" % "3.2.19" % Test,
     "org.scalatestplus" %%% "scalacheck-1-18" % "3.2.19.0" % Test,
   )
