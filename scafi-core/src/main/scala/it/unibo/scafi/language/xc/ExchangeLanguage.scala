@@ -23,11 +23,11 @@ trait ExchangeLanguage extends ExchangeSyntax, FieldCalculusSyntax:
   override def neighborValues[Format, Value: CodableFromTo[Format]](expr: Value): SharedData[Value] =
     exchange(expr)(nv => returning(nv) send expr)
 
-  override def evolve[A](initial: A)(evolution: A => A): A = ???
-  // exchange[Option[A]](None)(nones =>
-  //   val previousValue = nones(localId).getOrElse(initial)
-  //   nones.set(localId, Some(evolution(previousValue))),
-  // )(localId).get
+  override def evolve[Format, Value: CodableFromTo[Format]](initial: Value)(evolution: Value => Value): Value =
+    exchange(None)(nones =>
+      val previousValue = nones(localId).getOrElse(initial)
+      nones.set(localId, Some(evolution(previousValue))),
+    )(localId).get
 
   override def share[Format, Value: CodableFromTo[Format]](initial: Value)(
       shareAndReturning: SharedData[Value] => Value,

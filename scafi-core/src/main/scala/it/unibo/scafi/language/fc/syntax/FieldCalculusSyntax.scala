@@ -10,7 +10,8 @@ trait FieldCalculusSyntax:
    * `nbr` sends a local value to <b>neighbours</b> and returns the aggregate value of the received messages.
    * @param expr
    *   the local value to send to neighbours
-   * @param Format
+   * @tparam Format
+   *   the data format type used to encode the local value for distribution to neighbours
    * @tparam Value
    *   the type of the local value
    * @return
@@ -24,12 +25,14 @@ trait FieldCalculusSyntax:
    *   the initial value
    * @param evolution
    *   the function to apply
+   * @tparam Format
+   *   the data format type used to encode the local value for distribution to neighbours
    * @tparam Value
    *   the type of the value
    * @return
    *   the value after the last application of the function
    */
-  def evolve[Value](initial: Value)(evolution: Value => Value): Value
+  def evolve[Format, Value: CodableFromTo[Format]](initial: Value)(evolution: Value => Value): Value
 
   /**
    * `share` computes a value by repeatedly applying a function to an initial value while <b>sharing</b> the result with
@@ -38,7 +41,8 @@ trait FieldCalculusSyntax:
    *   the initial value
    * @param shareAndReturning
    *   the function that returns the value to share and return
-   * @param Format
+   * @tparam Format
+   *   the data format type used to encode the local value for distribution to neighbours
    * @tparam Value
    *   the type of the value
    * @return

@@ -6,7 +6,7 @@ import it.unibo.scafi.language.xc.FieldBasedSharedData
 import it.unibo.scafi.language.xc.syntax.ExchangeSyntax
 import it.unibo.scafi.libraries.All.*
 import it.unibo.scafi.test.environment.Grids.mooreGrid
-import it.unibo.scafi.message.Codables.inMemory
+import it.unibo.scafi.message.Codables.forInMemoryCommunications
 
 object Experiments:
 

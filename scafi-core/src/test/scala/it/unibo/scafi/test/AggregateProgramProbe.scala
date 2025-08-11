@@ -6,7 +6,7 @@ import it.unibo.scafi.runtime.network.NetworkManager
 
 trait AggregateProgramProbe:
 
-  given [Message]: Codable[Message, Message] = Codables.inMemory[Message]
+  given [Message]: Codable[Message, Message] = Codables.forInMemoryCommunications[Message]
 
   def roundForAggregateProgram[
       ID,

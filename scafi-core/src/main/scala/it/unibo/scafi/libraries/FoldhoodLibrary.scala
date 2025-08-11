@@ -9,6 +9,7 @@ import cats.syntax.all.{ catsSyntaxTuple2Semigroupal, toFunctorOps }
 
 // import FieldCalculusLibrary.neighborValues as fcNbr
 // import FoldingLibrary.foldWithoutSelf
+// import it.unibo.scafi.message.CodableFromTo
 
 // object FoldhoodLibrary:
 
@@ -26,8 +27,9 @@ import cats.syntax.all.{ catsSyntaxTuple2Semigroupal, toFunctorOps }
 //    * @return
 //    *   the value of the expression
 //    */
-//   def nbr[A, L <: AggregateFoundation & FieldCalculusSyntax](expr: => A)(using c: FoldhoodContext[L]): A =
-//     c.current(fcNbr[A](expr))
+//   def nbr[Format, A: CodableFromTo[Format], L <: AggregateFoundation & FieldCalculusSyntax](expr: => A)(using
+//       c: FoldhoodContext[L],
+//   ): A = c.current(fcNbr(expr))
 
 //   /**
 //    * The distances construct is used to access the distance from the corresponding neighbors during the evaluation of a

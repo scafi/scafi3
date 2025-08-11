@@ -12,8 +12,8 @@ object All:
   export ExchangeCalculusLibrary.{ *, given }
   export FieldCalculusLibrary.{ *, given }
   export FoldingLibrary.{ *, given }
-  // export GradientLibrary.{ *, given }
-  // export MathLibrary.{ *, given }
+  export GradientLibrary.{ *, given }
+  export MathLibrary.{ *, given }
   // TODO: missing FoldhoodLibrary, why?
   export CommonBoundaries.{ *, given }
   export cats.syntax.all.*
