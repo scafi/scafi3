@@ -1,9 +1,9 @@
 package it.unibo.scafi.utils
 
+import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.matchers.should
 import org.scalatest.propspec.AnyPropSpec
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
-import org.scalatest.matchers.should
-import org.scalatest.concurrent.ScalaFutures
 
 import unsafeExceptions.canThrowAny
 

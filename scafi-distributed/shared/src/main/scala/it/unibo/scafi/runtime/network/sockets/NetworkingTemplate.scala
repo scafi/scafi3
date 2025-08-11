@@ -2,15 +2,15 @@ package it.unibo.scafi.runtime.network.sockets
 
 import java.nio.ByteBuffer
 
-import scala.concurrent.Future
 import scala.LazyList.continually
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.{ Failure, Success, Try }
 import scala.util.Using.Releasable
 
 import it.unibo.scafi.message.{ BinaryDecodable, BinaryEncodable }
 import it.unibo.scafi.message.Codable.*
 
-trait NetworkingTemplate(using conf: SocketConfiguration) extends Networking:
+trait NetworkingTemplate(using ec: ExecutionContext, conf: SocketConfiguration) extends Networking:
 
   override type MessageIn: BinaryDecodable
 
@@ -19,10 +19,12 @@ trait NetworkingTemplate(using conf: SocketConfiguration) extends Networking:
   /** An abstract connection template with pre-cooked `send` logic. */
   trait ConnectionTemplate extends Connection:
     override def send(msg: MessageOut): Future[Unit] =
-      val serializedMsg = encode(msg)
-      val lengthBytes = ByteBuffer.allocate(Integer.BYTES).putInt(serializedMsg.length).array()
-      val data = lengthBytes ++ serializedMsg
-      write(data)
+      for
+        serializedMsg <- Future(encode(msg))
+        lengthBytes <- Future(ByteBuffer.allocate(Integer.BYTES).putInt(serializedMsg.length).array())
+        data = lengthBytes ++ serializedMsg
+        _ <- write(data)
+      yield ()
 
     /**
      * Writes the given buffer over the underlying connection.
@@ -39,7 +41,7 @@ trait NetworkingTemplate(using conf: SocketConfiguration) extends Networking:
    *   the [[Releasable]] client socket type.
    */
   trait ListenerTemplate[Socket: Releasable](onReceive: MessageIn => Unit) extends Listener:
-    def serve(using Socket) = continually(validate(readMessageLength))
+    protected def serve(using Socket) = continually(validate(readMessageLength))
       .takeWhile(_.isSuccess)
       .collect { case Success(value) => value }
       .filter(_ > 0)

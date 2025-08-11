@@ -4,15 +4,15 @@ import java.nio.charset.StandardCharsets
 
 import scala.concurrent.ExecutionContext
 
-import it.unibo.scafi.message.Codable
-import it.unibo.scafi.runtime.network.sockets.InetTypes.*
-import it.unibo.scafi.runtime.ScafiEngine
 import it.unibo.scafi.context.xc.ExchangeAggregateContext.exchangeContextFactory
 import it.unibo.scafi.language.AggregateFoundation
 import it.unibo.scafi.language.common.syntax.BranchingSyntax
 import it.unibo.scafi.language.xc.FieldBasedSharedData
 import it.unibo.scafi.language.xc.syntax.ExchangeSyntax
 import it.unibo.scafi.libraries.All.*
+import it.unibo.scafi.message.Codable
+import it.unibo.scafi.runtime.ScafiEngine
+import it.unibo.scafi.runtime.network.sockets.InetTypes.*
 
 object DistributedTests:
 

@@ -1,11 +1,11 @@
 package it.unibo.scafi.runtime.network.sockets
 
-import java.net.{ ServerSocket, Socket, SocketException }
 import java.io.{ DataInputStream, DataOutputStream }
+import java.net.{ ServerSocket, Socket, SocketException }
 
+import scala.LazyList.continually
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.{ Failure, Success, Try }
-import scala.LazyList.continually
 
 import it.unibo.scafi.utils.Task
 

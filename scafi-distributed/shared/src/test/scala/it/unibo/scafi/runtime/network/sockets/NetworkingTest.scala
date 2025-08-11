@@ -2,16 +2,16 @@ package it.unibo.scafi.runtime.network.sockets
 
 import java.util.concurrent.TimeoutException
 
-import scala.concurrent.duration.*
 import scala.concurrent.Future
+import scala.concurrent.duration.*
 
 import it.unibo.scafi.message.{ Codable, Codables }
 import it.unibo.scafi.utils.Async
 
-import org.scalatest.flatspec.AsyncFlatSpec
-import org.scalatest.matchers.should
 import org.scalatest.compatible.Assertion
 import org.scalatest.concurrent.PatienceConfiguration
+import org.scalatest.flatspec.AsyncFlatSpec
+import org.scalatest.matchers.should
 import org.scalatest.time.{ Millis, Seconds, Span }
 
 trait NetworkingTest extends AsyncFlatSpec with should.Matchers with PatienceConfiguration:

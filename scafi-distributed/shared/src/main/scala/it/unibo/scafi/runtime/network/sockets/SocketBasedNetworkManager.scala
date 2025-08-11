@@ -5,10 +5,10 @@ import java.util.concurrent.ConcurrentHashMap
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.jdk.CollectionConverters.*
 
-import it.unibo.scafi.runtime.network.{ Neighborhood, NetworkManager }
-import it.unibo.scafi.runtime.network.sockets.InetTypes.Endpoint
 import it.unibo.scafi.message.*
 import it.unibo.scafi.message.Codable.*
+import it.unibo.scafi.runtime.network.{ Neighborhood, NetworkManager }
+import it.unibo.scafi.runtime.network.sockets.InetTypes.Endpoint
 import it.unibo.scafi.utils.Channel
 
 import io.bullet.borer.Cbor

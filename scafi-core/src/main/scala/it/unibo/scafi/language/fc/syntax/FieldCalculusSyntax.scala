@@ -25,14 +25,12 @@ trait FieldCalculusSyntax:
    *   the initial value
    * @param evolution
    *   the function to apply
-   * @tparam Format
-   *   the data format type used to encode the local value for distribution to neighbours
    * @tparam Value
    *   the type of the value
    * @return
    *   the value after the last application of the function
    */
-  def evolve[Format, Value: CodableFromTo[Format]](initial: Value)(evolution: Value => Value): Value
+  def evolve[Value](initial: Value)(evolution: Value => Value): Value
 
   /**
    * `share` computes a value by repeatedly applying a function to an initial value while <b>sharing</b> the result with

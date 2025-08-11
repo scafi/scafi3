@@ -2,10 +2,10 @@ package it.unibo.scafi.runtime.network.sockets
 
 import it.unibo.scafi.runtime.network.sockets.InetTypes.*
 
+import io.github.iltotore.iron.*
+import org.scalatest.Inspectors
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
-import org.scalatest.Inspectors
-import io.github.iltotore.iron.*
 
 class InetTypesTest extends AnyFlatSpec with should.Matchers with Inspectors:
 
