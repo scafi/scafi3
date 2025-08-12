@@ -31,6 +31,7 @@ trait SocketBasedNetworkManager[ID](deviceId: ID, port: Int)(using ExecutionCont
   private val outChannel = Channel[Set[MessageOut]]
   private val inValues = ConcurrentHashMap[DeviceId, ValueTree]()
 
+  // TODO: do not care result?
   def start(): Future[Unit] = Future.sequence(client(Map.empty) :: server(port.refineUnsafe) :: Nil).map(_ => ())
 
   override def send(message: Export[DeviceId]): Unit =
@@ -48,7 +49,7 @@ trait SocketBasedNetworkManager[ID](deviceId: ID, port: Int)(using ExecutionCont
           .get(endpoint)
           .filter(_.isOpen)
           .fold(establishConnection(endpoint))(Future.successful)
-          .flatMap(conn => conn.send((deviceId, value)).map(_ => Right(endpoint -> conn)))
+          .flatMap(conn => conn.send((deviceId, value)).map(_ => Right(endpoint -> conn))) // TODO: close on error?
           .recover { case e => Left(e) }
       _ <- client(newConnections.collect { case Right(nc) => nc }.toMap)
     yield ()
@@ -63,6 +64,7 @@ trait SocketBasedNetworkManager[ID](deviceId: ID, port: Int)(using ExecutionCont
 end SocketBasedNetworkManager
 
 object SocketBasedNetworkManager:
+  import it.unibo.scafi.runtime.network.CodableEnrichments.given_Codec_Path
 
   def withStaticallyAssignedNeighbors[ID: BinaryCodable](deviceId: ID, port: Int, neighbors: Map[ID, Endpoint])(using
       executionContext: ExecutionContext,

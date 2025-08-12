@@ -1,14 +1,10 @@
 package it.unibo.scafi.message
 
-import it.unibo.scafi.utils.InvocationCoordinate
-
-trait Path extends IndexedSeq[InvocationCoordinate]
+trait Path extends IndexedSeq[Any]
 
 object Path:
-  def apply(tokens: InvocationCoordinate*): Path = PathImpl(tokens)
-
-  private case class PathImpl(tokens: Seq[InvocationCoordinate]) extends Path:
-    override def apply(i: Int): InvocationCoordinate = tokens(i)
+  def apply[Token](tokens: Token*): Path = new Path:
+    override def apply(i: Int): Token = tokens(i)
 
     override def length: Int = tokens.length
 
@@ -22,5 +18,3 @@ object Path:
 
   given CanEqual[Path, Path] = CanEqual.derived
   given CanEqual[Iterable[Path], Iterable[Path]] = CanEqual.derived
-
-end Path
