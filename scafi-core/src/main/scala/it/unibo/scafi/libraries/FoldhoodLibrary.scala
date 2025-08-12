@@ -4,12 +4,12 @@ import it.unibo.scafi.sensors.DistanceSensor.senseDistance
 import it.unibo.scafi.language.AggregateFoundation
 import it.unibo.scafi.language.fc.syntax.FieldCalculusSyntax
 import it.unibo.scafi.sensors.DistanceSensor
+import it.unibo.scafi.message.{ Codable, CodableFromTo }
 
 import cats.syntax.all.*
 
 import FieldCalculusLibrary.neighborValues as fcNbr
 import FoldingLibrary.foldWithoutSelf
-import it.unibo.scafi.message.{ Codable, CodableFromTo }
 
 object FoldhoodLibrary:
 

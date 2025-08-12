@@ -1,9 +1,10 @@
 package it.unibo.scafi.runtime.network
 
-import io.bullet.borer.Cbor
 import it.unibo.scafi.message.Path
 import it.unibo.scafi.runtime.network.CodableEnrichments.given_Codec_Path
 import it.unibo.scafi.utils.InvocationCoordinate
+
+import io.bullet.borer.Cbor
 import org.scalatest.matchers.should
 import org.scalatest.wordspec.AnyWordSpec
 
