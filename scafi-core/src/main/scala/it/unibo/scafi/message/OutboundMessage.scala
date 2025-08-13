@@ -22,7 +22,10 @@ trait OutboundMessage:
    *   the type of the value to be written.
    */
   protected def writeValue[Format, Value: EncodableTo[Format]](default: Value, overrides: Map[DeviceId, Value]): Unit =
-    registeredMessages.update(Path(currentPath*), MapWithDefault(overrides.mapValues(encode).toMap, encode(default)))
+    registeredMessages.update(
+      Path(currentPath*),
+      MapWithDefault(overrides.view.mapValues(encode).toMap, encode(default)),
+    )
 
   override def exportFromOutboundMessages: Export[DeviceId] =
     val messages = mutable.Map.empty[DeviceId, ValueTree].withDefaultValue(ValueTree.empty)

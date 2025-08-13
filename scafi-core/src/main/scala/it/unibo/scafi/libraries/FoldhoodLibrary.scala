@@ -68,12 +68,10 @@ object FoldhoodLibrary:
    * @return
    *   the aggregated value
    */
-  def foldhood[Format, A, B, L <: AggregateFoundation & FieldCalculusSyntax](
-      base: B,
-  )(f: (B, A) => B)(expr: FoldhoodContext[L] ?=> A)(using
-      language: L,
-      c: Codable[List[Any | Null], Format],
-  ): B = foldhoodImpl(false)(base)(f)(expr)
+  def foldhood[Format, A, B, L <: AggregateFoundation & FieldCalculusSyntax](base: B)(f: (B, A) => B)(
+      expr: FoldhoodContext[L] ?=> A,
+  )(using language: L)(using Codable[List[Any | Null], Format]): B =
+    foldhoodImpl(false)(base)(f)(expr)
 
   /**
    * The foldhoodPlus construct is used to aggregate the results of an expression over the neighborhood, including self.
@@ -94,19 +92,14 @@ object FoldhoodLibrary:
    * @return
    *   the aggregated value
    */
-  def foldhoodWithoutSelf[Format, A, B, L <: AggregateFoundation & FieldCalculusSyntax](
-      base: B,
-  )(f: (B, A) => B)(expr: FoldhoodContext[L] ?=> A)(using
-      language: L,
-      c: Codable[List[Any | Null], Format],
-  ): B = foldhoodImpl(true)(base)(f)(expr)
+  def foldhoodWithoutSelf[Format, A, B, L <: AggregateFoundation & FieldCalculusSyntax](base: B)(f: (B, A) => B)(
+      expr: FoldhoodContext[L] ?=> A,
+  )(using language: L)(using Codable[List[Any | Null], Format]): B =
+    foldhoodImpl(true)(base)(f)(expr)
 
-  private def foldhoodImpl[Format, A, B, L <: AggregateFoundation & FieldCalculusSyntax](
-      withSelf: Boolean,
-  )(base: B)(f: (B, A) => B)(expr: FoldhoodContext[L] ?=> A)(using
-      lang: L,
-      c: Codable[List[Any | Null], Format],
-  ): B =
+  private def foldhoodImpl[Format, A, B, L <: AggregateFoundation & FieldCalculusSyntax](withSelf: Boolean)(base: B)(
+      f: (B, A) => B,
+  )(expr: FoldhoodContext[L] ?=> A)(using lang: L)(using Codable[List[Any | Null], Format]): B =
     var neighbouringValues: List[lang.SharedData[Any | Null]] = List.empty
     val initial: FoldhoodContext[L] = new FoldhoodContext[L]:
       override def current[X](expr: (lang: L) ?=> lang.SharedData[X]): X =

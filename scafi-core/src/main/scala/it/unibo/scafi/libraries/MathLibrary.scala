@@ -20,6 +20,8 @@ object MathLibrary:
    *   the weight of the value for this device
    * @param value
    *   the value to be averaged
+   * @tparam Format
+   *   the data format type used to encode the value for distribution to neighbours
    * @tparam N
    *   the type of the value
    * @return

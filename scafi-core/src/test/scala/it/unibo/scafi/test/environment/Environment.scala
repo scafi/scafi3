@@ -10,7 +10,7 @@ class Environment[R, Context <: AggregateContext { type DeviceId = Int }](
     private val contextFactory: (Int, NetworkManager { type DeviceId = Int }) => Context,
     private val program: (Context, Environment[R, Context]) ?=> R,
     private val retainTime: Int = 1,
-    private val networkFactory: Environment[R, Context] => (Node[R, Context] => NetworkManager { type DeviceId = Int }),
+    private val networkFactory: Environment[R, Context] ?=> Node[R, Context] => NetworkManager { type DeviceId = Int },
 ):
   private val positions = mutable.Map[Node[R, Context], Position]()
   private val random = scala.util.Random(0)
@@ -43,7 +43,7 @@ class Environment[R, Context <: AggregateContext { type DeviceId = Int }](
    *   The position where the new node will be placed.
    */
   def addNode(position: Position): Unit =
-    val node = Node(this, nextNodeId, retainTime, contextFactory, program, networkFactory(this))
+    val node = Node(this, nextNodeId, retainTime, contextFactory, program, networkFactory(using this))
     positions(node) = position
     nextNodeId += 1
 

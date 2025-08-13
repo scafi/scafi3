@@ -9,6 +9,7 @@ import it.unibo.scafi.libraries.FieldCalculusLibrary.neighborValues
 import it.unibo.scafi.runtime.network.NetworkManager
 import it.unibo.scafi.test.AggregateProgramProbe
 import it.unibo.scafi.test.environment.Grids.mooreGrid
+import it.unibo.scafi.test.environment.Node.inMemoryNetwork
 
 import org.scalatest.Inspectors
 import org.scalatest.flatspec.AnyFlatSpecLike
@@ -24,14 +25,14 @@ trait BranchingSyntaxTest extends AggregateProgramProbe:
       contextFactory: (Int, NetworkManager { type DeviceId = Int }) => Context,
   ): Unit =
     "Branch operator" should "partition the network based on a condition" in:
-      val env = mooreGrid(5, 5, contextFactory):
+      val env = mooreGrid(5, 5, contextFactory, inMemoryNetwork):
         branch(localId % 2 == 0)(true)(false)
       // All even nodes should return true, odd nodes should return false
       env.cycleInOrder()
       forAll(env.status) { (id, result) => id % 2 == 0 shouldBe result }
 
     it should "restrict the field visibility based on the condition" in:
-      val env = mooreGrid(5, 5, contextFactory):
+      val env = mooreGrid(5, 5, contextFactory, inMemoryNetwork):
         branch(localId % 2 == 0) { neighborValues(localId).toList } { neighborValues(localId).toList }
       // All even nodes have even neighbors, odd nodes have odd neighbors
       (0 until 5).foreach { _ => env.cycleInOrder() }

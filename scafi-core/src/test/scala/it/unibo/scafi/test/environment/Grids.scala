@@ -3,7 +3,6 @@ package it.unibo.scafi.test.environment
 import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.runtime.network.NetworkManager
 
-@SuppressWarnings(Array("scalafix:DisableSyntax.defaultArgs"))
 object Grids:
   private val SAFE_MOORE_RADIUS = 1.5
   private val SAFE_VON_NEUMANN_RADIUS = 1.0
@@ -33,8 +32,10 @@ object Grids:
    *   The number of nodes along the X-axis.
    * @param sizeY
    *   The number of nodes along the Y-axis.
-   * @param factory
+   * @param contextFactory
    *   A function to create the context for each node, given its ID and a `NetworkManager`.
+   * @param networkFactory
+   *   A function to create the network manager for each node, given the node and the environment as context.
    * @param program
    *   The aggregate program to be executed by the nodes in the environment.
    * @tparam R
@@ -43,13 +44,14 @@ object Grids:
    *   The type of the aggregate context, which must have `DeviceId` as `Int`.
    * @return
    *   An `Environment` containing the grid of nodes with Moore neighborhood connectivity.
+   * @see
+   *   [[Node.inMemoryNetwork]] for an in-memory network manager.
    */
   def mooreGrid[R, Context <: IntAggregateContext](
       sizeX: Int,
       sizeY: Int,
       contextFactory: (Int, NetworkManager { type DeviceId = Int }) => Context,
-      networkFactory: Environment[R, Context] => (Node[R, Context] => NetworkManager { type DeviceId = Int }) =
-        (_: Environment[R, Context]) => (n: Node[R, Context]) => Node.InMemoryNetwork[R, Context](n),
+      networkFactory: Environment[R, Context] ?=> Node[R, Context] => NetworkManager { type DeviceId = Int },
   )(
       program: (Context, Environment[R, Context]) ?=> R,
   ): Environment[R, Context] = Environment[R, Context](
@@ -68,8 +70,10 @@ object Grids:
    *   The number of nodes along the X-axis.
    * @param sizeY
    *   The number of nodes along the Y-axis.
-   * @param factory
+   * @param contextFactory
    *   A function to create the context for each node, given its ID and a `NetworkManager`.
+   * @param networkFactory
+   *   A function to create the network manager for each node, given the node and the environment as context.
    * @param program
    *   The aggregate program to be executed by the nodes in the environment.
    * @tparam R
@@ -83,8 +87,7 @@ object Grids:
       sizeX: Int,
       sizeY: Int,
       contextFactory: (Int, NetworkManager { type DeviceId = Int }) => Context,
-      networkFactory: Environment[R, Context] => (Node[R, Context] => NetworkManager { type DeviceId = Int }) =
-        (_: Environment[R, Context]) => (n: Node[R, Context]) => Node.InMemoryNetwork[R, Context](n),
+      networkFactory: Environment[R, Context] ?=> Node[R, Context] => NetworkManager { type DeviceId = Int },
   )(
       program: (Context, Environment[R, Context]) ?=> R,
   ): Environment[R, Context] = Environment[R, Context](

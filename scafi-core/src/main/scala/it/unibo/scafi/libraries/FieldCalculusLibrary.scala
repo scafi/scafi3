@@ -14,7 +14,8 @@ object FieldCalculusLibrary:
    *
    * @param value
    *   the local value to send to neighbours
-   * @param Format
+   * @tparam Format
+   *   the data format type used to encode the local value for distribution to neighbours
    * @tparam Value
    *   the type of the local value
    * @return
@@ -33,14 +34,14 @@ object FieldCalculusLibrary:
    *   the initial value
    * @param f
    *   the function to apply
-   * @tparam A
+   * @tparam Value
    *   the type of the value
    * @return
    *   the value after the last application of the function
    * @see
    *   [[FieldCalculusSyntax.evolve]]
    */
-  def evolve[A](using language: AggregateFoundation & FieldCalculusSyntax)(init: A)(f: A => A): A =
+  def evolve[Value](using language: AggregateFoundation & FieldCalculusSyntax)(init: Value)(f: Value => Value): Value =
     language.evolve(init)(f)
 
   /**
@@ -51,7 +52,8 @@ object FieldCalculusLibrary:
    *   the initial value
    * @param f
    *   the function that returns the value to share and return
-   * @param Format
+   * @tparam Format
+   *   the data format type used to encode the local value for distribution to neighbours
    * @tparam Value
    *   the type of the value
    * @return

@@ -36,7 +36,7 @@ trait DistributedScenarioTest extends AsyncSpec with Programs:
         sizeX = 2,
         sizeY = 2,
         contextFactory = exchangeContextFactory,
-        networkFactory = env =>
+        networkFactory = env ?=>
           node =>
             val neighbors = env.nodes
               .filter(n => env.areConnected(env, n, node) && n != node)

@@ -50,9 +50,12 @@ object Node:
   given [R, Context <: AggregateContext { type DeviceId = Int }]: CanEqual[Node[R, Context], Node[R, Context]] =
     CanEqual.derived
 
-  private[environment] class InMemoryNetwork[R, Context <: AggregateContext { type DeviceId = Int }](
-      node: Node[R, Context],
-  ) extends NetworkManager:
+  def inMemoryNetwork[R, Context <: AggregateContext { type DeviceId = Int }](using
+      Environment[R, Context],
+  )(node: Node[R, Context]): NetworkManager { type DeviceId = Int } = InMemoryNetwork(node)
+
+  private class InMemoryNetwork[R, Context <: AggregateContext { type DeviceId = Int }](node: Node[R, Context])
+      extends NetworkManager:
     override type DeviceId = Int
 
     override def send(message: Export[Int]): Unit = () // In-memory message communication
@@ -63,3 +66,4 @@ object Node:
         .map(neighbor => neighbor.id -> neighbor.lastExportResult(node.id))
         .toMap
       Import(neighborsValueTrees)
+end Node

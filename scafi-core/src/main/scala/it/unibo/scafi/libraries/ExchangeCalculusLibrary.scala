@@ -27,7 +27,8 @@ object ExchangeCalculusLibrary:
    * @param f
    *   the function that takes the initial/received aggregate value and returns a new aggregate value or two aggregate
    *   values, one to be sent and one to be returned
-   * @param Format
+   * @tparam Format
+   *   the data format type used to encode the local value for distribution to neighbours
    * @tparam Value
    *   the type of the aggregate value
    * @return
