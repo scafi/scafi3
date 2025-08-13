@@ -5,7 +5,6 @@ import java.util.concurrent.TimeoutException
 import scala.concurrent.Future
 import scala.concurrent.duration.*
 
-import it.unibo.scafi.message.{ Codable, Codables }
 import it.unibo.scafi.utils.Async
 
 import org.scalatest.compatible.Assertion
@@ -14,10 +13,7 @@ import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest.matchers.should
 import org.scalatest.time.{ Millis, Seconds, Span }
 
-trait NetworkingTest extends AsyncFlatSpec with should.Matchers with PatienceConfiguration:
-
-  given Codable[String, Array[Byte]] = Codables.forStringsInBinaryFormat
-
+trait AsyncSpec extends AsyncFlatSpec with should.Matchers with PatienceConfiguration:
   given PatienceConfig = PatienceConfig(timeout = Span(1, Seconds), interval = Span(100, Millis))
 
   def eventually(assertion: => Assertion)(using patience: PatienceConfig): Future[Assertion] =
@@ -34,4 +30,3 @@ trait NetworkingTest extends AsyncFlatSpec with should.Matchers with PatienceCon
     infix def verify(assertion: T => Assertion): Future[Assertion] = f.map(assertion)
     infix def verifying(assertion: => Future[Assertion]): Future[Assertion] = verifying(_ => assertion)
     infix def verifying(assertion: T => Future[Assertion]): Future[Assertion] = f.flatMap(assertion)
-end NetworkingTest

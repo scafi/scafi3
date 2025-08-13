@@ -13,10 +13,11 @@ class Node[R, Context <: AggregateContext { type DeviceId = Int }](
     val retain: Int,
     private val contextFactory: (Int, NetworkManager { type DeviceId = Int }) => Context,
     private val program: (Context, Environment[R, Context]) ?=> R,
+    private val networkManagerFactory: Node[R, Context] => NetworkManager { type DeviceId = Int },
 ):
-  private val nodeNetworkManager = NodeNetworkManager()
   private var currentResult: R = uninitialized
-  private val engine = ScafiEngine(id, nodeNetworkManager, contextFactory): ctx ?=>
+  private lazy val nodeNetworkManager = networkManagerFactory(this)
+  private lazy val engine = ScafiEngine(id, nodeNetworkManager, contextFactory): ctx ?=>
     program(using ctx, environment)
 
   /**
@@ -43,20 +44,22 @@ class Node[R, Context <: AggregateContext { type DeviceId = Int }](
    *   The result of type `R`.
    */
   def result: R = currentResult
-
-  private class NodeNetworkManager extends NetworkManager:
-    override type DeviceId = Int
-
-    override def send(message: Export[Int]): Unit = () // In-memory message communication
-
-    override def receive: Import[Int] =
-      val neighborsValueTrees = environment
-        .neighborsOf(Node.this)
-        .map(neighbor => neighbor.id -> neighbor.lastExportResult(Node.this.id))
-        .toMap
-      Import(neighborsValueTrees)
 end Node
 
 object Node:
   given [R, Context <: AggregateContext { type DeviceId = Int }]: CanEqual[Node[R, Context], Node[R, Context]] =
     CanEqual.derived
+
+  private[environment] class InMemoryNetwork[R, Context <: AggregateContext { type DeviceId = Int }](
+      node: Node[R, Context],
+  ) extends NetworkManager:
+    override type DeviceId = Int
+
+    override def send(message: Export[Int]): Unit = () // In-memory message communication
+
+    override def receive: Import[Int] =
+      val neighborsValueTrees = node.environment
+        .neighborsOf(node)
+        .map(neighbor => neighbor.id -> neighbor.lastExportResult(node.id))
+        .toMap
+      Import(neighborsValueTrees)

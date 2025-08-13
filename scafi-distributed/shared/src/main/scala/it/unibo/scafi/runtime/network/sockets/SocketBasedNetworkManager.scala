@@ -17,7 +17,8 @@ import io.github.iltotore.iron.*
 // TODO: better port management
 trait SocketBasedNetworkManager[ID](deviceId: ID, port: Int)(using ExecutionContext)
     extends NetworkManager
-    with Networking:
+    with Networking
+    with AutoCloseable:
   self: InetAwareNeighborhoodResolver =>
 
   override type DeviceId = ID
@@ -30,12 +31,17 @@ trait SocketBasedNetworkManager[ID](deviceId: ID, port: Int)(using ExecutionCont
 
   private val outChannel = Channel[Set[MessageOut]]
   private val inValues = ConcurrentHashMap[DeviceId, ValueTree]()
+  private var connectionsListener: Option[ListenerRef] = None
 
   // TODO: do not care result?
-  def start(): Future[Unit] = Future.sequence(client(Map.empty) :: server(port.refineUnsafe) :: Nil).map(_ => ())
+  def start(): Future[Unit] = for
+    listenerRef <- server(port.refineUnsafe)
+    _ = connectionsListener = Some(listenerRef)
+    _ <- client(Map.empty)
+  yield ()
 
   override def send(message: Export[DeviceId]): Unit =
-    try outChannel.push((resolve() - deviceId).map(id => id -> message(id)))
+    try outChannel.push((resolve() - deviceId).map(id => id -> message(id))) // TODO do not send to itself, right?
     catch case e: Channel.ChannelClosedException => scribe.warn(e) // TODO what to do here?
 
   override def receive: Import[DeviceId] = Import(inValues.asScala.toMap)
@@ -61,6 +67,12 @@ trait SocketBasedNetworkManager[ID](deviceId: ID, port: Int)(using ExecutionCont
     inValues.put(id, valueTree): Unit
   .run()
 
+  override def close(): Unit =
+    try
+      outChannel.close()
+      connectionsListener.foreach(_.listener.close())
+    catch case e: (Channel.ChannelClosedException | Exception) => scribe.warn(e)
+
 end SocketBasedNetworkManager
 
 object SocketBasedNetworkManager:
@@ -69,9 +81,7 @@ object SocketBasedNetworkManager:
   def withStaticallyAssignedNeighbors[ID: BinaryCodable](deviceId: ID, port: Int, neighbors: Map[ID, Endpoint])(using
       executionContext: ExecutionContext,
       socketConfiguration: SocketConfiguration,
-  ): NetworkManager { type DeviceId = ID } = new SocketBasedNetworkManager(deviceId, port)
-    with SocketNetworking
-    with InetAwareNeighborhoodResolver:
+  ) = new SocketBasedNetworkManager(deviceId, port) with SocketNetworking with InetAwareNeighborhoodResolver:
 
     val _ = start()
 
@@ -81,8 +91,8 @@ object SocketBasedNetworkManager:
     override given BinaryEncodable[MessageOut] = msg =>
       val (id, valueTree) = msg
       val encodedId = encode(id)
-      val encodedPathsWithValues: Map[Array[Byte], Array[Byte]] = valueTree.paths
-        .map(path => Cbor.encode(path).toByteArray -> valueTree.get(path))
+      val encodedPathsWithValues = valueTree.paths
+        .map(path => Cbor.encode(path).toByteArray -> valueTree.get[Array[Byte]](path))
         .filter((_, optionalValue) => optionalValue.isDefined)
         .map { case (pathBytes, value) => pathBytes -> value.get }
         .toMap

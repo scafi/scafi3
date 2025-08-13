@@ -3,6 +3,7 @@ package it.unibo.scafi.test.environment
 import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.runtime.network.NetworkManager
 
+@SuppressWarnings(Array("scalafix:DisableSyntax.defaultArgs"))
 object Grids:
   private val SAFE_MOORE_RADIUS = 1.5
   private val SAFE_VON_NEUMANN_RADIUS = 1.0
@@ -46,15 +47,18 @@ object Grids:
   def mooreGrid[R, Context <: IntAggregateContext](
       sizeX: Int,
       sizeY: Int,
-      factory: (Int, NetworkManager { type DeviceId = Int }) => Context,
+      contextFactory: (Int, NetworkManager { type DeviceId = Int }) => Context,
+      networkFactory: Environment[R, Context] => (Node[R, Context] => NetworkManager { type DeviceId = Int }) =
+        (_: Environment[R, Context]) => (n: Node[R, Context]) => Node.InMemoryNetwork[R, Context](n),
   )(
       program: (Context, Environment[R, Context]) ?=> R,
   ): Environment[R, Context] = Environment[R, Context](
     areConnected = (env, n1, n2) =>
       (for n1Pos <- env.positionOf(n1); n2Pos <- env.positionOf(n2)
       yield n1Pos.distanceTo(n2Pos) <= SAFE_MOORE_RADIUS).getOrElse(false),
-    contextFactory = factory,
+    contextFactory = contextFactory,
     program = program,
+    networkFactory = networkFactory,
   ).grid(sizeX, sizeY)
 
   /**
@@ -78,14 +82,17 @@ object Grids:
   def vonNeumannGrid[R, Context <: IntAggregateContext](
       sizeX: Int,
       sizeY: Int,
-      factory: (Int, NetworkManager { type DeviceId = Int }) => Context,
+      contextFactory: (Int, NetworkManager { type DeviceId = Int }) => Context,
+      networkFactory: Environment[R, Context] => (Node[R, Context] => NetworkManager { type DeviceId = Int }) =
+        (_: Environment[R, Context]) => (n: Node[R, Context]) => Node.InMemoryNetwork[R, Context](n),
   )(
       program: (Context, Environment[R, Context]) ?=> R,
   ): Environment[R, Context] = Environment[R, Context](
     areConnected = (env, n1, n2) =>
       (for n1Pos <- env.positionOf(n1); n2Pos <- env.positionOf(n2)
       yield n1Pos.distanceTo(n2Pos) <= SAFE_VON_NEUMANN_RADIUS).getOrElse(false),
-    contextFactory = factory,
+    contextFactory = contextFactory,
     program = program,
+    networkFactory = networkFactory,
   ).grid(sizeX, sizeY)
 end Grids

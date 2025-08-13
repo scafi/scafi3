@@ -5,8 +5,9 @@ import java.util.concurrent.CopyOnWriteArrayList
 import scala.concurrent.{ ExecutionContext, Future }
 
 import it.unibo.scafi.runtime.network.sockets.InetTypes.*
+import it.unibo.scafi.message.Codables.forStringsInBinaryFormat
 
-trait SocketNetworkingBehavior extends NetworkingTest:
+trait SocketNetworkingBehavior extends AsyncSpec:
 
   given SocketConfiguration = SocketConfiguration.basic
 
