@@ -111,7 +111,7 @@ lazy val `scafi-distributed` = crossProject(JSPlatform, JVMPlatform, NativePlatf
     libraryDependencies ++= Seq(
       "io.bullet" %%% "borer-core" % "1.16.1",
       "io.bullet" %%% "borer-derivation" % "1.16.1",
-    )
+    ),
   )
 
 //val alchemistVersion = "42.1.0"
