@@ -82,6 +82,8 @@ object Grids:
    *   The type of the aggregate context, which must have `DeviceId` as `Int`.
    * @return
    *   An `Environment` containing the grid of nodes with Von Neumann neighborhood connectivity.
+   * @see
+   *   [[Node.inMemoryNetwork]] for an in-memory network manager.
    */
   def vonNeumannGrid[R, Context <: IntAggregateContext](
       sizeX: Int,

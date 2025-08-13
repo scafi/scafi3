@@ -5,6 +5,9 @@ import java.util.concurrent.Executors
 import scala.concurrent.{ blocking, ExecutionContext, Future }
 import scala.concurrent.duration.FiniteDuration
 
+/**
+ * JVM and native platform-specific utilities.
+ */
 object Platform:
 
   def asyncOps: AsyncOperations = new AsyncOperations:

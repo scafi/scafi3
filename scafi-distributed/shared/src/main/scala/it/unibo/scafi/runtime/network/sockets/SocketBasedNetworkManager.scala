@@ -76,7 +76,7 @@ trait SocketBasedNetworkManager[ID](deviceId: ID, port: Int)(using ExecutionCont
 end SocketBasedNetworkManager
 
 object SocketBasedNetworkManager:
-  import it.unibo.scafi.runtime.network.CodableEnrichments.given_Codec_Path
+  import it.unibo.scafi.runtime.network.CodableInstances.given
 
   def withStaticallyAssignedNeighbors[ID: BinaryCodable](deviceId: ID, port: Int, neighbors: Map[ID, Endpoint])(using
       executionContext: ExecutionContext,
@@ -92,7 +92,7 @@ object SocketBasedNetworkManager:
       val (id, valueTree) = msg
       val encodedId = encode(id)
       val encodedPathsWithValues = valueTree.paths
-        .map(path => Cbor.encode(path).toByteArray -> valueTree.get[Array[Byte]](path))
+        .map(path => encode(path) -> valueTree.get[Array[Byte]](path)) // TODO apply?
         .filter((_, optionalValue) => optionalValue.isDefined)
         .map { case (pathBytes, value) => pathBytes -> value.get }
         .toMap
@@ -100,8 +100,6 @@ object SocketBasedNetworkManager:
 
     override given BinaryDecodable[MessageIn] = bytes =>
       val (rawId, rawValueTree) = Cbor.decode(bytes).to[(Array[Byte], Map[Array[Byte], Array[Byte]])].value
-      val valueTree = ValueTree(
-        rawValueTree.map((pathBytes, valueBytes) => Cbor.decode(pathBytes).to[Path].value -> valueBytes),
-      )
+      val valueTree = ValueTree(rawValueTree.map(decode[Array[Byte], Path](_) -> _))
       decode(rawId) -> valueTree
 end SocketBasedNetworkManager

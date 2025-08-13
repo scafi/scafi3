@@ -61,7 +61,8 @@ trait SendableChannel[-T]:
 end SendableChannel
 
 /**
- * A channel from which items can be read, pushed onto, and closed.
+ * A channel from which items can be read, pushed onto, and closed in a non-blocking way, allowing to work in both JVM,
+ * Native and JS platforms where blocking operations are not allowed.
  */
 trait Channel[T] extends ReadableChannel[T] with SendableChannel[T]:
 
