@@ -5,6 +5,8 @@ import java.util.concurrent.ConcurrentHashMap
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.jdk.CollectionConverters.*
 
+import it.unibo.scafi.runtime.network.{ Neighborhood, NetworkManager }
+import it.unibo.scafi.runtime.network.sockets.InetTypes.{ Endpoint, Port }
 import it.unibo.scafi.message.*
 import it.unibo.scafi.message.Codable.*
 import it.unibo.scafi.runtime.network.{ Neighborhood, NetworkManager }
@@ -14,8 +16,7 @@ import it.unibo.scafi.utils.Channel
 import io.bullet.borer.Cbor
 import io.github.iltotore.iron.*
 
-// TODO: better port management
-trait SocketBasedNetworkManager[ID](deviceId: ID, port: Int)(using ExecutionContext)
+trait SocketBasedNetworkManager[ID](deviceId: ID, port: Port)(using ExecutionContext)
     extends NetworkManager
     with ConnectionOrientedNetworking
     with AutoCloseable:
@@ -33,44 +34,41 @@ trait SocketBasedNetworkManager[ID](deviceId: ID, port: Int)(using ExecutionCont
   private val inValues = ConcurrentHashMap[DeviceId, ValueTree]()
   private var connectionsListener: Option[ListenerRef] = None
 
-  // TODO: do not care result?
-  def start(): Future[Unit] = for
-    listenerRef <- server(port.refineUnsafe)
-    _ = connectionsListener = Some(listenerRef)
-    _ <- client(Map.empty)
-  yield ()
+  def start(): Future[Unit] =
+    for
+      listenerRef <- server(port.refineUnsafe)
+      _ = connectionsListener = Some(listenerRef)
+      _ <- client(Map.empty)
+    yield ()
 
   override def send(message: Export[DeviceId]): Unit =
     try outChannel.push((resolve() - deviceId).map(id => id -> message(id))) // TODO do not send to itself, right?
-    catch case e: Channel.ChannelClosedException => scribe.warn(e) // TODO what to do here?
+    catch case e: Channel.ChannelClosedException => scribe.error("The network manager was closed, cannot send message.")
 
   override def receive: Import[DeviceId] = Import(inValues.asScala.toMap)
 
   private def client(connections: Map[Endpoint, Connection]): Future[Unit] =
     for
       msgs <- outChannel.take
-      nvalues <- Future(msgs.map((id, valueTree) => (id.reachableAt.get, valueTree))) // TODO: handle gracefully get
-      newConnections <- Future.traverse(nvalues): (endpoint, value) =>
+      nvalues <- Future(msgs.map((nid, valueTree) => nid.reachableAt.get -> valueTree)) // TODO: handle gracefully get
+      newConnections <- Future.traverse(nvalues): (endpoint, valueTree) =>
         connections
           .get(endpoint)
           .filter(_.isOpen)
           .fold(establishConnection(endpoint))(Future.successful)
-          .flatMap(conn => conn.send((deviceId, value)).map(_ => Right(endpoint -> conn))) // TODO: close on error?
+          .flatMap(conn => conn.sendOrClose((deviceId, valueTree)).map(_ => Right(endpoint -> conn)))
           .recover { case e => Left(e) }
       _ <- client(newConnections.collect { case Right(nc) => nc }.toMap)
     yield ()
 
   private def establishConnection(endpoint: Endpoint): Future[Connection] = out(endpoint)
 
-  private def server(port: Port): Future[ListenerRef] = in(port): messageIn =>
-    val (id, valueTree) = messageIn
-    inValues.put(id, valueTree): Unit
+  private def server(port: Port): Future[ListenerRef] = in(port)(inValues.put(_, _): Unit)
 
-  override def close(): Unit =
-    try
-      outChannel.close()
-      connectionsListener.foreach(_.listener.close())
-    catch case e: (Channel.ChannelClosedException | Exception) => scribe.warn(e)
+  override def close(): Unit = try
+    outChannel.close()
+    connectionsListener.foreach(_.listener.close())
+  catch case e: (Channel.ChannelClosedException | Exception) => scribe.warn(e)
 
 end SocketBasedNetworkManager
 
@@ -80,7 +78,9 @@ object SocketBasedNetworkManager:
   def withStaticallyAssignedNeighbors[ID: BinaryCodable](deviceId: ID, port: Int, neighbors: Map[ID, Endpoint])(using
       executionContext: ExecutionContext,
       socketConfiguration: SocketConfiguration,
-  ) = new SocketBasedNetworkManager(deviceId, port) with SocketNetworking with InetAwareNeighborhoodResolver:
+  ) = new SocketBasedNetworkManager(deviceId, port.refineUnsafe)
+    with SocketNetworking
+    with InetAwareNeighborhoodResolver:
 
     val _ = start()
 
@@ -91,9 +91,11 @@ object SocketBasedNetworkManager:
       val (id, valueTree) = msg
       val encodedId = encode(id)
       val encodedPathsWithValues = valueTree.paths
-        .map(path => encode(path) -> valueTree.get[Array[Byte]](path)) // TODO apply?
-        .filter((_, optionalValue) => optionalValue.isDefined)
-        .map { case (pathBytes, value) => pathBytes -> value.get }
+        .map: path =>
+          try encode(path) -> valueTree[Array[Byte]](path)
+          catch
+            case e: ValueTree.NoPathFoundException =>
+              throw RuntimeException(s"Path: $path not found, this should not happen. Please report this.")
         .toMap
       Cbor.encode((encodedId, encodedPathsWithValues)).toByteArray
 

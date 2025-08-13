@@ -60,6 +60,17 @@ trait ConnectionOrientedNetworking:
      */
     def send(msg: MessageOut): Future[Unit]
 
+    /**
+     * Sends the given message, possibly closing the connection if an error occurs while sending.
+     * @param msg
+     *   the message to send.
+     * @return
+     *   a `Future` that completes when the message has been sent successfully, or fails in case of errors, after which
+     *   the connection will be closed.
+     */
+    def sendOrClose(msg: MessageOut): Future[Unit]
+  end Connection
+
   /**
    * A reference to an active [[Listener]] and the asynchronous task responsible for managing incoming connections.
    * @param listener
