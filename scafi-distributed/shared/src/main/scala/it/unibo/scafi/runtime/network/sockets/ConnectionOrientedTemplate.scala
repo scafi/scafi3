@@ -10,7 +10,8 @@ import scala.util.Using.Releasable
 import it.unibo.scafi.message.{ BinaryDecodable, BinaryEncodable }
 import it.unibo.scafi.message.Codable.*
 
-trait NetworkingTemplate(using ec: ExecutionContext, conf: SocketConfiguration) extends Networking:
+trait ConnectionOrientedTemplate(using ec: ExecutionContext, conf: SocketConfiguration)
+    extends ConnectionOrientedNetworking:
 
   override type MessageIn: BinaryDecodable
 
@@ -81,4 +82,4 @@ trait NetworkingTemplate(using ec: ExecutionContext, conf: SocketConfiguration) 
      */
     def accept: Future[Unit]
   end ListenerTemplate
-end NetworkingTemplate
+end ConnectionOrientedTemplate

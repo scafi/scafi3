@@ -5,11 +5,9 @@ import scala.concurrent.Future
 import it.unibo.scafi.utils.Task
 
 /**
- * Networking platform-independent abstraction for connection-oriented communication.
- *
- * TODO: rename with ConnectionOrientedNetworking or similar.
+ * Networking platform-independent abstraction for connection-oriented networking operations.
  */
-trait Networking:
+trait ConnectionOrientedNetworking:
   export InetTypes.*
 
   /** The incoming message type from remote processes. */
@@ -80,4 +78,5 @@ trait Networking:
 
     /** @return the port this listener is bound to. */
     def boundPort: Port
-end Networking
+
+end ConnectionOrientedNetworking

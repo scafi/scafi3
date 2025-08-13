@@ -12,7 +12,7 @@ import scala.util.chaining.scalaUtilChainingOps
 import it.unibo.scafi.runtime.network.sockets.EventEmitter.*
 import it.unibo.scafi.utils.Task
 
-trait SocketNetworking(using ec: ExecutionContext, conf: SocketConfiguration) extends NetworkingTemplate:
+trait SocketNetworking(using ec: ExecutionContext, conf: SocketConfiguration) extends ConnectionOrientedTemplate:
 
   override def out(endpoint: Endpoint) = Task[Connection]:
     for

@@ -17,7 +17,7 @@ import io.github.iltotore.iron.*
 // TODO: better port management
 trait SocketBasedNetworkManager[ID](deviceId: ID, port: Int)(using ExecutionContext)
     extends NetworkManager
-    with Networking
+    with ConnectionOrientedNetworking
     with AutoCloseable:
   self: InetAwareNeighborhoodResolver =>
 

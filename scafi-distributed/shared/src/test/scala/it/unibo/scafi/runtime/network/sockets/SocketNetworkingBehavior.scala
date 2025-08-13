@@ -11,7 +11,7 @@ trait SocketNetworkingBehavior extends AsyncSpec:
 
   given SocketConfiguration = SocketConfiguration.basic
 
-  type PlainTextNetworking = Networking & {
+  type PlainTextNetworking = ConnectionOrientedNetworking & {
     type MessageIn = String
     type MessageOut = String
   }
@@ -20,7 +20,7 @@ trait SocketNetworkingBehavior extends AsyncSpec:
     override type MessageIn = String
     override type MessageOut = String
 
-  def anInboundConnectionListener(using net: Networking)(using ExecutionContext): Unit =
+  def anInboundConnectionListener(using net: ConnectionOrientedNetworking)(using ExecutionContext): Unit =
     it should "be able to be initialized on a free port" in:
       val server = net.in(FreePort)(nop)
       server.run() verify: ref =>
@@ -28,7 +28,7 @@ trait SocketNetworkingBehavior extends AsyncSpec:
         ref.listener.close()
         ref.listener.isOpen shouldBe false
 
-  def anOutboundConnection(using net: Networking): Unit =
+  def anOutboundConnection(using net: ConnectionOrientedNetworking): Unit =
     it should "fail to connect to an unavailable remote endpoint" in:
       val nonExistentServerPort: Port = 5050
       val client = net.out(Endpoint(Localhost, nonExistentServerPort))
@@ -41,7 +41,7 @@ trait SocketNetworkingBehavior extends AsyncSpec:
         client.close()
         client.isOpen shouldBe false
 
-  def both(using net: PlainTextNetworking) =
+  def both(using net: PlainTextNetworking): Unit =
     it should "be able to accept incoming connections from remote endpoints" in:
       val receivedMessages = CopyOnWriteArrayList[net.MessageIn]()
       val messages = Seq("Hello", "World", "Scafi", "Networking")
@@ -54,7 +54,7 @@ trait SocketNetworkingBehavior extends AsyncSpec:
         client send Seq(tooLargeMessage) verifying eventually(client.isOpen shouldBe false)
 
   private def usingServer[Result](using
-      net: Networking,
+      net: ConnectionOrientedNetworking,
   )(onMessage: net.MessageIn => Unit)(todo: net.Connection => Future[Result]) =
     for
       server <- net.in(FreePort)(onMessage).run()
@@ -64,8 +64,8 @@ trait SocketNetworkingBehavior extends AsyncSpec:
       _ = server.listener.close()
     yield result
 
-  extension (using net: Networking)(client: net.Connection)
-    infix def send(messages: Seq[net.MessageOut]) =
+  extension (using net: ConnectionOrientedNetworking)(client: net.Connection)
+    infix private def send(messages: Seq[net.MessageOut]) =
       messages.foldLeft(Future.unit)((acc, msg) => acc.flatMap(_ => client.send(msg)))
 
   private val nop: Any => Unit = _ => ()
