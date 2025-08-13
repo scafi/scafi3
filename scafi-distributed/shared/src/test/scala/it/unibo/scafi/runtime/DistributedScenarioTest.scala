@@ -12,7 +12,7 @@ import it.unibo.scafi.test.environment.Grids.vonNeumannGrid
 import it.unibo.scafi.context.xc.ExchangeAggregateContext.exchangeContextFactory
 import it.unibo.scafi.runtime.network.sockets.InetTypes.{ Endpoint, Localhost }
 import it.unibo.scafi.runtime.network.sockets.{ SocketBasedNetworkManager, SocketConfiguration }
-import it.unibo.scafi.utils.{ PlatformRuntime, Runtime }
+import it.unibo.scafi.utils.{ Platform, PlatformRuntime }
 
 import io.github.iltotore.iron.refineUnsafe
 import org.scalatest.time.{ Seconds, Span }
@@ -33,7 +33,7 @@ trait DistributedScenarioTest extends AsyncSpec with Programs:
       scribe.info("==== STARTING DISTRIBUTED SCENARIO TEST ====")
       given PatienceConfig = PatienceConfig(timeout = Span(30, Seconds), interval = Span(2, Seconds))
       var networks = Set.empty[SocketBasedNetworkManager[ID]]
-      val initialPort = Runtime.platform match
+      val initialPort = Platform.runtime match
         case PlatformRuntime.Jvm => 5060
         case PlatformRuntime.Js => 5070
         case PlatformRuntime.Native => 5080

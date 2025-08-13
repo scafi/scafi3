@@ -6,9 +6,9 @@ import scala.concurrent.{ blocking, ExecutionContext, Future }
 import scala.concurrent.duration.FiniteDuration
 
 /**
- * JVM and native platform-specific utilities.
+ * Defines a platform that supports asynchronous operations in a blocking manner.
  */
-object Platform:
+trait BlockingPlatform:
 
   def asyncOps: AsyncOperations = new AsyncOperations:
     given ExecutionContext = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())

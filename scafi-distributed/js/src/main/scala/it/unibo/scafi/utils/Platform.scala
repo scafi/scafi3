@@ -8,6 +8,8 @@ import scala.scalajs.js.timers.setTimeout
  */
 object Platform:
 
+  def runtime: PlatformRuntime = PlatformRuntime.Js
+
   def asyncOps: AsyncOperations = duration =>
     val p = Promise[Unit]()
     setTimeout(duration)(p.success(())): Unit
