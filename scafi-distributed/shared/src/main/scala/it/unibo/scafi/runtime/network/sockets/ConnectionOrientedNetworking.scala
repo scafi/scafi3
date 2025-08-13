@@ -2,8 +2,6 @@ package it.unibo.scafi.runtime.network.sockets
 
 import scala.concurrent.Future
 
-import it.unibo.scafi.utils.Task
-
 /**
  * Networking platform-independent abstraction for connection-oriented networking operations.
  */
@@ -17,28 +15,28 @@ trait ConnectionOrientedNetworking:
   type MessageOut
 
   /**
-   * A deferred [[Connection]] factory to a remote endpoint.
+   * A [[Connection]] factory to a remote endpoint.
    * @param endpoint
    *   the remote [[Endpoint]] to connect to.
    * @return
-   *   a deferred computation that, when run, attempt to establish a connection, returning a `Future` that successfully
-   *   completes with the established connection, or fails in case of errors.
+   *   a `Future` that attempts to establish a connection to the provided remote endpoint, completing with the
+   *   established connection on success, or failing with an error.
    */
-  def out(endpoint: Endpoint): Task[Connection]
+  def out(endpoint: Endpoint): Future[Connection]
 
   /**
-   * A deferred connection [[Listener]] factory that listens for incoming connections on a specific port.
+   * A connection [[Listener]] factory that listens for incoming connections on a specific port.
    * @param port
    *   the port to listen on.
    * @param onReceive
    *   the callback to invoke when a message is received.
    * @return
-   *   a deferred computation that, when run, attempts to create a connection listener, returning a `Future` that
-   *   successfully completes with the [[ListenerRef]], or fails in case of errors.
+   *   a `Future` that attempts to create a connection listener, completing with the [[ListenerRef]] on success, or
+   *   failing with an error.
    * @see
    *   [[ListenerRef]]
    */
-  def in(port: Port)(onReceive: MessageIn => Unit): Task[ListenerRef]
+  def in(port: Port)(onReceive: MessageIn => Unit): Future[ListenerRef]
 
   /**
    * Represents the state of a connection oriented resource.

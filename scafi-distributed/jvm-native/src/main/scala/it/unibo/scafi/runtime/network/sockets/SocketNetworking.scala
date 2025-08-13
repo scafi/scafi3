@@ -7,11 +7,9 @@ import scala.LazyList.continually
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.{ Failure, Success, Try }
 
-import it.unibo.scafi.utils.Task
-
 trait SocketNetworking(using ec: ExecutionContext, conf: SocketConfiguration) extends ConnectionOrientedTemplate:
 
-  override def out(endpoint: Endpoint) = Task:
+  override def out(endpoint: Endpoint): Future[Connection] =
     for
       socket <- Future(Socket(endpoint._1, endpoint._2))
       conn = new ConnectionTemplate:
@@ -24,7 +22,7 @@ trait SocketNetworking(using ec: ExecutionContext, conf: SocketConfiguration) ex
         override def isOpen: Boolean = !socket.isClosed && Try(synchronized(sendChannel.write(0))).isSuccess
     yield conn
 
-  override def in(port: Port)(onReceive: MessageIn => Unit) = Task[ListenerRef]:
+  override def in(port: Port)(onReceive: MessageIn => Unit): Future[ListenerRef] =
     for
       server <- Future(ServerSocket(port))
       listener = new ListenerTemplate[Socket](onReceive):

@@ -10,11 +10,10 @@ import scala.util.Try
 import scala.util.chaining.scalaUtilChainingOps
 
 import it.unibo.scafi.runtime.network.sockets.EventEmitter.*
-import it.unibo.scafi.utils.Task
 
 trait SocketNetworking(using ec: ExecutionContext, conf: SocketConfiguration) extends ConnectionOrientedTemplate:
 
-  override def out(endpoint: Endpoint) = Task[Connection]:
+  override def out(endpoint: Endpoint): Future[Connection] =
     for
       socket <- createSocket(endpoint)
       conn = new ConnectionTemplate:
@@ -34,7 +33,7 @@ trait SocketNetworking(using ec: ExecutionContext, conf: SocketConfiguration) ex
       .onceConnect(() => p.trySuccess(socket): Unit)
       .onError(err => p.tryFailure(Exception(err.message)).pipe(_ => socket.destroy())): Unit
 
-  override def in(port: Port)(onReceive: MessageIn => Unit) = Task[ListenerRef]:
+  override def in(port: Port)(onReceive: MessageIn => Unit): Future[ListenerRef] =
     val listener = ServerSocketListener(onReceive)
     fromPromise[Listener]: p =>
       listener.serverSocket

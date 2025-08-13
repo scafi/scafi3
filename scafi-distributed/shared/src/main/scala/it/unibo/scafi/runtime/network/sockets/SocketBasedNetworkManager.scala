@@ -60,12 +60,11 @@ trait SocketBasedNetworkManager[ID](deviceId: ID, port: Int)(using ExecutionCont
       _ <- client(newConnections.collect { case Right(nc) => nc }.toMap)
     yield ()
 
-  private def establishConnection(endpoint: Endpoint): Future[Connection] = out(endpoint).run()
+  private def establishConnection(endpoint: Endpoint): Future[Connection] = out(endpoint)
 
   private def server(port: Port): Future[ListenerRef] = in(port): messageIn =>
     val (id, valueTree) = messageIn
     inValues.put(id, valueTree): Unit
-  .run()
 
   override def close(): Unit =
     try
