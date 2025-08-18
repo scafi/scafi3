@@ -31,7 +31,7 @@ trait DistributedScenarioTest extends AsyncSpec with Programs:
   def expected() =
     it should "successfully execute in a distributed scenario with socket-based network manager" in:
       scribe.info("==== STARTING DISTRIBUTED SCENARIO TEST ====")
-      given PatienceConfig = PatienceConfig(timeout = Span(30, Seconds), interval = Span(2, Seconds))
+      given PatienceConfig = PatienceConfig(timeout = Span(15, Seconds), interval = Span(2, Seconds))
       var networks = Set.empty[SocketBasedNetworkManager[ID]]
       val initialPort = Platform.runtime match
         case PlatformRuntime.Jvm => 5060

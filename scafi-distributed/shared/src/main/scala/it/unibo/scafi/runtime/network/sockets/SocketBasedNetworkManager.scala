@@ -13,7 +13,6 @@ import it.unibo.scafi.runtime.network.{ Neighborhood, NetworkManager }
 import it.unibo.scafi.runtime.network.sockets.InetTypes.Endpoint
 import it.unibo.scafi.utils.Channel
 
-import io.bullet.borer.Cbor
 import io.github.iltotore.iron.*
 
 trait SocketBasedNetworkManager[ID](deviceId: ID, port: Port)(using ExecutionContext)
@@ -87,20 +86,4 @@ object SocketBasedNetworkManager:
     override def resolve(): Neighborhood[DeviceId] = neighbors.keySet
     extension (id: ID) override def reachableAt: Option[Endpoint] = neighbors.get(id)
 
-    override given BinaryEncodable[MessageOut] = msg =>
-      val (id, valueTree) = msg
-      val encodedId = encode(id)
-      val encodedPathsWithValues = valueTree.paths
-        .map: path =>
-          try encode(path) -> valueTree[Array[Byte]](path)
-          catch
-            case e: ValueTree.NoPathFoundException =>
-              throw RuntimeException(s"Path: $path not found, this should not happen. Please report this.")
-        .toMap
-      Cbor.encode((encodedId, encodedPathsWithValues)).toByteArray
-
-    override given BinaryDecodable[MessageIn] = bytes =>
-      val (rawId, rawValueTree) = Cbor.decode(bytes).to[(Array[Byte], Map[Array[Byte], Array[Byte]])].value
-      val valueTree = ValueTree(rawValueTree.map(decode[Array[Byte], Path](_) -> _))
-      decode(rawId) -> valueTree
 end SocketBasedNetworkManager

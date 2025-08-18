@@ -14,11 +14,11 @@ class CodableInstancesTest extends AnyWordSpec with should.Matchers:
     "composed of `InvocationCoordinate`s tokens" should:
       "be both encodable and decodable" in:
         val path = Path(InvocationCoordinate("branch/true", 0), InvocationCoordinate("exchange", 0))
-        decode(encode(path)) shouldBe path
+        decode[Array[Byte], Path](encode(path)) shouldBe path
 
     "composed of other tokens" should:
       "fail to encode and decode" in:
         case class Unsupported(value: String)
         val path = Path(Unsupported("branch/true"), Unsupported("exchange"))
         an[Throwable] should be thrownBy encode(path)
-        an[Throwable] should be thrownBy decode(encode(path))
+        an[Throwable] should be thrownBy decode[Array[Byte], Path](encode(path))
