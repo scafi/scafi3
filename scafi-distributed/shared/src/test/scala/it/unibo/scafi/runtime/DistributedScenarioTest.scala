@@ -11,7 +11,7 @@ import it.unibo.scafi.message.BinaryCodable
 import it.unibo.scafi.test.environment.Grids.vonNeumannGrid
 import it.unibo.scafi.context.xc.ExchangeAggregateContext.exchangeContextFactory
 import it.unibo.scafi.runtime.network.sockets.InetTypes.{ Endpoint, Localhost }
-import it.unibo.scafi.runtime.network.sockets.{ SocketBasedNetworkManager, SocketConfiguration }
+import it.unibo.scafi.runtime.network.sockets.{ SocketConfiguration, SocketNetworkManager }
 import it.unibo.scafi.utils.{ Platform, PlatformRuntime }
 
 import io.github.iltotore.iron.refineUnsafe
@@ -30,10 +30,9 @@ trait DistributedScenarioTest extends AsyncSpec with Programs:
 
   def expected() =
     it should "successfully execute in a distributed scenario with socket-based network manager" in:
-      scribe.info("==== STARTING DISTRIBUTED SCENARIO TEST ====")
       given PatienceConfig = PatienceConfig(timeout = Span(15, Seconds), interval = Span(2, Seconds))
-      var networks = Set.empty[SocketBasedNetworkManager[ID]]
-      val initialPort = Platform.runtime match
+      var networks = Set.empty[SocketNetworkManager[ID]]
+      val basePort = Platform.runtime match
         case PlatformRuntime.Jvm => 5060
         case PlatformRuntime.Js => 5070
         case PlatformRuntime.Native => 5080
@@ -45,12 +44,11 @@ trait DistributedScenarioTest extends AsyncSpec with Programs:
           node =>
             val neighbors = env.nodes
               .filter(n => env.areConnected(env, n, node) && n != node)
-              .map(n => n.id -> Endpoint(Localhost, (initialPort + n.id).refineUnsafe))
+              .map(n => n.id -> Endpoint(Localhost, (basePort + n.id).refineUnsafe))
               .toMap
-            val network = SocketBasedNetworkManager
-              .withStaticallyAssignedNeighbors(node.id, initialPort + node.id, neighbors)
-            networks = networks + network
-            network,
+            val net = SocketNetworkManager.withFixedNeighbors(node.id, (basePort + node.id).refineUnsafe, neighbors)
+            networks = networks + net
+            net,
       )(exchangeWithRestrictions)
       val expectedResult = Map(
         0 -> Map(2 -> 100),
@@ -59,11 +57,8 @@ trait DistributedScenarioTest extends AsyncSpec with Programs:
         3 -> Map(1 -> 200),
       )
       eventually:
-        scribe.info("Cycling in order!")
         env.cycleInOrder()
-        val status = env.status.asInstanceOf[Map[ID, Map[ID, Int]]]
-        scribe.info(s"Current status is: $status")
-        status shouldBe expectedResult
+        env.status.asInstanceOf[Map[ID, Map[ID, Int]]] shouldBe expectedResult
       .map: res => // Ensure the network is closed after the test
         networks.foreach(_.close())
         res

@@ -13,9 +13,12 @@ import it.unibo.scafi.runtime.network.{ Neighborhood, NetworkManager }
 import it.unibo.scafi.runtime.network.sockets.InetTypes.Endpoint
 import it.unibo.scafi.utils.Channel
 
-import io.github.iltotore.iron.*
-
-trait SocketBasedNetworkManager[ID](deviceId: ID, port: Port)(using ExecutionContext)
+/**
+ * A [[NetworkManager]] using plain platform sockets for communicating with neighbors.
+ * @tparam ID
+ *   the type of the self's device identifier.
+ */
+trait SocketNetworkManager[ID](deviceId: ID, port: Port)(using ExecutionContext)
     extends NetworkManager
     with ConnectionOrientedNetworking
     with AutoCloseable:
@@ -35,7 +38,7 @@ trait SocketBasedNetworkManager[ID](deviceId: ID, port: Port)(using ExecutionCon
 
   def start(): Future[Unit] =
     for
-      listenerRef <- server(port.refineUnsafe)
+      listenerRef <- server(port)
       _ = connectionsListener = Some(listenerRef)
       _ <- client(Map.empty)
     yield ()
@@ -69,21 +72,20 @@ trait SocketBasedNetworkManager[ID](deviceId: ID, port: Port)(using ExecutionCon
     connectionsListener.foreach(_.listener.close())
   catch case e: (Channel.ChannelClosedException | Exception) => scribe.warn(e)
 
-end SocketBasedNetworkManager
+end SocketNetworkManager
 
-object SocketBasedNetworkManager:
+object SocketNetworkManager:
   import it.unibo.scafi.runtime.network.CodableInstances.given
 
-  def withStaticallyAssignedNeighbors[ID: BinaryCodable](deviceId: ID, port: Int, neighbors: Map[ID, Endpoint])(using
-      executionContext: ExecutionContext,
-      socketConfiguration: SocketConfiguration,
-  ) = new SocketBasedNetworkManager(deviceId, port.refineUnsafe)
+  def withFixedNeighbors[ID: BinaryCodable](
+      deviceId: ID,
+      port: Port,
+      neighbors: Map[ID, Endpoint],
+  )(using ExecutionContext, SocketConfiguration) = new SocketNetworkManager(deviceId, port)
     with SocketNetworking
     with InetAwareNeighborhoodResolver:
-
-    val _ = start()
 
     override def resolve(): Neighborhood[DeviceId] = neighbors.keySet
     extension (id: ID) override def reachableAt: Option[Endpoint] = neighbors.get(id)
 
-end SocketBasedNetworkManager
+    val _ = start()
