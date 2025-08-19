@@ -53,13 +53,12 @@ trait SocketNetworking(using ec: ExecutionContext, conf: SocketConfiguration) ex
         .onData: chunk =>
           val buffer = clientChannels.getOrElseUpdate(socket, ArrayBuffer[Byte]())
           for i <- 0 until chunk.length do buffer += chunk(i).toByte
-          serve(using socket)
+          serve(using socket): Unit
         .onceClose(_ => clientChannels.remove(socket): Unit): Unit
 
-    override def readMessageLength(using client: Socket): Try[Int] =
+    override def readMessageLength(using client: Socket): Int =
       val channel = clientChannels(client)
-      Try(ByteBuffer.wrap(channel.slice(0, Integer.BYTES).toArray).getInt)
-        .filter(channel.length >= Integer.BYTES + _)
+      ByteBuffer.wrap(channel.slice(0, Integer.BYTES).toArray).getInt ensuring (channel.length >= Integer.BYTES + _)
 
     override def readMessage(length: Int)(using client: Socket): Array[Byte] =
       val buffer = clientChannels(client)

@@ -29,16 +29,15 @@ trait SocketNetworking(using ec: ExecutionContext, conf: SocketConfiguration) ex
         private val clientChannels = ConcurrentHashMap[Socket, InputStream]()
         override val accept = Future:
           continually(Try(server.accept))
-            .takeWhile:
-              case Failure(_) => clientChannels.keySet.forEach(_.close()).pipe(_ => false)
-              case _ => true
+            .takeWhile(_.isSuccess)
             .collect { case Success(s) => s }
             .foreach: s =>
               clientChannels.put(s, s.getInputStream)
               s.setSoTimeout(conf.inactivityTimeout.toIntMillis)
-              Future(serve(using s)).onComplete(_ => clientChannels.remove(s))
-        override def readMessageLength(using client: Socket): Try[Int] =
-          Try(DataInputStream(clientChannels.get(client)).readInt).filter(_ > -1)
+              Future.fromTry(serve(using s)).onComplete(_ => clientChannels.remove(s))
+          clientChannels.keySet.forEach(_.close())
+        override def readMessageLength(using client: Socket): Int =
+          DataInputStream(clientChannels.get(client)).readInt ensuring (_ > -1)
         override def readMessage(length: Int)(using client: Socket): Array[Byte] =
           clientChannels.get(client).readNBytes(length)
         override def close(): Unit = server.close()

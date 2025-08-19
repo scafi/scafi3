@@ -41,7 +41,10 @@ object CodableInstances:
     override def encode(value: Path): Array[Byte] = Cbor.encode(value).toByteArray
     override def decode(data: Array[Byte]): Path = Cbor.decode(data).to[Path].value
 
-  /** A [[BinaryCodable]] for encoding and decoding [[ValueTree]] instances whose values are already in binary form. */
+  /**
+   * A [[BinaryCodable]] for encoding and decoding [[ValueTree]] instances whose values are already in binary form.
+   * Values not in binary form will be discarded from the encoded output.
+   */
   given valueTreeCodable: BinaryCodable[ValueTree] = new BinaryCodable[ValueTree]:
     override def encode(valueTree: ValueTree): Array[Byte] =
       val encodedPathsWithValues = valueTree.paths

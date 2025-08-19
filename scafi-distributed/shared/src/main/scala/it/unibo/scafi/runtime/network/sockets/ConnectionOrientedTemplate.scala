@@ -1,12 +1,10 @@
 package it.unibo.scafi.runtime.network.sockets
 
 import java.nio.ByteBuffer
-
 import scala.LazyList.continually
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.{ Failure, Success, Try }
 import scala.util.Using.Releasable
-
 import it.unibo.scafi.message.{ BinaryDecodable, BinaryEncodable }
 import it.unibo.scafi.message.Codable.*
 
@@ -42,26 +40,22 @@ trait ConnectionOrientedTemplate(using ec: ExecutionContext, conf: SocketConfigu
    *   the [[Releasable]] client socket type.
    */
   trait ListenerTemplate[Socket: Releasable](onReceive: MessageIn => Unit) extends Listener:
-    protected def serve(using Socket) = continually(validate(readMessageLength))
-      .takeWhile(_.isSuccess)
-      .collect { case Success(value) => value }
-      .filter(_ > 0)
-      .map(readMessage andThen decode)
-      .foreach(onReceive)
+    protected def serve(using socket: Socket): Try[Unit] = Using(socket): _ =>
+      continually(validate(readMessageLength))
+        .filter(_ > 0)
+        .map(readMessage andThen decode)
+        .foreach(onReceive)
 
-    private def validate(msgLen: Try[Int])(using client: Socket): Try[Int] = msgLen.flatMap: rawLen =>
-      Try(rawLen ensuring (_ < conf.maxMessageSize)).recoverWith: err =>
-        Socket.release(client)
-        Failure(err)
+    private def validate(msgLen: Int): Int = msgLen ensuring (_ < conf.maxMessageSize)
 
     /**
      * Reads the length of the next message from the client socket.
      * @param client
      *   the client socket to read from.
      * @return
-     *   a `Try` containing the length of the message, or a failure if reading fails.
+     *   the length of the message
      */
-    def readMessageLength(using client: Socket): Try[Int]
+    def readMessageLength(using client: Socket): Int
 
     /**
      * Reads a message of the specified length from the client socket.
