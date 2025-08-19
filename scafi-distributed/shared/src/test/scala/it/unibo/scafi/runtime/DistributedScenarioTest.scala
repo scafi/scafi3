@@ -69,9 +69,9 @@ trait DistributedScenarioTest extends AsyncSpec with Programs:
    */
   object PortsPool:
     private val basePort = Platform.runtime match
-      case PlatformRuntime.Jvm => 5060 to 5160
-      case PlatformRuntime.Js => 5070 to 5170
-      case PlatformRuntime.Native => 5080 to 5180
+      case PlatformRuntime.Jvm => 50_000 until 50_100
+      case PlatformRuntime.Js => 50_100 until 50_110
+      case PlatformRuntime.Native => 50_110 until 50_120
     private val current = AtomicInteger(0)
 
     def get: Port = basePort(current.getAndIncrement() % basePort.size).refineUnsafe
