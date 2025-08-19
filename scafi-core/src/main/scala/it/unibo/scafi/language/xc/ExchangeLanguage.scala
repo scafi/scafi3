@@ -25,7 +25,7 @@ trait ExchangeLanguage extends ExchangeSyntax, FieldCalculusSyntax:
 
   override def evolve[Value](initial: Value)(evolution: Value => Value): Value =
     // `exchange` is called only to update the self-value: `None` is shared with neighbors, so an in-memory
-    // codec is enough; any non-in-memory network manager will ignore it since it is not serialized.
+    // codec is enough; non-in-memory network managers will ignore it since it is not serialized.
     exchange(None)(nones =>
       val previousValue = nones(localId).getOrElse(initial)
       nones.set(localId, Some(evolution(previousValue))),

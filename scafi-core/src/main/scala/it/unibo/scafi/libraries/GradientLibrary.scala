@@ -46,7 +46,7 @@ object GradientLibrary:
    * @param distances
    *   the measured distances from the neighbours
    * @tparam Format
-   *   the data format type used to encode the distance value for distribution to neighbours
+   *   the type of data format used to encode the local value to be distributed to neighbours
    * @tparam N
    *   the type of the distance
    * @return
@@ -80,7 +80,7 @@ object GradientLibrary:
    * @param source
    *   whether this node is the source
    * @tparam Format
-   *   the data format type used to encode the distance value for distribution to neighbours
+   *   the type of data format used to encode the local value to be distributed to neighbours
    * @tparam N
    *   the type of the distance
    * @return

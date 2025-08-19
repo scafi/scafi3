@@ -20,6 +20,8 @@ object FoldhoodLibrary:
    *   the expression to be evaluated, once for self and once for each neighbor
    * @param c
    *   the foldhood context
+   * @tparam Format
+   *   the type of data format used to encode the local value to be distributed to neighbours
    * @tparam A
    *   the type of the expression
    * @tparam L
@@ -59,6 +61,8 @@ object FoldhoodLibrary:
    *   the expression to be evaluated, once for self and once for each neighbor
    * @param language
    *   the language context
+   * @tparam Format
+   *   the type of data format used to encode the local value to be distributed to neighbours
    * @tparam A
    *   the type of the expression
    * @tparam B
@@ -74,7 +78,8 @@ object FoldhoodLibrary:
     foldhoodImpl(false)(base)(f)(expr)
 
   /**
-   * The foldhoodPlus construct is used to aggregate the results of an expression over the neighborhood, including self.
+   * The foldhoodWithoutSelf construct is used to aggregate the results of an expression over the neighborhood,
+   * including self.
    * @param base
    *   the initial value of the aggregation
    * @param f
@@ -83,6 +88,8 @@ object FoldhoodLibrary:
    *   the expression to be evaluated, once for self and once for each neighbor
    * @param language
    *   the language context
+   * @tparam Format
+   *   the type of data format used to encode the local value to be distributed to neighbours
    * @tparam A
    *   the type of the expression
    * @tparam B

@@ -21,7 +21,7 @@ object MathLibrary:
    * @param value
    *   the value to be averaged
    * @tparam Format
-   *   the data format type used to encode the value for distribution to neighbours
+   *   the type of data format used to encode the local value to be distributed to neighbours
    * @tparam N
    *   the type of the value
    * @return

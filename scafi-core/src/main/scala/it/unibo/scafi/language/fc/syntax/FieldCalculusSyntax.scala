@@ -11,7 +11,7 @@ trait FieldCalculusSyntax:
    * @param expr
    *   the local value to send to neighbours
    * @tparam Format
-   *   the data format type used to encode the local value for distribution to neighbours
+   *   the type of data format used to encode the local value to be distributed to neighbours
    * @tparam Value
    *   the type of the local value
    * @return
@@ -40,7 +40,7 @@ trait FieldCalculusSyntax:
    * @param shareAndReturning
    *   the function that returns the value to share and return
    * @tparam Format
-   *   the data format type used to encode the local value for distribution to neighbours
+   *   the type of data format used to encode the local value to be distributed to neighbours
    * @tparam Value
    *   the type of the value
    * @return

@@ -27,7 +27,7 @@ trait ExchangeSyntax:
    *   the function that takes the initial/received aggregate value and returns a new aggregate value or two aggregate
    *   values, one to be sent and one to be returned
    * @tparam Format
-   *   the data format type used to encode the local value for distribution to neighbours
+   *   the type of data format used to encode the local value to be distributed to neighbours
    * @tparam Value
    *   the type of the aggregate value
    * @return

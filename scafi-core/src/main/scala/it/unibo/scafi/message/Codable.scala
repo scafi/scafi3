@@ -107,18 +107,18 @@ object Codables:
   /**
    * A [[Codable]] that does not perform any transformation on the messages, leaving them as-is. This is useful in
    * non-distributed environments, like simulations or local testing, where messages are simply passed around without
-   * any form of distributed communication.
+   * any form of (de)serialization.
    * @tparam Message
    *   the type of the message.
    * @return
    *   a [[Codable]] instance that encodes and decodes messages leaving them unchanged.
    */
-  given forInMemoryCommunications[Message]: Codable[Message, Message] = new Codable[Message, Message]:
+  given forInMemoryCommunications[Message]: Codable[Message, Message] with
     inline def encode(msg: Message): Message = msg
     inline def decode(msg: Message): Message = msg
 
   /** @return a [[BinaryCodable]] for encoding and decoding stringified messages in binary format. */
-  given forStringsInBinaryFormat: Codable[String, Array[Byte]] = new Codable[String, Array[Byte]]:
-    inline def encode(msg: String): Array[Byte] = msg.getBytes(StandardCharsets.UTF_8)
-    inline def decode(bytes: Array[Byte]): String = new String(bytes, StandardCharsets.UTF_8)
+  given forStringsInBinaryFormat: Codable[String, Array[Byte]] with
+    def encode(msg: String): Array[Byte] = msg.getBytes(StandardCharsets.UTF_8)
+    def decode(bytes: Array[Byte]): String = new String(bytes, StandardCharsets.UTF_8)
 end Codables

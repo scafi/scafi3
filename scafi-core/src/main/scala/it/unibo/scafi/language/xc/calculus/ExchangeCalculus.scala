@@ -34,7 +34,7 @@ trait ExchangeCalculus extends AggregateFoundation:
    * @param f
    *   function from neighbouring value to the couple (new local state, message to send)
    * @tparam Format
-   *   the data format type used to encode the local value for distribution to neighbours
+   *   the type of data format used to encode the local value to be distributed to neighbours
    * @tparam Value
    *   the type of neighbouring values
    * @return
