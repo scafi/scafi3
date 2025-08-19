@@ -171,7 +171,8 @@ object EventEmitter:
     /**
      * Registers a one-time listener for the `close` event.
      * @param listener
-     *   the function to be called when the socket is closed.
+     *   the function to be called when the socket is closed. It receives a boolean indicating if the socket was closed
+     *   gracefully or had an error.
      * @return
      *   the socket instance itself.
      */

@@ -31,6 +31,7 @@ trait SocketNetworking(using ec: ExecutionContext, conf: SocketConfiguration) ex
     val socket = Net.connect(endpoint.port, endpoint.address)
     socket
       .onceConnect(() => p.trySuccess(socket): Unit)
+      .onceClose(_ => p.tryFailure(Exception("Socket server closed connection")).pipe(_ => socket.destroy()))
       .onError(err => p.tryFailure(Exception(err.message)).pipe(_ => socket.destroy())): Unit
 
   override def in(port: Port)(onReceive: MessageIn => Unit): Future[ListenerRef] =

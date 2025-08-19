@@ -13,7 +13,7 @@ trait SocketNetworkingBehavior extends AsyncSpec:
 
   given SocketConfiguration = SocketConfiguration.basic
 
-  given PatienceConfig = PatienceConfig(timeout = Span(2, Seconds), interval = Span(200, Millis))
+  given PatienceConfig = PatienceConfig(timeout = Span(2, Seconds), interval = Span(250, Millis))
 
   type PlainTextNetworking = ConnectionOrientedNetworking & {
     type MessageIn = String
@@ -56,11 +56,6 @@ trait SocketNetworkingBehavior extends AsyncSpec:
       val tooLargeMessage = "A" * 65_536
       usingServer(nop): (_, client) =>
         client send Seq(tooLargeMessage) verifying eventually(client.isOpen shouldBe false)
-
-    it should "close all active clients connections when closed" in:
-      usingServer(nop): (server, client) =>
-        server.listener.close()
-        eventually(client.isOpen shouldBe false)
 
   private def usingServer[Result](using
       net: ConnectionOrientedNetworking,

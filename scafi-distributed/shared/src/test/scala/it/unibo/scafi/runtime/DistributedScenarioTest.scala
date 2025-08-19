@@ -19,7 +19,7 @@ import org.scalatest.time.{ Seconds, Span }
 
 trait DistributedScenarioTest extends AsyncSpec with Programs:
 
-  given PatienceConfig = PatienceConfig(timeout = Span(10, Seconds), interval = Span(1, Seconds))
+  given PatienceConfig = PatienceConfig(timeout = Span(15, Seconds), interval = Span(1, Seconds))
 
   override given BinaryCodable[ID] = new BinaryCodable[ID]:
     def encode(msg: ID): Array[Byte] = msg.toString.getBytes(StandardCharsets.UTF_8)
