@@ -14,7 +14,6 @@ import org.scalatest.matchers.should
 import org.scalatest.time.{ Millis, Seconds, Span }
 
 trait AsyncSpec extends AsyncFlatSpec with should.Matchers with PatienceConfiguration:
-  given PatienceConfig = PatienceConfig(timeout = Span(1, Seconds), interval = Span(100, Millis))
 
   def eventually(assertion: => Assertion)(using patience: PatienceConfig): Future[Assertion] =
     val deadline = patience.timeout.fromNow

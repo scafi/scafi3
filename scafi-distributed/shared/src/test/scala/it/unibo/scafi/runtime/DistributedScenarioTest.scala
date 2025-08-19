@@ -19,6 +19,8 @@ import org.scalatest.time.{ Seconds, Span }
 
 trait DistributedScenarioTest extends AsyncSpec with Programs:
 
+  given PatienceConfig = PatienceConfig(timeout = Span(10, Seconds), interval = Span(1, Seconds))
+
   override given BinaryCodable[ID] = new BinaryCodable[ID]:
     def encode(msg: ID): Array[Byte] = msg.toString.getBytes(StandardCharsets.UTF_8)
     def decode(bytes: Array[Byte]): ID = new String(bytes, StandardCharsets.UTF_8).toInt
@@ -28,7 +30,6 @@ trait DistributedScenarioTest extends AsyncSpec with Programs:
     override val maxMessageSize: Int = 65_536
 
   def socketBasedDistributedEnvironment(probe: ProgramWithResult[Map[ID, Int]]): Future[Assertion] =
-    given PatienceConfig = PatienceConfig(timeout = Span(10, Seconds), interval = Span(1, Seconds))
     for
       networks = collection.mutable.Set.empty[SocketNetworkManager[ID]]
       sizeX = 2

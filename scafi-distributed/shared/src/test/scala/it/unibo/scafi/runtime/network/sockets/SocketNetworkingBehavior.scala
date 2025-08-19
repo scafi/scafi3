@@ -7,9 +7,13 @@ import scala.concurrent.{ ExecutionContext, Future }
 import it.unibo.scafi.runtime.network.sockets.InetTypes.*
 import it.unibo.scafi.message.Codables.forStringsInBinaryFormat
 
+import org.scalatest.time.{ Millis, Seconds, Span }
+
 trait SocketNetworkingBehavior extends AsyncSpec:
 
   given SocketConfiguration = SocketConfiguration.basic
+
+  given PatienceConfig = PatienceConfig(timeout = Span(2, Seconds), interval = Span(200, Millis))
 
   type PlainTextNetworking = ConnectionOrientedNetworking & {
     type MessageIn = String
