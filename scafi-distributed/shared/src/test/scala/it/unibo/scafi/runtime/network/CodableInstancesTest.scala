@@ -28,7 +28,7 @@ class CodableInstancesTest extends AnyWordSpec with should.Matchers:
         an[Exception] should be thrownBy decode[Array[Byte], Path]("Unsupported path".getBytes)
 
   "ValueTree" when:
-    "composed of already encoded values" should:
+    "composed of encoded values" should:
       "be both encodable and decodable" in:
         val path = Path(InvocationCoordinate("branch/true", 0), InvocationCoordinate("exchange", 0))
         val value = "value"
