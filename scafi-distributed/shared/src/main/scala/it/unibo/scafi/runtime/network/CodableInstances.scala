@@ -22,12 +22,12 @@ object CodableInstances:
             .write("InvocationCoordinate")
             .write(coordinate)
             .writeArrayClose()
-        case _ => throw new IllegalArgumentException("Unsupported Path type: " + path.getClass.getName),
+        case _ => throw IllegalArgumentException("Unsupported Path type: " + path.getClass.getName),
     Decoder: reader =>
       val unbounded = reader.readArrayOpen(2)
       val value = reader.readString() match
         case "InvocationCoordinate" => reader.read[InvocationCoordinate]()
-        case tag => throw new IllegalArgumentException(s"Unsupported Path type: $tag")
+        case tag => throw IllegalArgumentException(s"Unsupported Path type: $tag")
       reader.readArrayClose(unbounded, value),
   )
 
@@ -45,8 +45,11 @@ object CodableInstances:
   given valueTreeCodable: BinaryCodable[ValueTree] = new BinaryCodable[ValueTree]:
     override def encode(valueTree: ValueTree): Array[Byte] =
       val encodedPathsWithValues = valueTree.paths
-        .map: path =>
-          try pathCodable.encode(path) -> valueTree[Array[Byte]](path)
+        .flatMap: path =>
+          try
+            valueTree[Any](path) match
+              case encodedValue: Array[Byte] => Some(path -> encodedValue)
+              case _ => None
           catch
             case _: ValueTree.NoPathFoundException =>
               throw RuntimeException(s"Path: $path not found, this should not happen. Please report this.")
@@ -54,8 +57,8 @@ object CodableInstances:
       Cbor.encode(encodedPathsWithValues).toByteArray
 
     override def decode(data: Array[Byte]): ValueTree =
-      val pathsWithValues = Cbor.decode(data).to[Map[Array[Byte], Array[Byte]]].value
-      ValueTree(pathsWithValues.map(pathCodable.decode(_) -> _))
+      val pathsWithEncodedValues = Cbor.decode(data).to[Map[Path, Array[Byte]]].value
+      ValueTree(pathsWithEncodedValues)
 
   /** A [[BinaryCodable]] for encoding and decoding tuples of two codable elements. */
   given [T1: BinaryCodable, T2: BinaryCodable]: BinaryCodable[(T1, T2)] = new BinaryCodable[(T1, T2)]:

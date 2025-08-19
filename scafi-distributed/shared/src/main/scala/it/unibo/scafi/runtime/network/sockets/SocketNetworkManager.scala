@@ -60,7 +60,7 @@ trait SocketNetworkManager[ID](deviceId: ID, port: Port)(using ExecutionContext)
           .get(endpoint)
           .filter(_.isOpen)
           .fold(establishConnection(endpoint))(Future.successful)
-          .flatMap(conn => conn.sendOrClose((deviceId, valueTree)).map(_ => Right(endpoint -> conn)))
+          .flatMap(conn => conn.send((deviceId, valueTree)).map(_ => Right(endpoint -> conn)))
           .recover { case e => Left(e) }
       _ <- client(newConnections.collect { case Right(nc) => nc }.toMap)
     yield ()

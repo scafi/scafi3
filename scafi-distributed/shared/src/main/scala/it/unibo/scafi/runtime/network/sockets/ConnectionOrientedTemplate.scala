@@ -19,8 +19,6 @@ trait ConnectionOrientedTemplate(using ec: ExecutionContext, conf: SocketConfigu
 
   /** An abstract connection template with pre-cooked `send` logic. */
   trait ConnectionTemplate extends Connection:
-    override def sendOrClose(msg: MessageOut): Future[Unit] = send(msg).andThen { case Failure(_) => close() }
-
     override def send(msg: MessageOut): Future[Unit] =
       for
         serializedMsg <- Future(encode(msg))
