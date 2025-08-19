@@ -44,24 +44,24 @@ trait SocketNetworking(using ec: ExecutionContext, conf: SocketConfiguration) ex
   private class ServerSocketListener(onReceive: MessageIn => Unit) extends ListenerTemplate[Socket](onReceive):
     private var open = true
     private val acceptPromise: Promise[Unit] = Promise[Unit]()
-    private val sendChannels = js.Map[Socket, ArrayBuffer[Byte]]()
+    private val clientChannels = js.Map[Socket, ArrayBuffer[Byte]]()
 
     val serverSocket: Server = Net.createServer: socket =>
       socket
         .setTimeout(conf.inactivityTimeout.toIntMillis)(() => socket.destroy())
         .onData: chunk =>
-          val buffer = sendChannels.getOrElseUpdate(socket, ArrayBuffer[Byte]())
+          val buffer = clientChannels.getOrElseUpdate(socket, ArrayBuffer[Byte]())
           for i <- 0 until chunk.length do buffer += chunk(i).toByte
           serve(using socket)
-        .onceClose(_ => sendChannels.remove(socket): Unit): Unit
+        .onceClose(_ => clientChannels.remove(socket): Unit): Unit
 
     override def readMessageLength(using client: Socket): Try[Int] =
-      val channel = sendChannels(client)
+      val channel = clientChannels(client)
       Try(ByteBuffer.wrap(channel.slice(0, Integer.BYTES).toArray).getInt)
         .filter(channel.length >= Integer.BYTES + _)
 
     override def readMessage(length: Int)(using client: Socket): Array[Byte] =
-      val buffer = sendChannels(client)
+      val buffer = clientChannels(client)
       val msgBytes = buffer.slice(Integer.BYTES, Integer.BYTES + length).toArray
       buffer.remove(0, Integer.BYTES + length)
       msgBytes

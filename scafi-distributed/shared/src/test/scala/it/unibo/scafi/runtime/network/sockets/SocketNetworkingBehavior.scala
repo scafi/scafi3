@@ -32,11 +32,11 @@ trait SocketNetworkingBehavior extends AsyncSpec:
     it should "fail to connect to an unavailable remote endpoint" in:
       val nonExistentServerPort: Port = 5050
       val client = net.out(Endpoint(Localhost, nonExistentServerPort))
-      client.failed map:
+      client.failed verify:
         _ shouldBe a[Throwable]
 
     it should "be able to connect to an available remote endpoint" in:
-      usingServer(nop): client =>
+      usingServer(nop): (_, client) =>
         client.isOpen shouldBe true
         client.close()
         client.isOpen shouldBe false
@@ -45,21 +45,26 @@ trait SocketNetworkingBehavior extends AsyncSpec:
     it should "be able to accept incoming connections from remote endpoints" in:
       val receivedMessages = CopyOnWriteArrayList[net.MessageIn]()
       val messages = Seq("Hello", "World", "Scafi", "Networking")
-      usingServer(msg => receivedMessages.add(msg): Unit):
-        _ send messages verifying eventually(receivedMessages should contain theSameElementsInOrderAs messages)
+      usingServer(msg => receivedMessages.add(msg): Unit): (_, client) =>
+        client send messages verifying eventually(receivedMessages should contain theSameElementsInOrderAs messages)
 
     it should "close connections with clients attempting to flood the server" in:
       val tooLargeMessage = "A" * 65_536
-      usingServer(nop): client =>
+      usingServer(nop): (_, client) =>
         client send Seq(tooLargeMessage) verifying eventually(client.isOpen shouldBe false)
+
+    it should "close all active clients connections when closed" in:
+      usingServer(nop): (server, client) =>
+        server.listener.close()
+        eventually(client.isOpen shouldBe false)
 
   private def usingServer[Result](using
       net: ConnectionOrientedNetworking,
-  )(onMessage: net.MessageIn => Unit)(todo: net.Connection => Future[Result]) =
+  )(onMessage: net.MessageIn => Unit)(todo: (net.ListenerRef, net.Connection) => Future[Result]) =
     for
       server <- net.in(FreePort)(onMessage)
       client <- net.out(Endpoint(Localhost, server.listener.boundPort))
-      result <- todo(client)
+      result <- todo(server, client)
       _ = client.close()
       _ = server.listener.close()
     yield result

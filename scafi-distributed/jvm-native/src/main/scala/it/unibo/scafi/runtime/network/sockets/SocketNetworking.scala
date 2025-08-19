@@ -26,20 +26,21 @@ trait SocketNetworking(using ec: ExecutionContext, conf: SocketConfiguration) ex
     for
       server <- Future(ServerSocket(port))
       listener = new ListenerTemplate[Socket](onReceive):
+        private val clientChannels = ConcurrentHashMap[Socket, InputStream]()
         override val accept = Future:
           continually(Try(server.accept))
             .takeWhile:
-              case Failure(_: SocketException) => false
+              case Failure(_) => clientChannels.keySet.forEach(_.close).pipe(_ => false)
               case _ => true
-            .collect { case Success(c) => c }
+            .collect { case Success(s) => s }
             .foreach: s =>
+              clientChannels.put(s, s.getInputStream)
               s.setSoTimeout(conf.inactivityTimeout.toIntMillis)
-              Future(serve(using s))
-
+              Future(serve(using s)).onComplete(_ => clientChannels.remove(s))
         override def readMessageLength(using client: Socket): Try[Int] =
-          Try(DataInputStream(client.getInputStream).readInt).filter(_ > -1)
+          Try(DataInputStream(clientChannels.get(client)).readInt).filter(_ > -1)
         override def readMessage(length: Int)(using client: Socket): Array[Byte] =
-          client.getInputStream.readNBytes(length)
+          clientChannels.get(client).readNBytes(length)
         override def close(): Unit = server.close()
         override def isOpen: Boolean = !server.isClosed
         override def boundPort: Port = server.getLocalPort.assume
