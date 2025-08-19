@@ -5,7 +5,6 @@ import java.util.concurrent.atomic.AtomicReference
 
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.jdk.CollectionConverters.*
-import scala.util.Failure
 
 import it.unibo.scafi.runtime.network.{ Neighborhood, NetworkManager }
 import it.unibo.scafi.runtime.network.sockets.InetTypes.{ Endpoint, Port }
@@ -91,7 +90,9 @@ object SocketNetworkManager:
    * @tparam ID
    *   the type of the device identifier.
    * @return
-   *   a new instance of [[SocketNetworkManager]].
+   *   a newly created, not yet started instance of [[SocketNetworkManager]].
+   * @see
+   *   [[SocketNetworkManager.start]] to start the network manager.
    */
   def withFixedNeighbors[ID: BinaryCodable](
       deviceId: ID,
@@ -99,7 +100,6 @@ object SocketNetworkManager:
       neighbors: Map[ID, Endpoint],
   )(using ExecutionContext, SocketConfiguration): SocketNetworkManager[ID] =
     new SocketNetworkManager(deviceId, port) with SocketNetworking with InetAwareNeighborhoodResolver:
-      val _ = start().andThen { case Failure(exception) => scribe.error(exception) }
       override def neighborhood: Neighborhood[DeviceId] = neighbors.keySet
       extension (id: ID) override def endpoint: Option[Endpoint] = neighbors.get(id)
 end SocketNetworkManager

@@ -7,6 +7,7 @@ import it.unibo.scafi.libraries.All.*
 import it.unibo.scafi.language.common.syntax.BranchingSyntax
 import it.unibo.scafi.message.BinaryCodable
 import it.unibo.scafi.context.AggregateContext
+import it.unibo.scafi.language.fc.syntax.FieldCalculusSyntax
 
 trait Programs:
 
@@ -15,17 +16,31 @@ trait Programs:
   given BinaryCodable[ID] = compiletime.deferred
 
   type Lang = AggregateContext { type DeviceId = ID } & AggregateFoundation & FieldBasedSharedData & ExchangeSyntax &
-    BranchingSyntax
+    BranchingSyntax & FieldCalculusSyntax
 
-  def pingPong(using lang: Lang): lang.SharedData[ID] =
-    exchange(0)(n => returnSending(n.map(_ + 1)))
+  class ProgramWithResult[Result](val program: Lang ?=> Result, val expected: Map[ID, Result])
 
-  def exchangeWithRestrictions(using lang: Lang): Map[ID, Int] =
-    branch(localId % 2 == 0)(
+  def neighborsDiscoveryProgram = ProgramWithResult(
+    program = neighborValues(localId).neighborValues,
+    expected = Map(
+      0 -> Map(1 -> 1, 2 -> 2),
+      1 -> Map(0 -> 0, 3 -> 3),
+      2 -> Map(0 -> 0, 3 -> 3),
+      3 -> Map(1 -> 1, 2 -> 2),
+    ),
+  )
+
+  def exchangeWithRestrictionsProgram = ProgramWithResult(
+    program = branch(localId % 2 == 0)(
       exchange(100)(returnSending).neighborValues,
     )(
       exchange(200)(returnSending).neighborValues,
-    )
-
-  // def programs(using lang: Lang) = List(pingPong, exchangeWithRestrictions)
+    ),
+    expected = Map(
+      0 -> Map(2 -> 100),
+      1 -> Map(3 -> 200),
+      2 -> Map(0 -> 100),
+      3 -> Map(1 -> 200),
+    ),
+  )
 end Programs
