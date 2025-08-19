@@ -31,7 +31,7 @@ trait DistributedScenarioTest extends AsyncSpec with Programs:
     override val maxMessageSize: Int = 65_536
 
   def socketBasedDistributedEnvironment(probe: ProgramWithResult[Map[ID, Int]]): Future[Assertion] =
-    given PatienceConfig = PatienceConfig(timeout = Span(10, Seconds), interval = Span(2, Seconds))
+    given PatienceConfig = PatienceConfig(timeout = Span(10, Seconds), interval = Span(1, Seconds))
     for
       networks = collection.mutable.Set.empty[SocketNetworkManager[ID]]
       sizeX = 2
