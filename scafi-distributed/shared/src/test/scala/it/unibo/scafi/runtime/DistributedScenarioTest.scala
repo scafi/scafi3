@@ -9,8 +9,9 @@ import scala.util.chaining.scalaUtilChainingOps
 import it.unibo.scafi.context.xc.ExchangeAggregateContext
 import it.unibo.scafi.context.xc.ExchangeAggregateContext.exchangeContextFactory
 import it.unibo.scafi.message.BinaryCodable
-import it.unibo.scafi.runtime.network.sockets.{ AsyncSpec, SocketConfiguration, SocketNetworkManager }
+import it.unibo.scafi.runtime.network.sockets.{ SocketConfiguration, SocketNetworkManager }
 import it.unibo.scafi.runtime.network.sockets.InetTypes.{ Endpoint, FreePort, Localhost }
+import it.unibo.scafi.test.AsyncSpec
 import it.unibo.scafi.test.environment.{ Environment, IntAggregateContext, Node }
 import it.unibo.scafi.test.environment.Grids.vonNeumannGrid
 
@@ -29,7 +30,16 @@ trait DistributedScenarioTest extends AsyncSpec with Programs:
     override val inactivityTimeout: FiniteDuration = 2.seconds
     override val maxMessageSize: Int = 65_536
 
-  def socketBasedDistributedEnvironment(probe: ProgramWithResult[Map[ID, Int]]): Future[Assertion] =
+  "Evolve program" should "make single nodes evolve as expected" in
+    socketBasedDistributedEnvironment(evolveProgram)
+
+  "Neighbors discovery program" should "spread local values to neighborhood" in
+    socketBasedDistributedEnvironment(neighborsDiscoveryProgram)
+
+  "Exchange aggregate program with branch restriction" should "correctly spread local values to aligned neighbors" in
+    socketBasedDistributedEnvironment(exchangeWithRestrictionsProgram)
+
+  def socketBasedDistributedEnvironment[Result](probe: ProgramWithResult[Result]): Future[Assertion] =
     for
       networks = collection.mutable.Set.empty[SocketNetworkManager[ID]]
       sizeX = 2
@@ -38,7 +48,7 @@ trait DistributedScenarioTest extends AsyncSpec with Programs:
         sizeX,
         sizeY,
         exchangeContextFactory[ID, SocketNetworkManager[ID]],
-        socketNetworkFactory[Map[ID, Int], ExchangeAggregateContext[ID]].andThen(_.tap(networks.add)),
+        socketNetworkFactory.andThen(_.tap(networks.add)),
       )(probe.program)
       res <- eventually:
         env.cycleInOrder()

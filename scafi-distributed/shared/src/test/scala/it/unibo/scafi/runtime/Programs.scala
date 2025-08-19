@@ -20,6 +20,18 @@ trait Programs:
 
   class ProgramWithResult[Result](val program: Lang ?=> Result, val expected: Map[ID, Result])
 
+  given [Result]: CanEqual[Map[ID, Result], Map[ID, Result]] = CanEqual.derived
+
+  def evolveProgram = ProgramWithResult(
+    program = evolve(localId)(_ + 1),
+    expected = Map(
+      0 -> 1,
+      1 -> 2,
+      2 -> 3,
+      3 -> 4,
+    ),
+  )
+
   def neighborsDiscoveryProgram = ProgramWithResult(
     program = neighborValues(localId).neighborValues,
     expected = Map(

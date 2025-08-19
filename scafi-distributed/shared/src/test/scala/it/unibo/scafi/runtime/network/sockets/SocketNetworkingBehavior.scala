@@ -4,6 +4,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 import scala.concurrent.{ ExecutionContext, Future }
 
+import it.unibo.scafi.test.AsyncSpec
 import it.unibo.scafi.runtime.network.sockets.InetTypes.*
 import it.unibo.scafi.message.Codables.forStringsInBinaryFormat
 
