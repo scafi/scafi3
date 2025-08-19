@@ -127,7 +127,7 @@ object Channel:
         closed = true
         waiters.drain.foreach(_.failure(ChannelClosedException()))
 
-    extension [T](q: collection.mutable.Queue[T]) def drain: Seq[T] = q.dequeueAll(_ => true)
+    extension [R](q: collection.mutable.Queue[R]) def drain: Seq[R] = q.dequeueAll(_ => true)
 
     override def isClosed: Boolean = synchronized(closed)
   end ChannelImpl

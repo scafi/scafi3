@@ -1,9 +1,11 @@
 package it.unibo.scafi.runtime.network.sockets
 
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicReference
 
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.jdk.CollectionConverters.*
+import scala.util.Failure
 
 import it.unibo.scafi.runtime.network.{ Neighborhood, NetworkManager }
 import it.unibo.scafi.runtime.network.sockets.InetTypes.{ Endpoint, Port }
@@ -34,25 +36,26 @@ trait SocketNetworkManager[ID](deviceId: ID, port: Port)(using ExecutionContext)
 
   private val outChannel = Channel[Set[MessageOut]]
   private val inValues = ConcurrentHashMap[DeviceId, ValueTree]()
-  private var connectionsListener: Option[ListenerRef] = None
+  private val connectionsListener = AtomicReference[ListenerRef]()
 
   def start(): Future[Unit] =
     for
+      _ <- if outChannel.isClosed then Future.failed(IllegalStateException("Network manager's closed")) else Future.unit
       listenerRef <- server(port)
-      _ = connectionsListener = Some(listenerRef)
-      _ <- client(Map.empty)
+      _ = connectionsListener.set(listenerRef)
+      _ = client(Map.empty)
     yield ()
 
   override def send(message: Export[DeviceId]): Unit =
-    try outChannel.push((resolve() - deviceId).map(id => id -> message(id))) // TODO do not send to itself, right?
-    catch case e: Channel.ChannelClosedException => scribe.error("The network manager was closed, cannot send message.")
+    try outChannel.push((neighborhood - deviceId).map(id => id -> message(id)))
+    catch case _: Channel.ChannelClosedException => scribe.error("The network manager is closed, cannot send message.")
 
   override def receive: Import[DeviceId] = Import(inValues.asScala.toMap)
 
   private def client(connections: Map[Endpoint, Connection]): Future[Unit] =
     for
       msgs <- outChannel.take
-      nvalues <- Future(msgs.map((nid, valueTree) => nid.reachableAt.get -> valueTree)) // TODO: handle gracefully get
+      nvalues = msgs.flatMap((nid, valueTree) => nid.endpoint.map(_ -> valueTree))
       newConnections <- Future.traverse(nvalues): (endpoint, valueTree) =>
         connections
           .get(endpoint)
@@ -69,23 +72,34 @@ trait SocketNetworkManager[ID](deviceId: ID, port: Port)(using ExecutionContext)
 
   override def close(): Unit = try
     outChannel.close()
-    connectionsListener.foreach(_.listener.close())
-  catch case e: (Channel.ChannelClosedException | Exception) => scribe.warn(e)
+    Option(connectionsListener.get()).foreach(_.listener.close())
+  catch case e: (Channel.ChannelClosedException | Exception) => scribe.error(e)
 
 end SocketNetworkManager
 
 object SocketNetworkManager:
   import it.unibo.scafi.runtime.network.CodableInstances.given
 
+  /**
+   * Creates a new socket-based [[NetworkManager]] with statically assigned neighbors.
+   * @param deviceId
+   *   the device identifier of the self-node.
+   * @param port
+   *   the port to listen for incoming connections.
+   * @param neighbors
+   *   the map of neighbors with their device identifiers and endpoints.
+   * @tparam ID
+   *   the type of the device identifier.
+   * @return
+   *   a new instance of [[SocketNetworkManager]].
+   */
   def withFixedNeighbors[ID: BinaryCodable](
       deviceId: ID,
       port: Port,
       neighbors: Map[ID, Endpoint],
-  )(using ExecutionContext, SocketConfiguration) = new SocketNetworkManager(deviceId, port)
-    with SocketNetworking
-    with InetAwareNeighborhoodResolver:
-
-    override def resolve(): Neighborhood[DeviceId] = neighbors.keySet
-    extension (id: ID) override def reachableAt: Option[Endpoint] = neighbors.get(id)
-
-    val _ = start()
+  )(using ExecutionContext, SocketConfiguration): SocketNetworkManager[ID] =
+    new SocketNetworkManager(deviceId, port) with SocketNetworking with InetAwareNeighborhoodResolver:
+      val _ = start().andThen { case Failure(exception) => scribe.error(exception) }
+      override def neighborhood: Neighborhood[DeviceId] = neighbors.keySet
+      extension (id: ID) override def endpoint: Option[Endpoint] = neighbors.get(id)
+end SocketNetworkManager

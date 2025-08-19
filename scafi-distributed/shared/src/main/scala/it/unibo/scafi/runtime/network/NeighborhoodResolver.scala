@@ -18,4 +18,4 @@ trait NeighborhoodResolver:
    * @return
    *   the neighborhood of the device.
    */
-  def resolve(): Neighborhood[DeviceId]
+  def neighborhood: Neighborhood[DeviceId]
