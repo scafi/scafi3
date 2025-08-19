@@ -22,12 +22,12 @@ object CodableInstances:
             .write("InvocationCoordinate")
             .write(coordinate)
             .writeArrayClose()
-        case _ => throw IllegalArgumentException("Unsupported Path type: " + path.getClass.getName),
+        case _ => throw IllegalArgumentException(s"Unsupported Path token type ${path.getClass.getName}"),
     Decoder: reader =>
       val unbounded = reader.readArrayOpen(2)
       val value = reader.readString() match
         case "InvocationCoordinate" => reader.read[InvocationCoordinate]()
-        case tag => throw IllegalArgumentException(s"Unsupported Path type: $tag")
+        case tag => throw IllegalArgumentException(s"Unsupported Path token type $tag.")
       reader.readArrayClose(unbounded, value),
   )
 
