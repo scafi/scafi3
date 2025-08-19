@@ -2,22 +2,21 @@ package it.unibo.scafi.test.environment
 
 import scala.compiletime.uninitialized
 
-import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.message.{ Export, Import }
 import it.unibo.scafi.runtime.ScafiEngine
 import it.unibo.scafi.runtime.network.NetworkManager
 
-class Node[R, Context <: AggregateContext { type DeviceId = Int }](
-    val environment: Environment[R, Context],
+class Node[Result, Context <: IntAggregateContext, Network <: IntNetworkManager](
+    val environment: Environment[Result, Context, Network],
     val id: Int,
     val retain: Int,
-    private val contextFactory: (Int, NetworkManager { type DeviceId = Int }) => Context,
-    private val program: (Context, Environment[R, Context]) ?=> R,
-    private val networkManagerFactory: Node[R, Context] => NetworkManager { type DeviceId = Int },
+    private val contextFactory: (Int, Network) => Context,
+    private val program: (Context, Environment[Result, Context, Network]) ?=> Result,
+    private val networkManagerFactory: Node[Result, Context, Network] => Network,
 ):
-  private var currentResult: R = uninitialized
-  private lazy val nodeNetworkManager = networkManagerFactory(this)
-  private lazy val engine = ScafiEngine(id, nodeNetworkManager, contextFactory): ctx ?=>
+  lazy val networkManager: Network = networkManagerFactory(this)
+  private var currentResult: Result = uninitialized
+  private lazy val engine = ScafiEngine(id, networkManager, contextFactory): ctx ?=>
     program(using ctx, environment)
 
   /**
@@ -25,7 +24,7 @@ class Node[R, Context <: AggregateContext { type DeviceId = Int }](
    * @return
    *   The result of the round.
    */
-  def cycle: R =
+  def cycle: Result =
     currentResult = engine.cycle()
     currentResult
 
@@ -41,21 +40,22 @@ class Node[R, Context <: AggregateContext { type DeviceId = Int }](
    * Retrieves the current result of the node's computation.
    *
    * @return
-   *   The result of type `R`.
+   *   The result of type `Result`.
    */
-  def result: R = currentResult
+  def result: Result = currentResult
 end Node
 
 object Node:
-  given [R, Context <: AggregateContext { type DeviceId = Int }]: CanEqual[Node[R, Context], Node[R, Context]] =
-    CanEqual.derived
+  given [Result, Context <: IntAggregateContext, Network <: IntNetworkManager]
+      : CanEqual[Node[Result, Context, Network], Node[Result, Context, Network]] = CanEqual.derived
 
-  def inMemoryNetwork[R, Context <: AggregateContext { type DeviceId = Int }](using
-      Environment[R, Context],
-  )(node: Node[R, Context]): NetworkManager { type DeviceId = Int } = InMemoryNetwork(node)
+  def inMemoryNetwork[Result, Context <: IntAggregateContext, Network <: IntNetworkManager](using
+      Environment[Result, Context, Network],
+  )(node: Node[Result, Context, Network]): IntNetworkManager = InMemoryNetwork(node)
 
-  private class InMemoryNetwork[R, Context <: AggregateContext { type DeviceId = Int }](node: Node[R, Context])
-      extends NetworkManager:
+  private class InMemoryNetwork[Result, Context <: IntAggregateContext, Network <: IntNetworkManager](
+      node: Node[Result, Context, Network],
+  ) extends NetworkManager:
     override type DeviceId = Int
 
     override def send(message: Export[Int]): Unit = () // In-memory message communication

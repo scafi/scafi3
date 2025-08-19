@@ -74,6 +74,8 @@ trait SocketNetworkManager[ID](deviceId: ID, port: Port)(using ExecutionContext)
     Option(connectionsListener.get()).foreach(_.listener.close())
   catch case e: (Channel.ChannelClosedException | Exception) => scribe.error(e)
 
+  def boundPort: Option[Port] = Option(connectionsListener.get()).map(_.listener.boundPort)
+
 end SocketNetworkManager
 
 object SocketNetworkManager:
@@ -97,7 +99,7 @@ object SocketNetworkManager:
   def withFixedNeighbors[ID: BinaryCodable](
       deviceId: ID,
       port: Port,
-      neighbors: Map[ID, Endpoint],
+      neighbors: => Map[ID, Endpoint],
   )(using ExecutionContext, SocketConfiguration): SocketNetworkManager[ID] =
     new SocketNetworkManager(deviceId, port) with SocketNetworking with InetAwareNeighborhoodResolver:
       override def neighborhood: Neighborhood[DeviceId] = neighbors.keySet

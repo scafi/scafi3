@@ -30,7 +30,7 @@ trait SocketNetworking(using ec: ExecutionContext, conf: SocketConfiguration) ex
         override val accept = Future:
           continually(Try(server.accept))
             .takeWhile:
-              case Failure(_) => clientChannels.keySet.forEach(_.close).pipe(_ => false)
+              case Failure(_) => clientChannels.keySet.forEach(_.close()).pipe(_ => false)
               case _ => true
             .collect { case Success(s) => s }
             .foreach: s =>

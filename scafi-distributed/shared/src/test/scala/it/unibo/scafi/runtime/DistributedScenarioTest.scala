@@ -1,7 +1,6 @@
 package it.unibo.scafi.runtime
 
 import java.nio.charset.StandardCharsets
-import java.util.concurrent.atomic.AtomicInteger
 
 import scala.concurrent.Future
 import scala.concurrent.duration.{ DurationInt, FiniteDuration }
@@ -11,12 +10,10 @@ import it.unibo.scafi.context.xc.ExchangeAggregateContext
 import it.unibo.scafi.context.xc.ExchangeAggregateContext.exchangeContextFactory
 import it.unibo.scafi.message.BinaryCodable
 import it.unibo.scafi.runtime.network.sockets.{ AsyncSpec, SocketConfiguration, SocketNetworkManager }
-import it.unibo.scafi.runtime.network.sockets.InetTypes.{ Endpoint, Localhost, Port }
-import it.unibo.scafi.test.environment.{ Environment, Node }
-import it.unibo.scafi.test.environment.Grids.{ vonNeumannGrid, IntAggregateContext }
-import it.unibo.scafi.utils.{ Platform, PlatformRuntime }
+import it.unibo.scafi.runtime.network.sockets.InetTypes.{ Endpoint, FreePort, Localhost }
+import it.unibo.scafi.test.environment.{ Environment, IntAggregateContext, Node }
+import it.unibo.scafi.test.environment.Grids.vonNeumannGrid
 
-import io.github.iltotore.iron.refineUnsafe
 import org.scalatest.compatible.Assertion
 import org.scalatest.time.{ Seconds, Span }
 
@@ -36,12 +33,11 @@ trait DistributedScenarioTest extends AsyncSpec with Programs:
       networks = collection.mutable.Set.empty[SocketNetworkManager[ID]]
       sizeX = 2
       sizeY = 2
-      endpoints = (0 to sizeX).flatMap(x => (0 to sizeY).map(y => x + y -> Endpoint(Localhost, PortsPool.get))).toMap
       env = vonNeumannGrid(
         sizeX,
         sizeY,
-        exchangeContextFactory,
-        socketNetworkFactory[Map[ID, Int], ExchangeAggregateContext[ID]](endpoints).andThen(_.tap(networks.add)),
+        exchangeContextFactory[ID, SocketNetworkManager[ID]],
+        socketNetworkFactory[Map[ID, Int], ExchangeAggregateContext[ID]].andThen(_.tap(networks.add)),
       )(probe.program)
       res <- eventually:
         env.cycleInOrder()
@@ -49,31 +45,15 @@ trait DistributedScenarioTest extends AsyncSpec with Programs:
       _ = networks.foreach(_.close())
     yield res
 
-  private def socketNetworkFactory[R, Context <: IntAggregateContext](endpoints: Map[ID, Endpoint])(using
-      env: Environment[R, Context],
-  )(node: Node[R, Context]): SocketNetworkManager[ID] =
-    val neighbors = env.nodes
+  private def socketNetworkFactory[Result, Context <: IntAggregateContext](using
+      env: Environment[Result, Context, SocketNetworkManager[ID]],
+  )(node: Node[Result, Context, SocketNetworkManager[ID]]): SocketNetworkManager[ID] =
+    lazy val neighbors = env.nodes
       .filter(n => env.areConnected(env, n, node) && n != node)
-      .map(n => n.id -> endpoints(n.id))
+      .map(n => n.id -> Endpoint(Localhost, n.networkManager.boundPort.get))
       .toMap
-    val network = SocketNetworkManager.withFixedNeighbors(node.id, endpoints(node.id).port, neighbors)
+    val network = SocketNetworkManager.withFixedNeighbors(node.id, FreePort, neighbors)
     network.start().onComplete(result => require(result.isSuccess, s"Failed to start network: ${result.failed.get}"))
     network
-
-  /**
-   * Manages the assignment of TCP ports to nodes in a distributed setup using a pool of ports.
-   * @note
-   *   This is needed because tests of different platforms may run concurrently causing port conflicts. Moreover, each
-   *   test can select a separate port to avoid issues with ports that are not immediately freed by the OS, incurring in
-   *   binding exceptions.
-   */
-  object PortsPool:
-    private val basePort = Platform.runtime match
-      case PlatformRuntime.Jvm => 50_000 until 50_100
-      case PlatformRuntime.Js => 50_100 until 50_110
-      case PlatformRuntime.Native => 50_110 until 50_120
-    private val current = AtomicInteger(0)
-
-    def get: Port = basePort(current.getAndIncrement() % basePort.size).refineUnsafe
 
 end DistributedScenarioTest
