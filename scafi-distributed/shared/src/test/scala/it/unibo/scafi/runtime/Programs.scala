@@ -18,11 +18,12 @@ trait Programs:
   type Lang = AggregateContext { type DeviceId = ID } & AggregateFoundation & FieldBasedSharedData & ExchangeSyntax &
     BranchingSyntax & FieldCalculusSyntax
 
+  /** An aggregate program along with its expected result. */
   class ProgramWithResult[Result](val program: Lang ?=> Result, val expected: Map[ID, Result])
 
   given [Result]: CanEqual[Map[ID, Result], Map[ID, Result]] = CanEqual.derived
 
-  def evolveProgram = ProgramWithResult(
+  def evolveProgram: ProgramWithResult[Int] = ProgramWithResult(
     program = evolve(localId)(_ + 1),
     expected = Map(
       0 -> 1,
@@ -32,7 +33,7 @@ trait Programs:
     ),
   )
 
-  def neighborsDiscoveryProgram = ProgramWithResult(
+  def neighborsDiscoveryProgram: ProgramWithResult[Map[ID, Int]] = ProgramWithResult(
     program = neighborValues(localId).neighborValues,
     expected = Map(
       0 -> Map(1 -> 1, 2 -> 2),
@@ -42,7 +43,7 @@ trait Programs:
     ),
   )
 
-  def exchangeWithRestrictionsProgram = ProgramWithResult(
+  def exchangeWithRestrictionsProgram: ProgramWithResult[Map[ID, Int]] = ProgramWithResult(
     program = branch(localId % 2 == 0)(
       exchange(100)(returnSending).neighborValues,
     )(

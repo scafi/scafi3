@@ -5,10 +5,18 @@ import scala.LazyList.continually
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.{ Failure, Success, Try }
 import scala.util.Using.Releasable
+
 import it.unibo.scafi.message.{ BinaryDecodable, BinaryEncodable }
 import it.unibo.scafi.message.Codable.*
 
-trait ConnectionOrientedTemplate(using ec: ExecutionContext, conf: SocketConfiguration)
+/**
+ * Template for connection-oriented networking components.
+ * @param ec
+ *   the execution context for handling asynchronous operations
+ * @param conf
+ *   the connection configuration settings
+ */
+trait ConnectionOrientedTemplate(using ec: ExecutionContext, conf: ConnectionConfiguration)
     extends ConnectionOrientedNetworking:
 
   override type MessageIn: BinaryDecodable
@@ -36,11 +44,11 @@ trait ConnectionOrientedTemplate(using ec: ExecutionContext, conf: SocketConfigu
 
   /**
    * A connection listener template with pre-cooked message serving logic.
-   * @tparam Socket
-   *   the [[Releasable]] client socket type.
+   * @tparam Client
+   *   the [[Releasable]] client abstraction type.
    */
-  trait ListenerTemplate[Socket: Releasable](onReceive: MessageIn => Unit) extends Listener:
-    protected def serve(using socket: Socket): Try[Unit] = Using(socket): _ =>
+  trait ListenerTemplate[Client: Releasable](onReceive: MessageIn => Unit) extends Listener:
+    protected def serve(using client: Client): Try[Unit] = Using(client): _ =>
       continually(validate(readMessageLength))
         .filter(_ > 0)
         .map(readMessage andThen decode)
@@ -55,7 +63,7 @@ trait ConnectionOrientedTemplate(using ec: ExecutionContext, conf: SocketConfigu
      * @return
      *   the length of the message
      */
-    def readMessageLength(using client: Socket): Int
+    def readMessageLength(using client: Client): Int
 
     /**
      * Reads a message of the specified length from the client socket.
@@ -66,7 +74,7 @@ trait ConnectionOrientedTemplate(using ec: ExecutionContext, conf: SocketConfigu
      * @return
      *   an `Array[Byte]` containing the message data.
      */
-    def readMessage(length: Int)(using client: Socket): Array[Byte]
+    def readMessage(length: Int)(using client: Client): Array[Byte]
 
     /**
      * @return

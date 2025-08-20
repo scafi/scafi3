@@ -20,7 +20,7 @@ trait ConnectionOrientedNetworking:
    *   the remote [[Endpoint]] to connect to.
    * @return
    *   a `Future` that attempts to establish a connection to the provided remote endpoint, completing with the
-   *   established connection on success, or failing with an error.
+   *   established connection on success, or fails in case of errors.
    */
   def out(endpoint: Endpoint): Future[Connection]
 
@@ -32,7 +32,7 @@ trait ConnectionOrientedNetworking:
    *   the callback to invoke when a message is received.
    * @return
    *   a `Future` that attempts to create a connection listener, completing with the [[ListenerRef]] on success, or
-   *   failing with an error.
+   *   fails in case of errors.
    * @see
    *   [[ListenerRef]]
    */

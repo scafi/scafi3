@@ -7,7 +7,7 @@ import io.bullet.borer.derivation.ArrayBasedCodecs.deriveCodec
 import io.bullet.borer.*
 
 /**
- * A collection of [[Codable]]s for various types used in the distributed runtime.
+ * A collection of [[Codable]]s for various types used in the distributed networking context.
  */
 object CodableInstances:
 

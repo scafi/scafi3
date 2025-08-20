@@ -9,8 +9,8 @@ import scala.util.chaining.scalaUtilChainingOps
 import it.unibo.scafi.context.xc.ExchangeAggregateContext
 import it.unibo.scafi.context.xc.ExchangeAggregateContext.exchangeContextFactory
 import it.unibo.scafi.message.BinaryCodable
-import it.unibo.scafi.runtime.network.sockets.{ SocketConfiguration, SocketNetworkManager }
-import it.unibo.scafi.runtime.network.sockets.InetTypes.{ Endpoint, FreePort, Localhost }
+import it.unibo.scafi.runtime.network.sockets.*
+import it.unibo.scafi.runtime.network.sockets.InetTypes.*
 import it.unibo.scafi.test.AsyncSpec
 import it.unibo.scafi.test.environment.{ Environment, IntAggregateContext, Node }
 import it.unibo.scafi.test.environment.Grids.vonNeumannGrid
@@ -26,7 +26,7 @@ trait DistributedScenarioTest extends AsyncSpec with Programs:
     def encode(msg: ID): Array[Byte] = msg.toString.getBytes(StandardCharsets.UTF_8)
     def decode(bytes: Array[Byte]): ID = new String(bytes, StandardCharsets.UTF_8).toInt
 
-  given SocketConfiguration = new SocketConfiguration:
+  given ConnectionConfiguration = new ConnectionConfiguration:
     override val inactivityTimeout: FiniteDuration = 2.seconds
     override val maxMessageSize: Int = 65_536
 
@@ -41,13 +41,11 @@ trait DistributedScenarioTest extends AsyncSpec with Programs:
 
   def socketBasedDistributedEnvironment[Result](probe: ProgramWithResult[Result]): Future[Assertion] =
     for
-      networks = collection.mutable.Set.empty[SocketNetworkManager[ID]]
-      sizeX = 2
-      sizeY = 2
+      networks = collection.mutable.Set.empty[ConnectionOrientedNetworkManager[ID]]
       env = vonNeumannGrid(
-        sizeX,
-        sizeY,
-        exchangeContextFactory[ID, SocketNetworkManager[ID]],
+        sizeX = 2,
+        sizeY = 2,
+        exchangeContextFactory[ID, ConnectionOrientedNetworkManager[ID]],
         socketNetworkFactory.andThen(_.tap(networks.add)),
       )(probe.program)
       res <- eventually:
@@ -57,8 +55,8 @@ trait DistributedScenarioTest extends AsyncSpec with Programs:
     yield res
 
   private def socketNetworkFactory[Result, Context <: IntAggregateContext](using
-      env: Environment[Result, Context, SocketNetworkManager[ID]],
-  )(node: Node[Result, Context, SocketNetworkManager[ID]]): SocketNetworkManager[ID] =
+      env: Environment[Result, Context, ConnectionOrientedNetworkManager[ID]],
+  )(node: Node[Result, Context, ConnectionOrientedNetworkManager[ID]]): ConnectionOrientedNetworkManager[ID] =
     lazy val neighbors = env.nodes
       .filter(n => env.areConnected(env, n, node) && n != node)
       .map(n => n.id -> Endpoint(Localhost, n.networkManager.boundPort.get))

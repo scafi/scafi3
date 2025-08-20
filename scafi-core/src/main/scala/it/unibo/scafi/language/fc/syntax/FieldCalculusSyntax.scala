@@ -7,7 +7,7 @@ trait FieldCalculusSyntax:
   self: AggregateFoundation =>
 
   /**
-   * `nbr` sends a local value to <b>neighbours</b> and returns the aggregate value of the received messages.
+   * `neighborValues` sends a local value to <b>neighbours</b> and returns the aggregate value of the received messages.
    * @param expr
    *   the local value to send to neighbours
    * @tparam Format
@@ -20,7 +20,7 @@ trait FieldCalculusSyntax:
   def neighborValues[Format, Value: CodableFromTo[Format]](expr: Value): SharedData[Value]
 
   /**
-   * `rep` <b>repeatedly</b> applies a function to an initial value for every execution round.
+   * `evolve` <b>repeatedly</b> applies a function to an initial value for every execution round.
    * @param initial
    *   the initial value
    * @param evolution

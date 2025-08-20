@@ -11,7 +11,7 @@ import scala.util.chaining.scalaUtilChainingOps
 
 import it.unibo.scafi.runtime.network.sockets.EventEmitter.*
 
-trait SocketNetworking(using ec: ExecutionContext, conf: SocketConfiguration) extends ConnectionOrientedTemplate:
+trait SocketNetworking(using ec: ExecutionContext, conf: ConnectionConfiguration) extends ConnectionOrientedTemplate:
 
   override def out(endpoint: Endpoint): Future[Connection] =
     for
