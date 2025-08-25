@@ -1,10 +1,13 @@
 package it.unibo.scafi.test
 
 import it.unibo.scafi.context.AggregateContext
-import it.unibo.scafi.message.Export
+import it.unibo.scafi.message.{ Codable, Codables, Export }
 import it.unibo.scafi.runtime.network.NetworkManager
 
 trait AggregateProgramProbe:
+
+  given valuesCodable[Value]: Codable[Value, Value] = Codables.forInMemoryCommunications[Value]
+
   def roundForAggregateProgram[
       ID,
       Result,

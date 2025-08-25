@@ -2,6 +2,7 @@ package it.unibo.scafi.message
 
 import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.language.AggregateFoundation
+import it.unibo.scafi.message.Decodable.decode
 import it.unibo.scafi.message.ValueTree.NoPathFoundException
 import it.unibo.scafi.utils.{ AlignmentManager, InvocationCoordinate }
 
@@ -13,7 +14,8 @@ trait InboundMessage:
   protected def alignedDevices: Iterable[DeviceId] =
     if currentPath.isEmpty then cachedPaths.neighbors else cachedPaths.alignedDevicesAt(currentPath)
 
-  protected def alignedMessages[Value]: Map[DeviceId, Value] = cachedPaths.dataAt(currentPath)
+  protected def alignedMessages[Format, Value: DecodableFrom[Format]]: Map[DeviceId, Value] =
+    cachedPaths.dataAt(currentPath)
 
   override def neighbors: Set[DeviceId] = cachedPaths.neighbors
 
@@ -42,7 +44,10 @@ trait InboundMessage:
         .toSet + localId
 
     @SuppressWarnings(Array("DisableSyntax.asInstanceOf"))
-    def dataAt[Value](tokens: IndexedSeq[InvocationCoordinate]): Map[DeviceId, Value] =
-      cachedPaths.get(Path(tokens*)).map(_.view.mapValues(_.asInstanceOf[Value]).toMap).getOrElse(Map.empty)
+    def dataAt[Format, Value: DecodableFrom[Format]](tokens: IndexedSeq[InvocationCoordinate]): Map[DeviceId, Value] =
+      cachedPaths
+        .get(Path(tokens*))
+        .map(_.view.mapValues(_.asInstanceOf[Format]).mapValues(decode).toMap)
+        .getOrElse(Map.empty)
   end CachedPaths
 end InboundMessage

@@ -4,6 +4,7 @@ import scala.collection.mutable
 
 import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.language.AggregateFoundation
+import it.unibo.scafi.message.Encodable.encode
 import it.unibo.scafi.utils.AlignmentManager
 
 trait OutboundMessage:
@@ -20,8 +21,11 @@ trait OutboundMessage:
    * @tparam Value
    *   the type of the value to be written.
    */
-  protected def writeValue[Value](default: Value, overrides: Map[DeviceId, Value]): Unit =
-    registeredMessages.update(Path(currentPath*), MapWithDefault(overrides, default))
+  protected def writeValue[Format, Value: EncodableTo[Format]](default: Value, overrides: Map[DeviceId, Value]): Unit =
+    registeredMessages.update(
+      Path(currentPath*),
+      MapWithDefault(overrides.view.mapValues(encode).toMap, encode(default)),
+    )
 
   override def exportFromOutboundMessages: Export[DeviceId] =
     val messages = mutable.Map.empty[DeviceId, ValueTree].withDefaultValue(ValueTree.empty)
