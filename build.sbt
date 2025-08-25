@@ -2,7 +2,7 @@ import scala.scalanative.build.*
 import sbtcrossproject.CrossProject
 import org.scalajs.linker.interface.OutputPatterns
 
-val scala3Version = "3.6.4"
+val scala3Version = "3.7.2"
 
 ThisBuild / scalaVersion := scala3Version
 ThisBuild / organization := "it.unibo.scafi"
