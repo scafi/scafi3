@@ -1,6 +1,7 @@
 package it.unibo.scafi.runtime.network.sockets
 
-import it.unibo.scafi.runtime.network.sockets.InetTypes.{ Hostname, IPv4, IPv6 }
+import it.unibo.scafi
+import scafi.runtime.network.sockets.InetTypes.{ Hostname, IPv4, IPv6 }
 
 import io.github.iltotore.iron.*
 import org.scalatest.Inspectors
@@ -9,13 +10,15 @@ import org.scalatest.matchers.should
 
 class InetTypesTest extends AnyFlatSpec with should.Matchers with Inspectors:
 
+  inline private val inetTypesImport = "import scafi.runtime.network.sockets.InetTypes.*\n"
+
   it should "allow to define a valid port" in:
-    "val port: Port = 8080" should compile
-    "val port: Port = 0" should compile
+    inetTypesImport + "val port: Port = 8080" should compile
+    inetTypesImport + "val port: Port = 0" should compile
 
   it should "forbid to define an invalid port" in:
-    "val port: Port = 65_536" shouldNot compile
-    "val port: Port = -1" shouldNot compile
+    inetTypesImport + "val port: Port = 65_536" shouldNot compile
+    inetTypesImport + "val port: Port = -1" shouldNot compile
 
   it should "allow to define valid IPv4 addresses" in:
     val validIPv4s = "192.168.1.1" :: "10.0.0.255" :: "172.16.254.3" :: "255.255.255.255" :: "0.0.0.0" :: Nil
