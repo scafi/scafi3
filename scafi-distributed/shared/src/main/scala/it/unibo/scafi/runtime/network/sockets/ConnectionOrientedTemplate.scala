@@ -7,7 +7,7 @@ import scala.util.{ Failure, Success, Try }
 import scala.util.Using.Releasable
 
 import it.unibo.scafi.message.{ BinaryDecodable, BinaryEncodable }
-import it.unibo.scafi.message.Codable.*
+import it.unibo.scafi.message.Codable.{ decode, encode }
 
 /**
  * Template for connection-oriented networking components.

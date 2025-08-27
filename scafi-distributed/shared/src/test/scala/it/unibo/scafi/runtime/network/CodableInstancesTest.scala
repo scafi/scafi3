@@ -3,7 +3,7 @@ package it.unibo.scafi.runtime.network
 import it.unibo.scafi.message.{ Path, ValueTree }
 import it.unibo.scafi.runtime.network.CodableInstances.given
 import it.unibo.scafi.utils.InvocationCoordinate
-import it.unibo.scafi.message.Codable.*
+import it.unibo.scafi.message.Codable.{ decode, encode }
 
 import org.scalatest.matchers.should
 import org.scalatest.wordspec.AnyWordSpec

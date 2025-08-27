@@ -4,11 +4,11 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicReference
 
 import scala.concurrent.{ ExecutionContext, Future }
-import scala.jdk.CollectionConverters.*
+import scala.jdk.CollectionConverters.MapHasAsScala
 
+import it.unibo.scafi.message.{ Export, Import, ValueTree }
 import it.unibo.scafi.runtime.network.NetworkManager
 import it.unibo.scafi.runtime.network.sockets.InetTypes.{ Endpoint, Port }
-import it.unibo.scafi.message.*
 import it.unibo.scafi.utils.Channel
 
 /**

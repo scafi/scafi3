@@ -1,6 +1,6 @@
 package it.unibo.scafi.runtime.network.sockets
 
-import it.unibo.scafi.runtime.network.sockets.InetTypes.*
+import it.unibo.scafi.runtime.network.sockets.InetTypes.{ Hostname, IPv4, IPv6 }
 
 import io.github.iltotore.iron.*
 import org.scalatest.Inspectors

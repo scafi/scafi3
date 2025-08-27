@@ -4,7 +4,7 @@ import it.unibo.scafi.message.{ BinaryCodable, Path, ValueTree }
 import it.unibo.scafi.utils.InvocationCoordinate
 
 import io.bullet.borer.derivation.ArrayBasedCodecs.deriveCodec
-import io.bullet.borer.*
+import io.bullet.borer.{ Cbor, Codec, Decoder, Encoder }
 
 /**
  * A collection of [[Codable]]s for various types used in the distributed networking context.

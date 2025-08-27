@@ -9,8 +9,12 @@ import scala.util.chaining.scalaUtilChainingOps
 import it.unibo.scafi.context.xc.ExchangeAggregateContext
 import it.unibo.scafi.context.xc.ExchangeAggregateContext.exchangeContextFactory
 import it.unibo.scafi.message.BinaryCodable
-import it.unibo.scafi.runtime.network.sockets.*
-import it.unibo.scafi.runtime.network.sockets.InetTypes.*
+import it.unibo.scafi.runtime.network.sockets.{
+  ConnectionConfiguration,
+  ConnectionOrientedNetworkManager,
+  SocketNetworkManager,
+}
+import it.unibo.scafi.runtime.network.sockets.InetTypes.{ Endpoint, FreePort, Localhost }
 import it.unibo.scafi.test.AsyncSpec
 import it.unibo.scafi.test.environment.{ Environment, IntAggregateContext, Node }
 import it.unibo.scafi.test.environment.Grids.vonNeumannGrid

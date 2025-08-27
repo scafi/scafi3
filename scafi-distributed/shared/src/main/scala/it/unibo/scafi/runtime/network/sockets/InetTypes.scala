@@ -1,6 +1,6 @@
 package it.unibo.scafi.runtime.network.sockets
 
-import io.github.iltotore.iron.*
+import io.github.iltotore.iron.{ :|, DescribedAs }
 import io.github.iltotore.iron.constraint.numeric.Interval
 import io.github.iltotore.iron.constraint.string.Match
 
