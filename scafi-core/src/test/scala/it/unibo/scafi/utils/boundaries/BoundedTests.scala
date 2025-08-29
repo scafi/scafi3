@@ -3,10 +3,10 @@ package it.unibo.scafi.utils.boundaries
 import scala.math.Numeric.Implicits.infixNumericOps
 
 import org.scalatest.flatspec.AnyFlatSpecLike
+import org.scalatest.prop.Tables.Table
+import org.scalatest.prop.TableFor1
 import org.scalatest.matchers.should
 import org.scalatest.prop.TableDrivenPropertyChecks.forAll
-import org.scalatest.prop.TableFor1
-import org.scalatest.prop.Tables.Table
 
 trait BoundedTests extends AnyFlatSpecLike, should.Matchers:
   def one[T: Numeric]: T = summon[Numeric[T]].one

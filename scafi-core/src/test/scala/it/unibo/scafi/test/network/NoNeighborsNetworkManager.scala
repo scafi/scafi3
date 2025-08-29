@@ -1,7 +1,7 @@
 package it.unibo.scafi.test.network
 
-import it.unibo.scafi.message.{ Export, Import }
 import it.unibo.scafi.runtime.network.NetworkManager
+import it.unibo.scafi.message.{ Export, Import }
 
 /**
  * This class is meant to be used when no neighbors are present in the network. It is used to test the behavior of the

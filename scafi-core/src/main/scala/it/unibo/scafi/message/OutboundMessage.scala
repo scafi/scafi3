@@ -2,8 +2,8 @@ package it.unibo.scafi.message
 
 import scala.collection.mutable
 
-import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.language.AggregateFoundation
+import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.utils.AlignmentManager
 
 trait OutboundMessage:

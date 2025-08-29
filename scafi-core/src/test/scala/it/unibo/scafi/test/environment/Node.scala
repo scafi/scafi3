@@ -3,9 +3,9 @@ package it.unibo.scafi.test.environment
 import scala.compiletime.uninitialized
 
 import it.unibo.scafi.context.AggregateContext
+import it.unibo.scafi.runtime.network.NetworkManager
 import it.unibo.scafi.message.{ Export, Import }
 import it.unibo.scafi.runtime.ScafiEngine
-import it.unibo.scafi.runtime.network.NetworkManager
 
 class Node[R, Context <: AggregateContext { type DeviceId = Int }](
     val environment: Environment[R, Context],

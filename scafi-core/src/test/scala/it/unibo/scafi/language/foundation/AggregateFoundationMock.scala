@@ -1,8 +1,8 @@
 package it.unibo.scafi.language.foundation
 
-import it.unibo.scafi.collections.SafeIterable
 import it.unibo.scafi.language.AggregateFoundation
 import it.unibo.scafi.utils.SharedDataOps
+import it.unibo.scafi.collections.SafeIterable
 
 import cats.Applicative
 

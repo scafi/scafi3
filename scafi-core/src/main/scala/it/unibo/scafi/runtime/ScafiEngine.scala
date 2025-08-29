@@ -1,8 +1,8 @@
 package it.unibo.scafi.runtime
 
 import it.unibo.scafi.context.AggregateContext
-import it.unibo.scafi.message.{ Export, ValueTree }
 import it.unibo.scafi.runtime.network.NetworkManager
+import it.unibo.scafi.message.{ Export, ValueTree }
 
 final class ScafiEngine[
     ID,
