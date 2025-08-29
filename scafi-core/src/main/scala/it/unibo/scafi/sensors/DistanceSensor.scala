@@ -1,5 +1,7 @@
 package it.unibo.scafi.sensors
 
+import scala.annotation.nowarn
+
 import it.unibo.scafi.language.AggregateFoundation
 
 /**
@@ -8,6 +10,7 @@ import it.unibo.scafi.language.AggregateFoundation
  * @tparam Distance
  *   the type of the distance measure
  */
+@nowarn("msg=unused implicit parameter")
 trait DistanceSensor[Distance: Numeric]:
   this: AggregateFoundation =>
 
@@ -30,6 +33,7 @@ object DistanceSensor:
    * @return
    *   the aggregate value that encapsulates the distance measure
    */
+  @nowarn("msg=unused implicit parameter")
   def senseDistance[Distance: Numeric](using
       language: AggregateFoundation & DistanceSensor[Distance],
   ): language.SharedData[Distance] =
