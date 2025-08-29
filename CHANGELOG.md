@@ -1,3 +1,62 @@
+## [1.2.2](https://github.com/scafi/scafi3/compare/v1.2.1...v1.2.2) (2025-08-29)
+
+### Dependency updates
+
+* **core-deps:** update dependency scala to v3.7.2 ([9b4a202](https://github.com/scafi/scafi3/commit/9b4a202e93cddf073e9cfe797181f0566c38c76f))
+* **deps:** update dependency ch.epfl.scala:sbt-scalafix to v0.14.3 ([38c141a](https://github.com/scafi/scafi3/commit/38c141a90a66c576f6fa8e3db1723166eec63abc))
+* **deps:** update dependency com.github.sbt:sbt-ci-release to v1.11.2 ([2d27919](https://github.com/scafi/scafi3/commit/2d279196c32dd3966b0c4bcc621b74b5423194d2))
+* **deps:** update dependency com.github.sbt:sbt-unidoc to v0.6.0 ([a9b92ac](https://github.com/scafi/scafi3/commit/a9b92aca984f52d3b1bed08e1caa4876212464c9))
+* **deps:** update dependency org.scala-native:sbt-scala-native to v0.5.8 ([95a9fc6](https://github.com/scafi/scafi3/commit/95a9fc65482737a88d7ad89e0f8e25d408ca4ba8))
+* **deps:** update dependency org.scalamock:scalamock to v7.3.2 ([0a084c4](https://github.com/scafi/scafi3/commit/0a084c4efa33faa3108c8bdbc8033e878c66cebc))
+* **deps:** update dependency sbt/sbt to v1.11.0 ([f5fa3e7](https://github.com/scafi/scafi3/commit/f5fa3e7ba8691fd2d7cbc70589fc06ade6be7c03))
+* **deps:** update dependency sbt/sbt to v1.11.1 ([eb92e29](https://github.com/scafi/scafi3/commit/eb92e297090fa7e9ff98844dd6dff22be47b9fc2))
+* **deps:** update dependency sbt/sbt to v1.11.2 ([c16e9fc](https://github.com/scafi/scafi3/commit/c16e9fcf723c2959dae7670ee9214ec0afdeee33))
+* **deps:** update dependency sbt/sbt to v1.11.3 ([fc740b2](https://github.com/scafi/scafi3/commit/fc740b206c39611ef863e91102374bca18f4dfad))
+* **deps:** update dependency sbt/sbt to v1.11.4 ([3b9fdbe](https://github.com/scafi/scafi3/commit/3b9fdbeb5c30d6e34710a4feb09d07f9c0743f7c))
+* **deps:** update dependency sbt/sbt to v1.11.5 ([902ad42](https://github.com/scafi/scafi3/commit/902ad421921ebd190043d9eb63147b6a9689f655))
+* **deps:** update dependency scalafmt to v3.9.6 ([8fa0e07](https://github.com/scafi/scafi3/commit/8fa0e070ea21458176f7600a9f26ec29b001723b))
+* **deps:** update dependency scalafmt to v3.9.7 ([c02375a](https://github.com/scafi/scafi3/commit/c02375aa2c1cd5a33e2d6384d3eb98bfe6368d28))
+* **deps:** update dependency scalafmt to v3.9.8 ([fb04fb9](https://github.com/scafi/scafi3/commit/fb04fb9208509a49c9daae018acef4835565f20e))
+* **deps:** update dependency scalafmt to v3.9.9 ([02756d4](https://github.com/scafi/scafi3/commit/02756d4f787ef168472baabc7a537bcf38e37dfe))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.128 ([0f88aa9](https://github.com/scafi/scafi3/commit/0f88aa92b9018a72f4958c76d79732bd92ae209c))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.129 ([a500ae3](https://github.com/scafi/scafi3/commit/a500ae34728574d2cb7aeddeee68c3c56f8651fc))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.130 ([9f3b047](https://github.com/scafi/scafi3/commit/9f3b047b9208e8c02bcef83e9f239b78e57ca160))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.131 ([a042e5a](https://github.com/scafi/scafi3/commit/a042e5ab6a37137402afcc6eb128f71b6ce110b8))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.132 ([e3fec51](https://github.com/scafi/scafi3/commit/e3fec517cee5d6d067a11f6cebe5cc3e13a2c11d))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.133 ([ffbc159](https://github.com/scafi/scafi3/commit/ffbc159eacb68eb196e1b245dee657bffd3607db))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.134 ([a986ca5](https://github.com/scafi/scafi3/commit/a986ca50932aa8d96f3f248c4cdc5a57db9f1201))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.135 ([31a8977](https://github.com/scafi/scafi3/commit/31a8977ad3ae5fe5f533d4885883152fe31dab37))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.136 ([64ac0bd](https://github.com/scafi/scafi3/commit/64ac0bd43c244c2fbb66bdbde636222ea0fc6158))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.137 ([eb6f1f3](https://github.com/scafi/scafi3/commit/eb6f1f342f47dd4f672b4c0fa55857aa6b538e82))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.138 ([7a5744a](https://github.com/scafi/scafi3/commit/7a5744ab55bf99abc03aacfdded5c33ef4fbb411))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.139 ([2bee87f](https://github.com/scafi/scafi3/commit/2bee87fb25efa8a13031100ab651ace63bf47faf))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.140 ([056024a](https://github.com/scafi/scafi3/commit/056024a334060e000a7487c58d293f2a0f3f1e7a))
+* **deps:** update node.js to 22.16 ([d86271e](https://github.com/scafi/scafi3/commit/d86271e3105a228acb802b9d77edc098cc2bf46e))
+* **deps:** update node.js to 22.17 ([905728c](https://github.com/scafi/scafi3/commit/905728cb2cf6d68bbaf23553addee57e62655528))
+* **deps:** update node.js to 22.18 ([715c61c](https://github.com/scafi/scafi3/commit/715c61c558ad716ed5a790e23145922d021f0530))
+* **deps:** update node.js to 22.19 ([f1996e5](https://github.com/scafi/scafi3/commit/f1996e55d330a77462451f17b78c8c24949af9e7))
+
+### Build and continuous integration
+
+* **deps:** update actions/checkout action to v4.3.0 ([143e8fe](https://github.com/scafi/scafi3/commit/143e8fe1ef9f614ae5b103f2ae37ecdc37db379c))
+* **deps:** update actions/checkout action to v5 ([bb47911](https://github.com/scafi/scafi3/commit/bb4791157bfa1a058b166b3fc86214b4f528f2a9))
+* **deps:** update nicolasfara/build-check-deploy-sbt-action action to v1.0.20 ([29f654c](https://github.com/scafi/scafi3/commit/29f654c2c3dca56017d26d45e53874a0bdff2dd1))
+* **deps:** update nicolasfara/build-check-deploy-sbt-action action to v1.0.21 ([c5e6936](https://github.com/scafi/scafi3/commit/c5e6936878dbc82edc96bf40ce98078d0c5a68ce))
+* **deps:** update nicolasfara/build-check-deploy-sbt-action action to v1.0.22 ([7283c71](https://github.com/scafi/scafi3/commit/7283c718461815092e0753097e207500a42a18c2))
+* **deps:** update nicolasfara/build-check-deploy-sbt-action action to v1.0.23 ([8437dcb](https://github.com/scafi/scafi3/commit/8437dcbfe731fd6b57f5e5cce0c5b93f4fd6b59e))
+* **deps:** update nicolasfara/build-check-deploy-sbt-action action to v1.0.24 ([2065c44](https://github.com/scafi/scafi3/commit/2065c4451844df3cd4ed7f4c93d3cd6548a4bd11))
+* **deps:** update nicolasfara/build-check-deploy-sbt-action action to v1.0.25 ([de3200b](https://github.com/scafi/scafi3/commit/de3200b66553fd61e99a1186235be72ec4e1f0c4))
+* **deps:** update nicolasfara/build-check-deploy-sbt-action action to v1.0.27 ([fe18408](https://github.com/scafi/scafi3/commit/fe184082de4db140367b2930e9d92b7bd339bacd))
+* re-enable scala multiplaform build (native + js) ([4d1af5a](https://github.com/scafi/scafi3/commit/4d1af5acaf5847ff8fdbe5441557d4550e7aae65))
+* remove sonatype parameters as it is deprecated ([a86e79a](https://github.com/scafi/scafi3/commit/a86e79adb4f1d16153783ccad8d6c49a1d55f44d))
+* remove sonatype parameters as it is deprecated ([51f9e64](https://github.com/scafi/scafi3/commit/51f9e64fb037284d637c50d514d1a92a1195f1c9))
+* switch to windows-2025 and ubuntu-24.04 runners ([#98](https://github.com/scafi/scafi3/issues/98)) ([a2a5a59](https://github.com/scafi/scafi3/commit/a2a5a59713bd2f158e3259075bfa875c733f738f))
+
+### Refactoring
+
+* change engine structure and deeply refactor trait structures and package ([bf614e4](https://github.com/scafi/scafi3/commit/bf614e4363b9d5bdeb0eacf025ce54fec868b455))
+* move `CanEqual` implicit in trait and suppress misleading unused warnings in type bounds ([#120](https://github.com/scafi/scafi3/issues/120)) ([b76e1f0](https://github.com/scafi/scafi3/commit/b76e1f065554ea28bf9c40ff8c8df91ba6c3aee5))
+
 ## [1.2.1](https://github.com/scafi/scafi3/compare/v1.2.0...v1.2.1) (2025-05-06)
 
 ### Dependency updates
