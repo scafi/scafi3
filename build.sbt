@@ -92,7 +92,6 @@ lazy val `scafi-core` = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .settings(commonDependencies)
   .settings(
     name := "scafi-core",
-    sonatypeProfileName := "it.unibo.scafi",
   )
 
 //val alchemistVersion = "42.1.0"
