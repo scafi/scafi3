@@ -25,6 +25,9 @@ trait Export[DeviceId]:
    */
   def devices: Set[DeviceId]
 
+  given CanEqual[DeviceId, DeviceId] = CanEqual.derived
+end Export
+
 object Export:
   /**
    * Creates an [[Export]] from a default [[ValueTree]] and a map of [[ValueTree]]s for each [[DeviceId]].
@@ -40,7 +43,6 @@ object Export:
   def apply[DeviceId](default: ValueTree, overrides: Map[DeviceId, ValueTree]): Export[DeviceId] = new Export[DeviceId]:
     override def apply(deviceId: DeviceId): ValueTree = overrides.getOrElse(deviceId, default)
     override def devices: Set[DeviceId] = overrides.keys.toSet
-    given CanEqual[DeviceId, DeviceId] = CanEqual.derived
 
     @SuppressWarnings(Array("DisableSyntax.asInstanceOf"))
     override def equals(obj: Any): Boolean = obj match
