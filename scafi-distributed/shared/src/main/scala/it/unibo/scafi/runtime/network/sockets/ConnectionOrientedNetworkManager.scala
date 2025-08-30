@@ -8,7 +8,7 @@ import scala.jdk.CollectionConverters.MapHasAsScala
 
 import it.unibo.scafi.message.{ Export, Import, ValueTree }
 import it.unibo.scafi.runtime.network.NetworkManager
-import it.unibo.scafi.runtime.network.sockets.InetTypes.{ Endpoint, Port }
+import it.unibo.scafi.runtime.network.sockets.InetTypes.Port
 import it.unibo.scafi.utils.Channel
 
 /**

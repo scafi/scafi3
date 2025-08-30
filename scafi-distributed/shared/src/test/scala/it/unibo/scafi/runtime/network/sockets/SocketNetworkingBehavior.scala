@@ -2,7 +2,7 @@ package it.unibo.scafi.runtime.network.sockets
 
 import java.util.concurrent.CopyOnWriteArrayList
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.Future
 
 import it.unibo.scafi.test.AsyncSpec
 import it.unibo.scafi.runtime.network.sockets.InetTypes.{ autoRefine, Endpoint, FreePort, Localhost, Port }
@@ -25,7 +25,7 @@ trait SocketNetworkingBehavior extends AsyncSpec:
     override type MessageIn = String
     override type MessageOut = String
 
-  def anInboundConnectionListener(using net: ConnectionOrientedNetworking)(using ExecutionContext): Unit =
+  def anInboundConnectionListener(using net: ConnectionOrientedNetworking): Unit =
     it should "be able to be initialized on a free port" in:
       val server = net.in(FreePort)(nop)
       server verify: ref =>

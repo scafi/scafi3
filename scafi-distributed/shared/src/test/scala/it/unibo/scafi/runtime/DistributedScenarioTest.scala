@@ -6,7 +6,6 @@ import scala.concurrent.Future
 import scala.concurrent.duration.{ DurationInt, FiniteDuration }
 import scala.util.chaining.scalaUtilChainingOps
 
-import it.unibo.scafi.context.xc.ExchangeAggregateContext
 import it.unibo.scafi.context.xc.ExchangeAggregateContext.exchangeContextFactory
 import it.unibo.scafi.message.BinaryCodable
 import it.unibo.scafi.runtime.network.sockets.{

@@ -1,6 +1,7 @@
 package it.unibo.scafi.test.environment
 
 import scala.compiletime.uninitialized
+import scala.annotation.unused
 
 import it.unibo.scafi.message.{ Export, Import }
 import it.unibo.scafi.runtime.ScafiEngine
@@ -50,7 +51,8 @@ object Node:
       : CanEqual[Node[Result, Context, Network], Node[Result, Context, Network]] = CanEqual.derived
 
   def inMemoryNetwork[Result, Context <: IntAggregateContext, Network <: IntNetworkManager](using
-      Environment[Result, Context, Network],
+      @unused("This simple in-memory network does not use Environment directly, but other networks may")
+      env: Environment[Result, Context, Network],
   )(node: Node[Result, Context, Network]): IntNetworkManager = InMemoryNetwork(node)
 
   private class InMemoryNetwork[Result, Context <: IntAggregateContext, Network <: IntNetworkManager](
