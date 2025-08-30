@@ -1,8 +1,8 @@
 package it.unibo.scafi.test
 
 import it.unibo.scafi.context.AggregateContext
-import it.unibo.scafi.runtime.network.NetworkManager
 import it.unibo.scafi.message.Export
+import it.unibo.scafi.runtime.network.NetworkManager
 
 trait AggregateProgramProbe:
   def roundForAggregateProgram[

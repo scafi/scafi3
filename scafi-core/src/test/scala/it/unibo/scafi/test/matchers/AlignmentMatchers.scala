@@ -2,7 +2,7 @@ package it.unibo.scafi.test.matchers
 
 import it.unibo.scafi.message.{ Export, ValueTree }
 
-import org.scalatest.matchers.{ Matcher, MatchResult }
+import org.scalatest.matchers.{ MatchResult, Matcher }
 
 trait AlignmentMatchers:
   class AlignWith[DeviceId](val exportToTest: Export[DeviceId]) extends Matcher[Export[DeviceId]]:

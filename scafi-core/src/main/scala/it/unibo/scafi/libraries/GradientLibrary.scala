@@ -2,11 +2,11 @@ package it.unibo.scafi.libraries
 
 import scala.math.Numeric.Implicits.infixNumericOps
 
-import it.unibo.scafi.sensors.DistanceSensor.senseDistance
-import it.unibo.scafi.sensors.DistanceSensor
-import it.unibo.scafi.utils.boundaries.UpperBounded
-import it.unibo.scafi.language.fc.syntax.FieldCalculusSyntax
 import it.unibo.scafi.language.AggregateFoundation
+import it.unibo.scafi.language.fc.syntax.FieldCalculusSyntax
+import it.unibo.scafi.sensors.DistanceSensor
+import it.unibo.scafi.sensors.DistanceSensor.senseDistance
+import it.unibo.scafi.utils.boundaries.UpperBounded
 
 import cats.syntax.all.catsSyntaxTuple2Semigroupal
 

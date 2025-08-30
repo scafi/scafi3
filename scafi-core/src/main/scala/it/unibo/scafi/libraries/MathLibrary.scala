@@ -1,7 +1,7 @@
 package it.unibo.scafi.libraries
 
-import it.unibo.scafi.language.fc.syntax.FieldCalculusSyntax
 import it.unibo.scafi.language.AggregateFoundation
+import it.unibo.scafi.language.fc.syntax.FieldCalculusSyntax
 
 import FieldCalculusLibrary.neighborValues
 import FoldingLibrary.foldWithoutSelf

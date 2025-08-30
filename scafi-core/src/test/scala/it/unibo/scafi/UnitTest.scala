@@ -2,10 +2,10 @@ package it.unibo.scafi
 
 import scala.reflect.ClassTag
 
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.prop.TableDrivenPropertyChecks
-import org.scalatest.matchers.should.Matchers as ShouldMatchers
 import org.scalatest.{ Inside, Inspectors, OptionValues }
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers as ShouldMatchers
+import org.scalatest.prop.TableDrivenPropertyChecks
 
 trait UnitTest
     extends AnyFlatSpec

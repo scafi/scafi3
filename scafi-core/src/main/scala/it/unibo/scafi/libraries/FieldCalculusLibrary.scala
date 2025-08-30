@@ -1,7 +1,7 @@
 package it.unibo.scafi.libraries
 
-import it.unibo.scafi.language.fc.syntax.FieldCalculusSyntax
 import it.unibo.scafi.language.AggregateFoundation
+import it.unibo.scafi.language.fc.syntax.FieldCalculusSyntax
 
 /**
  * This library provides the field calculus primitives: `neighborValues`, `rep`, and `share`.
