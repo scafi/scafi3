@@ -5,7 +5,7 @@ import it.unibo.scafi.language.fc.syntax.FieldCalculusSyntax
 
 import FieldCalculusLibrary.neighborValues
 import FoldingLibrary.foldWithoutSelf
-import Fractional.Implicits.*
+import Fractional.Implicits.infixFractionalOps
 
 /**
  * This library provides a set of mathematical functions.

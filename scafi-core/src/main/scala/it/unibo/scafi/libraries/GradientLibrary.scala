@@ -1,16 +1,17 @@
 package it.unibo.scafi.libraries
 
-import it.unibo.scafi.sensors.DistanceSensor.senseDistance
+import scala.math.Numeric.Implicits.infixNumericOps
+
 import it.unibo.scafi.language.AggregateFoundation
 import it.unibo.scafi.language.fc.syntax.FieldCalculusSyntax
 import it.unibo.scafi.sensors.DistanceSensor
+import it.unibo.scafi.sensors.DistanceSensor.senseDistance
 import it.unibo.scafi.utils.boundaries.UpperBounded
 
-import cats.syntax.all.*
+import cats.syntax.all.catsSyntaxTuple2Semigroupal
 
 import FieldCalculusLibrary.share
 import CommonLibrary.mux
-import Numeric.Implicits.*
 
 /**
  * This library provides a set of functions to compute the distance between nodes and a source in a network.

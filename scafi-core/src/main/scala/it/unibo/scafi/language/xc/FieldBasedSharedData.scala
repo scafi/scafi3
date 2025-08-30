@@ -3,9 +3,9 @@ package it.unibo.scafi.language.xc
 import scala.collection.MapView
 
 import it.unibo.scafi.collections.SafeIterable
+import it.unibo.scafi.language.ShareDataOps
 import it.unibo.scafi.language.xc.calculus.ExchangeCalculus
 import it.unibo.scafi.utils.SharedDataOps
-import it.unibo.scafi.language.ShareDataOps
 
 import cats.Applicative
 
