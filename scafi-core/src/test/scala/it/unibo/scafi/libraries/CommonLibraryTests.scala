@@ -1,7 +1,7 @@
 package it.unibo.scafi.libraries
 
 import it.unibo.scafi.language.foundation.AggregateFoundationMock
-import it.unibo.scafi.libraries.CommonLibrary.*
+import it.unibo.scafi.libraries.CommonLibrary.{ device, localId, mux }
 
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should

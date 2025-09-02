@@ -2,8 +2,8 @@ package it.unibo.scafi.context.xc
 
 import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.context.common.BranchingContext
-import it.unibo.scafi.language.xc.calculus.ExchangeCalculus
 import it.unibo.scafi.language.xc.{ ExchangeLanguage, FieldBasedSharedData }
+import it.unibo.scafi.language.xc.calculus.ExchangeCalculus
 import it.unibo.scafi.message.{ Import, InboundMessage, OutboundMessage }
 import it.unibo.scafi.runtime.network.NetworkManager
 import it.unibo.scafi.utils.AlignmentManager

@@ -2,8 +2,8 @@ package it.unibo.scafi.language.xc
 
 import it.unibo.scafi.language.fc.syntax.FieldCalculusSyntax
 import it.unibo.scafi.language.xc.calculus.ExchangeCalculus
-import it.unibo.scafi.language.xc.syntax.ReturnSending.returning
 import it.unibo.scafi.language.xc.syntax.{ ExchangeSyntax, ReturnSending }
+import it.unibo.scafi.language.xc.syntax.ReturnSending.returning
 
 /**
  * Exchange language provides the syntax for the exchange calculus main construct: `exchange`, but also provides the
