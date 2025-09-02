@@ -1,7 +1,7 @@
 package it.unibo.scafi.test.environment
 
-import scala.compiletime.uninitialized
 import scala.annotation.unused
+import scala.compiletime.uninitialized
 
 import it.unibo.scafi.message.{ Export, Import }
 import it.unibo.scafi.runtime.ScafiEngine

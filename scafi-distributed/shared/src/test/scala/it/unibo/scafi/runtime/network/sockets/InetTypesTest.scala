@@ -2,7 +2,7 @@ package it.unibo.scafi.runtime.network.sockets
 
 import it.unibo.scafi
 
-import io.github.iltotore.iron.*
+import io.github.iltotore.iron.refineAllUnsafe
 import org.scalatest.Inspectors
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should

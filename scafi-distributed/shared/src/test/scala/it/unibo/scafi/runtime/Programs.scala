@@ -4,9 +4,9 @@ import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.language.AggregateFoundation
 import it.unibo.scafi.language.common.syntax.BranchingSyntax
 import it.unibo.scafi.language.fc.syntax.FieldCalculusSyntax
-import it.unibo.scafi.language.xc.syntax.ExchangeSyntax
 import it.unibo.scafi.language.xc.FieldBasedSharedData
-import it.unibo.scafi.libraries.All.*
+import it.unibo.scafi.language.xc.syntax.ExchangeSyntax
+import it.unibo.scafi.libraries.All.{ branch, evolve, exchange, localId, neighborValues, returnSending }
 import it.unibo.scafi.message.BinaryCodable
 
 trait Programs:

@@ -6,7 +6,6 @@ import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.{ ExecutionContext, Future, Promise }
 import scala.scalajs.js
 import scala.scalajs.js.typedarray.Uint8Array
-import scala.util.Try
 import scala.util.chaining.scalaUtilChainingOps
 
 trait SocketNetworking(using ec: ExecutionContext, conf: ConnectionConfiguration) extends ConnectionOrientedTemplate:

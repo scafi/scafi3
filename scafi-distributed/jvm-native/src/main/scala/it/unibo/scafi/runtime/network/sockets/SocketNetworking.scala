@@ -1,11 +1,12 @@
 package it.unibo.scafi.runtime.network.sockets
 
-import java.io.{ DataInputStream, DataOutputStream }
-import java.net.{ ServerSocket, Socket, SocketException }
+import java.io.{ DataInputStream, DataOutputStream, InputStream }
+import java.net.{ ServerSocket, Socket }
+import java.util.concurrent.ConcurrentHashMap
 
 import scala.LazyList.continually
 import scala.concurrent.{ ExecutionContext, Future }
-import scala.util.{ Failure, Success, Try }
+import scala.util.{ Success, Try }
 
 trait SocketNetworking(using ec: ExecutionContext, conf: ConnectionConfiguration) extends ConnectionOrientedTemplate:
 

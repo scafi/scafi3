@@ -3,7 +3,7 @@ package it.unibo.scafi.test
 import java.util.concurrent.TimeoutException
 
 import scala.concurrent.Future
-import scala.concurrent.duration.*
+import scala.concurrent.duration.FiniteDuration
 
 import it.unibo.scafi.utils.Async
 
@@ -11,7 +11,6 @@ import org.scalatest.compatible.Assertion
 import org.scalatest.concurrent.PatienceConfiguration
 import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest.matchers.should
-import org.scalatest.time.{ Millis, Seconds, Span }
 
 /**
  * A base trait for asynchronous non-blocking cross-platform tests, needed to support platforms like Scala.js where

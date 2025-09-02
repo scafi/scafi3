@@ -4,9 +4,9 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 import scala.concurrent.Future
 
-import it.unibo.scafi.test.AsyncSpec
-import it.unibo.scafi.runtime.network.sockets.InetTypes.{ autoRefine, Endpoint, FreePort, Localhost, Port }
 import it.unibo.scafi.message.Codables.forStringsInBinaryFormat
+import it.unibo.scafi.runtime.network.sockets.InetTypes.{ autoRefine, Endpoint, FreePort, Localhost, Port }
+import it.unibo.scafi.test.AsyncSpec
 
 import org.scalatest.time.{ Millis, Seconds, Span }
 

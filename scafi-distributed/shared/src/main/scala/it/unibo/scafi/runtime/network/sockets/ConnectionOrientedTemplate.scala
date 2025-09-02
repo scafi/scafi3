@@ -1,9 +1,10 @@
 package it.unibo.scafi.runtime.network.sockets
 
 import java.nio.ByteBuffer
+
 import scala.LazyList.continually
 import scala.concurrent.{ ExecutionContext, Future }
-import scala.util.{ Failure, Success, Try }
+import scala.util.{ Try, Using }
 import scala.util.Using.Releasable
 
 import it.unibo.scafi.message.{ BinaryDecodable, BinaryEncodable }
