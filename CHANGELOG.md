@@ -1,3 +1,17 @@
+## [2.0.0](https://github.com/scafi/scafi3/compare/v1.2.2...v2.0.0) (2025-09-03)
+
+### ⚠ BREAKING CHANGES
+
+* add socket-based network manager requiring distributable values to be both Encodable & Decodable (#114)
+
+### Features
+
+* add socket-based network manager requiring distributable values to be both Encodable & Decodable ([#114](https://github.com/scafi/scafi3/issues/114)) ([e9d5c17](https://github.com/scafi/scafi3/commit/e9d5c174d5ab0977fe66618ff57b6f07b2b83dea))
+
+### Style improvements
+
+* forbid wildcard imports, merging them whenever possible ([#119](https://github.com/scafi/scafi3/issues/119)) ([d5e628a](https://github.com/scafi/scafi3/commit/d5e628a6199a65c713057683624c4c4d90e2c73a))
+
 ## [1.2.2](https://github.com/scafi/scafi3/compare/v1.2.1...v1.2.2) (2025-08-29)
 
 ### Dependency updates
