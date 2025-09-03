@@ -4,6 +4,7 @@ import scala.math.Numeric.Implicits.infixNumericOps
 
 import it.unibo.scafi.language.AggregateFoundation
 import it.unibo.scafi.language.fc.syntax.FieldCalculusSyntax
+import it.unibo.scafi.message.CodableFromTo
 import it.unibo.scafi.sensors.DistanceSensor
 import it.unibo.scafi.sensors.DistanceSensor.senseDistance
 import it.unibo.scafi.utils.boundaries.UpperBounded
@@ -44,15 +45,17 @@ object GradientLibrary:
    *   whether this node is the source
    * @param distances
    *   the measured distances from the neighbours
+   * @tparam Format
+   *   the type of data format used to encode the local value to be distributed to neighbours
    * @tparam N
    *   the type of the distance
    * @return
    *   the distance from the source to this node
    */
-  def distanceTo[N: {Numeric as numeric, UpperBounded as bound}](using
+  def distanceTo[Format, N: {Numeric as numeric, UpperBounded as bound, CodableFromTo[Format]}](using
       language: AggregateFoundation & FieldCalculusSyntax,
   )(source: Boolean, distances: language.SharedData[N]): N =
-    share[N](bound.upperBound)(av => mux(source)(numeric.zero)(distanceEstimate(av, distances)))
+    share(bound.upperBound)(av => mux(source)(numeric.zero)(distanceEstimate(av, distances)))
 
   /**
    * This function computes the distance estimate from a source to this node, based on estimates from the node's
@@ -76,6 +79,8 @@ object GradientLibrary:
    * neighbours and computing the minimum distance estimate. The distances are measured by a distance sensor.
    * @param source
    *   whether this node is the source
+   * @tparam Format
+   *   the type of data format used to encode the local value to be distributed to neighbours
    * @tparam N
    *   the type of the distance
    * @return
@@ -83,7 +88,7 @@ object GradientLibrary:
    * @see
    *   [[DistanceSensor.senseDistance]]
    */
-  def sensorDistanceTo[N: {Numeric, UpperBounded}](using
+  def sensorDistanceTo[Format, N: {Numeric, UpperBounded, CodableFromTo[Format]}](using
       language: AggregateFoundation & FieldCalculusSyntax & DistanceSensor[N],
   )(source: Boolean): N =
     distanceTo(source, senseDistance[N])

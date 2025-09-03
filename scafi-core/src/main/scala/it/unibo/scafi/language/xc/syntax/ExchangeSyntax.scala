@@ -1,6 +1,7 @@
 package it.unibo.scafi.language.xc.syntax
 
 import it.unibo.scafi.language.AggregateFoundation
+import it.unibo.scafi.message.CodableFromTo
 
 /**
  * This trait provides the syntax for the exchange calculus main construct: `exchange`.
@@ -25,6 +26,8 @@ trait ExchangeSyntax:
    * @param f
    *   the function that takes the initial/received aggregate value and returns a new aggregate value or two aggregate
    *   values, one to be sent and one to be returned
+   * @tparam Format
+   *   the type of data format used to encode the local value to be distributed to neighbours
    * @tparam Value
    *   the type of the aggregate value
    * @return
@@ -32,7 +35,7 @@ trait ExchangeSyntax:
    * @see
    *   [[ReturnSending]]
    */
-  def exchange[Value](initial: SharedData[Value])(
+  def exchange[Format, Value: CodableFromTo[Format]](initial: SharedData[Value])(
       f: SharedData[Value] => ReturnSending[SharedData[Value]],
   ): SharedData[Value]
 end ExchangeSyntax

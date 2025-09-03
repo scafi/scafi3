@@ -68,14 +68,12 @@ object ValueTree:
    * Creates a new [[ValueTree]] from the given [[underlying]] map of [[Path]]s and [[Value]]s.
    * @param from
    *   the map of [[Path]]s and [[Value]]s to create the [[ValueTree]] from.
-   * @tparam TokenType
-   *   the type of the token used in the [[Path]].
    * @tparam Value
    *   the type of the value associated to the [[Path]].
    * @return
    *   a new [[ValueTree]] created from the given map of [[Path]]s and [[Value]]s.
    */
-  def apply[TokenType, Value](from: Map[Path, Value]): ValueTree = new ValueTree:
+  def apply[Value](from: Map[Path, Value]): ValueTree = new ValueTree:
     override def paths: Iterable[Path] = from.keys
     @SuppressWarnings(Array("DisableSyntax.asInstanceOf"))
     override def apply[V](path: Path): V throws NoPathFoundException =
@@ -98,14 +96,10 @@ object ValueTree:
 
   /**
    * Creates an empty [[ValueTree]].
-   * @tparam TokenType
-   *   the type of the token used in the [[Path]].
-   * @tparam Value
-   *   the type of the value associated to the [[Path]].
    * @return
    *   an empty [[ValueTree]].
    */
-  def empty[TokenType, Value]: ValueTree = new ValueTree:
+  def empty: ValueTree = new ValueTree:
     override def paths: Iterable[Path] = Iterable.empty
     override def apply[V](path: Path): V throws NoPathFoundException = throw new NoPathFoundException(path)
     override def update[V](path: Path, value: V): ValueTree = ValueTree.apply(Map(path -> value))

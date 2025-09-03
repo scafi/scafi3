@@ -4,7 +4,7 @@ import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.context.common.BranchingContext
 import it.unibo.scafi.language.xc.{ ExchangeLanguage, FieldBasedSharedData }
 import it.unibo.scafi.language.xc.calculus.ExchangeCalculus
-import it.unibo.scafi.message.{ Import, InboundMessage, OutboundMessage }
+import it.unibo.scafi.message.{ CodableFromTo, Import, InboundMessage, OutboundMessage }
 import it.unibo.scafi.runtime.network.NetworkManager
 import it.unibo.scafi.utils.AlignmentManager
 
@@ -24,9 +24,11 @@ trait ExchangeAggregateContext[ID](
       AlignmentManager:
   override type DeviceId = ID
 
-  override def xc[T](init: SharedData[T])(f: SharedData[T] => (SharedData[T], SharedData[T])): SharedData[T] =
+  override def xc[Format, Value: CodableFromTo[Format]](init: SharedData[Value])(
+      f: SharedData[Value] => (SharedData[Value], SharedData[Value]),
+  ): SharedData[Value] =
     alignmentScope("exchange"): () =>
-      val messages = alignedMessages[T].map { case (id, value) => id -> value }
+      val messages = alignedMessages.map { case (id, value) => id -> value }
       val field = Field(init(localId), messages)
       val (ret, send) = f(field)
       writeValue(send.default, send.alignedValues)

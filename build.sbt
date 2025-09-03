@@ -44,9 +44,12 @@ ThisBuild / scalacOptions ++= Seq(
   "-explain",
   "-encoding", "UTF-8",
   "-feature",
+  "-preview",
+  "-deprecation",
   "-language:strictEquality",
   "-language:implicitConversions",
   "-language:experimental.saferExceptions",
+  "-language:experimental.modularity",
   "-Wconf:msg=unused value of type org.scalatest.Assertion:s",
   "-Wconf:msg=unused value of type org.scalatest.compatible.Assertion:s",
   "-Wconf:msg=unused value of type org.specs2.specification.core.Fragment:s",
@@ -61,7 +64,10 @@ lazy val commonDependencies =
   libraryDependencies ++= Seq(
     "org.typelevel" %%% "cats-core" % "2.13.0",
     "org.scalactic" %%% "scalactic" % "3.2.19",
+    "io.github.iltotore" %%% "iron" % "3.0.2",
+    "com.outr" %%% "scribe" % "3.17.0",
     "org.scalatest" %%% "scalatest" % "3.2.19" % Test,
+    "org.scalatestplus" %%% "scalacheck-1-18" % "3.2.19.0" % Test,
   )
 
 lazy val commonNativeSettings = Seq(
@@ -94,6 +100,21 @@ lazy val `scafi-core` = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     name := "scafi-core",
   )
 
+lazy val `scafi-distributed` = crossProject(JSPlatform, JVMPlatform, NativePlatform)
+  .crossType(CrossType.Full)
+  .in(file("scafi-distributed"))
+  .dependsOn(`scafi-core` % "compile->compile;test->test")
+  .nativeSettings(commonNativeSettings)
+  .jsSettings(commonJsSettings)
+  .settings(commonDependencies)
+  .settings(
+    name := "scafi-distributed",
+    libraryDependencies ++= Seq(
+      "io.bullet" %%% "borer-core" % "1.16.1",
+      "io.bullet" %%% "borer-derivation" % "1.16.1",
+    ),
+  )
+
 //val alchemistVersion = "42.1.0"
 //lazy val `alchemist-incarnation-scafi3` = project
 //  .settings(
@@ -112,7 +133,7 @@ lazy val `scafi-core` = crossProject(JSPlatform, JVMPlatform, NativePlatform)
 lazy val root = project
   .in(file("."))
   .enablePlugins(ScalaUnidocPlugin)
-  .aggregate(crossProjects(`scafi-core`) /* :+ `alchemist-incarnation`*/.map(_.project)*)
+  .aggregate(crossProjects(`scafi-core`, `scafi-distributed`) /* :+ `alchemist-incarnation`*/.map(_.project)*)
   .settings(
     name := "scafi3",
     publish / skip := true,
