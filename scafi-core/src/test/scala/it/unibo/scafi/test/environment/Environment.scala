@@ -88,7 +88,7 @@ class Environment[Result, Context <: IntAggregateContext, Network <: IntNetworkM
    * @return
    *   An [[Option]] containing a [[Set]] of neighboring nodes or [[None]] if no node matches the given id.
    */
-  def neighborsOf(id: Int): Option[Set[Node[R, Context]]] = nodes.find(_.id == id).map(neighborsOf)
+  def neighborsOf(id: Int): Option[Set[Node[Result, Context, Network]]] = nodes.find(_.id == id).map(neighborsOf)
 
   /**
    * Retrieves the neighbors of a given node in the environment.

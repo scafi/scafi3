@@ -104,4 +104,26 @@ object Grids:
     program = program,
     networkFactory = networkFactory,
   ).grid(sizeX, sizeY)
+
+  /**
+   * Creates a Von Neumann grid. Each device is identified by an integer id from `0` to `rows * cols - 1`, assigned in
+   * row-major order (i.e., left to right, top to bottom).
+   * @param rows
+   *   the number of rows of the grid
+   * @param cols
+   *   the number of columns of the grid
+   * @param f
+   *   a function that takes a device id and its neighbors' ids and returns a result
+   * @return
+   *   a sequence of results, one for each device in the grid
+   */
+  def vonNeumannGrid[Result](rows: Int, cols: Int)(f: (Int, Set[Int]) => Result): Seq[Result] =
+    val areConnected = (a: Int, b: Int) =>
+      val (ax, ay) = (a / cols, a % cols)
+      val (bx, by) = (b / cols, b % cols)
+      Position(ax, ay, 0.0).distanceTo(Position(bx, by, 0.0)) <= SAFE_VON_NEUMANN_RADIUS
+    for
+      i <- 0 until rows * cols
+      neighbors = (0 until rows * cols).filter(areConnected(i, _)).toSet
+    yield f(i, neighbors)
 end Grids

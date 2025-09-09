@@ -23,6 +23,6 @@ trait PortableBranchingLibrary extends PortableLibrary:
    *   the result of the expression that has been evaluated
    */
   @JSExport
-  def branch[Value](condition: Boolean)(thenBranch: => Value)(elseBranch: => Value): Value =
-    language.branch(condition)(thenBranch)(elseBranch)
+  def branch[Value](condition: Boolean)(thenBranch: Function0[Value])(elseBranch: Function0[Value]): Value =
+    language.branch(condition)(thenBranch())(elseBranch())
 end PortableBranchingLibrary

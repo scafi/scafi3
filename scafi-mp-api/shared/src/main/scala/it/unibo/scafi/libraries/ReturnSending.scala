@@ -40,7 +40,8 @@ object ReturnSending:
    *   an instance of the [[Continuation]] class, on which the `send` method can be called
    */
   @JSExportTopLevel("returning")
-  inline def returning[Value](value: Value): Continuation[Value] = Continuation(value)
+  @JSExport
+  def returning[Value](value: Value): Continuation[Value] = Continuation(value)
 
   /**
    * Alias for `ReturnSending(value, value)`.
@@ -50,5 +51,6 @@ object ReturnSending:
    *   a [[ReturnSending]] instance with the same value for returning and sending
    */
   @JSExportTopLevel("returnSending")
-  inline def returnSending[Value](value: Value): ReturnSending[Value] = ReturnSending(value, value)
+  @JSExport
+  def returnSending[Value](value: Value): ReturnSending[Value] = ReturnSending(value, value)
 end ReturnSending
