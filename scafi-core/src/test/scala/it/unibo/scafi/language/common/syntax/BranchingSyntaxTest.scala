@@ -6,6 +6,7 @@ import it.unibo.scafi.language.fc.syntax.FieldCalculusSyntax
 import it.unibo.scafi.libraries.BranchingLibrary.branch
 import it.unibo.scafi.libraries.CommonLibrary.localId
 import it.unibo.scafi.libraries.FieldCalculusLibrary.neighborValues
+import it.unibo.scafi.message.ValueTree
 import it.unibo.scafi.runtime.network.NetworkManager
 import it.unibo.scafi.test.AggregateProgramProbe
 import it.unibo.scafi.test.environment.Grids.mooreGrid
@@ -22,7 +23,7 @@ trait BranchingSyntaxTest extends AggregateProgramProbe:
     AggregateContext & AggregateFoundation { type DeviceId = Int } & BranchingSyntax & FieldCalculusSyntax
 
   def branchSpecification[Context <: BranchingContext](
-      contextFactory: (Int, NetworkManager { type DeviceId = Int }) => Context,
+      contextFactory: (Int, NetworkManager { type DeviceId = Int }, ValueTree) => Context,
   ): Unit =
     "Branch operator" should "partition the network based on a condition" in:
       val env = mooreGrid(5, 5, contextFactory, inMemoryNetwork):

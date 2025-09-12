@@ -15,7 +15,10 @@ trait InboundMessage:
     if currentPath.isEmpty then cachedPaths.neighbors else cachedPaths.alignedDevicesAt(currentPath)
 
   protected def alignedMessages[Format, Value: DecodableFrom[Format]]: Map[DeviceId, Value] =
-    cachedPaths.dataAt(currentPath)
+    cachedPaths.dataAt(currentPath) ++ selfMessagesFromPreviousRound
+      .get[Value](Path(currentPath*))
+      .map(value => Map(localId -> value))
+      .getOrElse(Map.empty)
 
   override def neighbors: Set[DeviceId] = cachedPaths.neighbors
 

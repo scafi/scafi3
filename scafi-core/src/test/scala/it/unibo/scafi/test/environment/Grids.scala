@@ -1,6 +1,7 @@
 package it.unibo.scafi.test.environment
 
 import it.unibo.scafi.context.AggregateContext
+import it.unibo.scafi.message.ValueTree
 import it.unibo.scafi.runtime.network.NetworkManager
 
 type IntAggregateContext = AggregateContext { type DeviceId = Int }
@@ -54,7 +55,7 @@ object Grids:
   def mooreGrid[Result, Context <: IntAggregateContext, Network <: IntNetworkManager](
       sizeX: Int,
       sizeY: Int,
-      contextFactory: (Int, Network) => Context,
+      contextFactory: (Int, Network, ValueTree) => Context,
       networkFactory: Environment[Result, Context, Network] ?=> Node[Result, Context, Network] => Network,
   )(
       program: (Context, Environment[Result, Context, Network]) ?=> Result,
@@ -92,7 +93,7 @@ object Grids:
   def vonNeumannGrid[Result, Context <: IntAggregateContext, Network <: IntNetworkManager](
       sizeX: Int,
       sizeY: Int,
-      contextFactory: (Int, Network) => Context,
+      contextFactory: (Int, Network, ValueTree) => Context,
       networkFactory: Environment[Result, Context, Network] ?=> Node[Result, Context, Network] => Network,
   )(
       program: (Context, Environment[Result, Context, Network]) ?=> Result,

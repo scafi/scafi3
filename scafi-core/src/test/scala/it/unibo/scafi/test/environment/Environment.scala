@@ -2,13 +2,15 @@ package it.unibo.scafi.test.environment
 
 import scala.collection.mutable
 
+import it.unibo.scafi.message.ValueTree
+
 class Environment[Result, Context <: IntAggregateContext, Network <: IntNetworkManager](
     val areConnected: (
         Environment[Result, Context, Network],
         Node[Result, Context, Network],
         Node[Result, Context, Network],
     ) => Boolean,
-    private val contextFactory: (Int, Network) => Context,
+    private val contextFactory: (Int, Network, ValueTree) => Context,
     private val program: (Context, Environment[Result, Context, Network]) ?=> Result,
     private val retainTime: Int = 1,
     private val networkFactory: Environment[Result, Context, Network] ?=> Node[Result, Context, Network] => Network,
@@ -89,7 +91,7 @@ class Environment[Result, Context <: IntAggregateContext, Network <: IntNetworkM
    *   A [[Set]] containing all nodes that are neighbors of the given node.
    */
   def neighborsOf(node: Node[Result, Context, Network]): Set[Node[Result, Context, Network]] =
-    positions.keys.filter { other => other != node && areConnected(this, node, other) }.toSet
+    positions.keys.filter(areConnected(this, node, _)).toSet
 
   /**
    * Removes a node from the environment by its unique identifier.

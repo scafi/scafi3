@@ -1,7 +1,7 @@
 package it.unibo.scafi.context
 
 import it.unibo.scafi.language.AggregateFoundation
-import it.unibo.scafi.message.{ Export, Import }
+import it.unibo.scafi.message.{ Export, Import, ValueTree }
 
 trait AggregateContext:
   self: AggregateFoundation =>
@@ -19,6 +19,10 @@ trait AggregateContext:
    *   the [[Import]] to be used to compute the next round.
    */
   def importFromInboundMessages: Import[DeviceId]
+
+  def selfMessagesForNextRound: ValueTree
+
+  def selfMessagesFromPreviousRound: ValueTree
 
   /**
    * The known neighbors.
