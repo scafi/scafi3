@@ -15,12 +15,11 @@ final class ScafiEngine[
     factory: (ID, Network, ValueTree) => Context,
 )(program: Context ?=> Result):
   private var lastExport: Export[ID] = Export(ValueTree.empty, Map.empty)
-  private var lastSelfMessages: ValueTree = ValueTree.empty
+  private var lastSelfMessages = ValueTree.empty
 
   private def round(): AggregateResult =
-    val ctx: Context =
-      factory(deviceId, network, lastSelfMessages) // Here it is used the network (receive) for generate the context
-    val result: Result = program(using ctx)
+    val ctx = factory(deviceId, network, lastSelfMessages) // Here the network is used (receive) to generate the context
+    val result = program(using ctx)
     val exportResult = ctx.exportFromOutboundMessages
     network.send(exportResult)
     AggregateResult(result, exportResult, ctx.selfMessagesForNextRound)

@@ -91,7 +91,7 @@ class Environment[Result, Context <: IntAggregateContext, Network <: IntNetworkM
    *   A [[Set]] containing all nodes that are neighbors of the given node.
    */
   def neighborsOf(node: Node[Result, Context, Network]): Set[Node[Result, Context, Network]] =
-    positions.keys.filter(areConnected(this, node, _)).toSet
+    positions.keys.filter { other => other != node && areConnected(this, node, other) }.toSet
 
   /**
    * Removes a node from the environment by its unique identifier.
