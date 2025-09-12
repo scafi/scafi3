@@ -1,9 +1,11 @@
 package it.unibo.scafi.runtime
 
 import java.nio.charset.StandardCharsets
+
 import scala.concurrent.{ Await, Future }
 import scala.concurrent.duration.{ DurationInt, FiniteDuration }
 import scala.util.chaining.scalaUtilChainingOps
+
 import it.unibo.scafi.context.xc.ExchangeAggregateContext.exchangeContextFactory
 import it.unibo.scafi.message.BinaryCodable
 import it.unibo.scafi.runtime.network.sockets.{
@@ -15,6 +17,7 @@ import it.unibo.scafi.runtime.network.sockets.InetTypes.{ Endpoint, FreePort, Lo
 import it.unibo.scafi.test.AsyncSpec
 import it.unibo.scafi.test.environment.{ Environment, IntAggregateContext, Node }
 import it.unibo.scafi.test.environment.Grids.vonNeumannGrid
+
 import org.scalatest.compatible.Assertion
 import org.scalatest.time.{ Seconds, Span }
 
