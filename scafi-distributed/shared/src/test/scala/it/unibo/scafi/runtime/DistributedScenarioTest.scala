@@ -2,7 +2,7 @@ package it.unibo.scafi.runtime
 
 import java.nio.charset.StandardCharsets
 
-import scala.concurrent.{ Await, Future }
+import scala.concurrent.Future
 import scala.concurrent.duration.{ DurationInt, FiniteDuration }
 import scala.util.chaining.scalaUtilChainingOps
 
@@ -51,6 +51,7 @@ trait DistributedScenarioTest extends AsyncSpec with Programs:
         exchangeContextFactory[ID, ConnectionOrientedNetworkManager[ID]],
         socketNetworkFactory.andThen(_.tap(networks.add)),
       )(probe.program)
+      _ <- Future.sequence(env.nodes.map(_.networkManager.start()))
       res <- eventually:
         env.cycleInOrder()
         env.status shouldBe probe.expected
@@ -64,9 +65,6 @@ trait DistributedScenarioTest extends AsyncSpec with Programs:
       .filter(n => env.areConnected(env, n, node) && n != node)
       .map(n => n.id -> Endpoint(Localhost, n.networkManager.boundPort.get))
       .toMap
-    val network = SocketNetworkManager.withFixedNeighbors(node.id, FreePort, neighbors)
-    Await.result(network.start(), 5.seconds)
-    // network.start().onComplete(result => require(result.isSuccess, s"Failed to start network: ${result.failed.get}"))
-    network
+    SocketNetworkManager.withFixedNeighbors(node.id, FreePort, neighbors)
 
 end DistributedScenarioTest
