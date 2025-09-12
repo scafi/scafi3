@@ -48,7 +48,7 @@ trait ConnectionOrientedNetworkManager[ID](deviceId: ID, port: Port)(using Execu
     yield ()
 
   override def send(message: Export[DeviceId]): Unit =
-    try outChannel.push((neighborhood - deviceId).map(id => id -> message(id)))
+    try outChannel.push(neighborhood.map(id => id -> message(id)))
     catch case _: Channel.ChannelClosedException => scribe.error("The network manager is closed, cannot send message.")
 
   override def receive: Import[DeviceId] = Import(inValues.asScala.toMap)
