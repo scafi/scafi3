@@ -27,7 +27,7 @@ trait OutboundMessage:
     registeredSelfMessages.update(path, overrides.getOrElse(localId, default))
     registeredMessages.update(path, MapWithDefault(overrides.view.mapValues(encode).toMap, encode(default)))
 
-  override def selfMessagesForNextRound: ValueTree = ValueTree(registeredSelfMessages.view.toMap)
+  override def selfMessagesForNextRound: ValueTree = ValueTree(registeredSelfMessages.toMap)
 
   override def exportFromOutboundMessages: Export[DeviceId] =
     val messages = mutable.Map.empty[DeviceId, ValueTree].withDefaultValue(ValueTree.empty)

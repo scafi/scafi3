@@ -52,7 +52,7 @@ trait FieldCalculusSyntaxTest extends AggregateProgramProbe:
         neighborValues(localId).toList
       (0 until 2).foreach(_ => env.cycleInOrder())
       forAll(env.status): (id, neighborIds) =>
-        neighborIds shouldBe (env.neighborsOf(env(id).get).map(_.id) + id).toList
+        neighborIds shouldBe (env.neighborsOf(id).get.map(_.id) + id).toList
 
     "Evolve operator" should "repeatedly apply a function to an initial value for every execution round" in:
       def evolveProgram(using lang: Language): Int = evolve(0)(_ + 1)
