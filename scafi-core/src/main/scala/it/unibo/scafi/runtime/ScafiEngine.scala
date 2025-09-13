@@ -1,5 +1,7 @@
 package it.unibo.scafi.runtime
 
+import scala.annotation.tailrec
+
 import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.message.{ Export, ValueTree }
 import it.unibo.scafi.runtime.network.NetworkManager
@@ -29,11 +31,7 @@ final class ScafiEngine[
    * @return
    *   the result of the single round.
    */
-  def cycle(): Result =
-    val cycleResult = round()
-    lastExport = cycleResult.exportResult
-    lastSelfMessages = cycleResult.selfMessages
-    cycleResult.result
+  def cycle(): Result = cycleWhile(_ => false)
 
   /**
    * Retrieves the last [[Export]] result produced by the engine. If no round has been performed, it returns an empty
@@ -46,15 +44,18 @@ final class ScafiEngine[
 
   /**
    * Executes the program until the condition is met.
+   *
    * @param condition
    *   the condition to check.
    * @return
    *   the result of the last round.
    */
+  @tailrec
   def cycleWhile(condition: AggregateResult => Boolean): Result =
-    var result: AggregateResult = round()
-    while condition(result) do result = round()
-    result.result
+    val result: AggregateResult = round()
+    lastExport = result.exportResult
+    lastSelfMessages = result.selfMessages
+    if condition(result) then cycleWhile(condition) else result.result
 
   /**
    * The result of the aggregate computation.
