@@ -15,10 +15,7 @@ trait InboundMessage:
     if currentPath.isEmpty then cachedPaths.neighbors else cachedPaths.alignedDevicesAt(currentPath)
 
   protected def alignedMessages[Format, Value: DecodableFrom[Format]]: Map[DeviceId, Value] =
-    cachedPaths.dataAt(currentPath) ++ selfMessagesFromPreviousRound
-      .get[Value](Path(currentPath*))
-      .map(value => Map(localId -> value))
-      .getOrElse(Map.empty)
+    cachedPaths.dataAt(currentPath)
 
   override def neighbors: Set[DeviceId] = cachedPaths.neighbors
 
@@ -48,9 +45,14 @@ trait InboundMessage:
 
     @SuppressWarnings(Array("DisableSyntax.asInstanceOf"))
     def dataAt[Format, Value: DecodableFrom[Format]](tokens: IndexedSeq[InvocationCoordinate]): Map[DeviceId, Value] =
-      cachedPaths
-        .get(Path(tokens*))
+      val path = Path(tokens*)
+      val selfValueAtPath = selfMessagesFromPreviousRound
+        .get[Value](path)
+        .map(localId -> _)
+      val importedValuesAtPath = cachedPaths
+        .get(path)
         .map(_.view.mapValues(_.asInstanceOf[Format]).mapValues(decode).toMap)
         .getOrElse(Map.empty)
+      selfValueAtPath.fold(importedValuesAtPath)(importedValuesAtPath + _)
   end CachedPaths
 end InboundMessage
