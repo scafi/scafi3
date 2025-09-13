@@ -44,7 +44,6 @@ final class ScafiEngine[
 
   /**
    * Executes the program until the condition is met.
-   *
    * @param condition
    *   the condition to check.
    * @return
@@ -52,10 +51,10 @@ final class ScafiEngine[
    */
   @tailrec
   def cycleWhile(condition: AggregateResult => Boolean): Result =
-    val result: AggregateResult = round()
-    lastExport = result.exportResult
-    lastSelfMessages = result.selfMessages
-    if condition(result) then cycleWhile(condition) else result.result
+    val aggregateResult = round()
+    lastExport = aggregateResult.exportResult
+    lastSelfMessages = aggregateResult.selfMessages
+    if condition(aggregateResult) then cycleWhile(condition) else aggregateResult.result
 
   /**
    * The result of the aggregate computation.
