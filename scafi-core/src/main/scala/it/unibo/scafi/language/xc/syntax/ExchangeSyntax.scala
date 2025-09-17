@@ -17,9 +17,12 @@ trait ExchangeSyntax:
    * <h3>Examples</h3>
    *
    * <h4>To send and return the same value</h4> {{{exchange(0)(value => f(value))}}}
-   * {{{exchange(0)(value => retsend(f(value)))}}} <h4>To send and return different values</h4>
-   * {{{exchange(0)(value => (f(value), f2(value)))}}} {{{exchange(0)(value => ret (f(value)) send f2(value))}}}
-   * {{{exchange(0)(value => ret(f(value)).send(f2(value)))}}} {{{exchange(0)(value => RetSend(f(value), f2(value)))}}}
+   * {{{exchange(0)(value => returnSending(f(value)))}}}
+   *
+   * <h4>To send and return different values</h4> {{{exchange(0)(value => (f(value), f2(value)))}}}
+   * {{{exchange(0)(value => returning (f(value)) send f2(value))}}}
+   * {{{exchange(0)(value => returning(f(value)).send(f2(value)))}}}
+   * {{{exchange(0)(value => ReturnSending(f(value), f2(value)))}}}
    *
    * @param initial
    *   the initial aggregate value
