@@ -4,7 +4,7 @@ import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.context.common.BranchingContext
 import it.unibo.scafi.language.xc.{ ExchangeLanguage, FieldBasedSharedData }
 import it.unibo.scafi.language.xc.calculus.ExchangeCalculus
-import it.unibo.scafi.message.{ CodableFromTo, Import, InboundMessage, OutboundMessage }
+import it.unibo.scafi.message.{ CodableFromTo, Import, InboundMessage, OutboundMessage, ValueTree }
 import it.unibo.scafi.runtime.network.NetworkManager
 import it.unibo.scafi.utils.AlignmentManager
 
@@ -14,6 +14,7 @@ import it.unibo.scafi.utils.AlignmentManager
 trait ExchangeAggregateContext[ID](
     override val localId: ID,
     override val importFromInboundMessages: Import[ID],
+    override val selfMessagesFromPreviousRound: ValueTree,
 ) extends AggregateContext,
       BranchingContext,
       ExchangeLanguage,
@@ -41,4 +42,6 @@ object ExchangeAggregateContext:
   def exchangeContextFactory[ID, Network <: NetworkManager { type DeviceId = ID }](
       localId: ID,
       network: Network,
-  ): ExchangeAggregateContext[ID] = new ExchangeAggregateContext[ID](localId, network.receive) {}
+      selfMessagesFromPreviousRound: ValueTree,
+  ): ExchangeAggregateContext[ID] =
+    new ExchangeAggregateContext[ID](localId, network.receive, selfMessagesFromPreviousRound) {}

@@ -2,13 +2,15 @@ package it.unibo.scafi.test.environment
 
 import scala.collection.mutable
 
+import it.unibo.scafi.message.ValueTree
+
 class Environment[Result, Context <: IntAggregateContext, Network <: IntNetworkManager](
     val areConnected: (
         Environment[Result, Context, Network],
         Node[Result, Context, Network],
         Node[Result, Context, Network],
     ) => Boolean,
-    private val contextFactory: (Int, Network) => Context,
+    private val contextFactory: (Int, Network, ValueTree) => Context,
     private val program: (Context, Environment[Result, Context, Network]) ?=> Result,
     private val retainTime: Int = 1,
     private val networkFactory: Environment[Result, Context, Network] ?=> Node[Result, Context, Network] => Network,
@@ -79,6 +81,16 @@ class Environment[Result, Context <: IntAggregateContext, Network <: IntNetworkM
    */
   def positionOf(node: Node[Result, Context, Network]): Option[Position] =
     positions.get(node)
+
+  /**
+   * Retrieves the neighbors of a node identified by its unique identifier.
+   *
+   * @param id
+   *   The unique identifier of the node for which neighbors are to be found.
+   * @return
+   *   An [[Option]] containing a [[Set]] of neighboring nodes or [[None]] if no node matches the given id.
+   */
+  def neighborsOf(id: Int): Option[Set[Node[Result, Context, Network]]] = nodes.find(_.id == id).map(neighborsOf)
 
   /**
    * Retrieves the neighbors of a given node in the environment.

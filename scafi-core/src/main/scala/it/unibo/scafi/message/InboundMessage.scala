@@ -45,9 +45,14 @@ trait InboundMessage:
 
     @SuppressWarnings(Array("DisableSyntax.asInstanceOf"))
     def dataAt[Format, Value: DecodableFrom[Format]](tokens: IndexedSeq[InvocationCoordinate]): Map[DeviceId, Value] =
-      cachedPaths
-        .get(Path(tokens*))
+      val path = Path(tokens*)
+      val selfValueAtPath = selfMessagesFromPreviousRound
+        .get[Value](path)
+        .map(localId -> _)
+      val importedValuesAtPath = cachedPaths
+        .get(path)
         .map(_.view.mapValues(_.asInstanceOf[Format]).mapValues(decode).toMap)
         .getOrElse(Map.empty)
+      selfValueAtPath.fold(importedValuesAtPath)(importedValuesAtPath + _)
   end CachedPaths
 end InboundMessage

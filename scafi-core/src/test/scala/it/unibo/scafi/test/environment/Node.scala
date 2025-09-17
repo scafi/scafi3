@@ -3,7 +3,7 @@ package it.unibo.scafi.test.environment
 import scala.annotation.unused
 import scala.compiletime.uninitialized
 
-import it.unibo.scafi.message.{ Export, Import }
+import it.unibo.scafi.message.{ Export, Import, ValueTree }
 import it.unibo.scafi.runtime.ScafiEngine
 import it.unibo.scafi.runtime.network.NetworkManager
 
@@ -11,7 +11,7 @@ class Node[Result, Context <: IntAggregateContext, Network <: IntNetworkManager]
     val environment: Environment[Result, Context, Network],
     val id: Int,
     val retain: Int,
-    private val contextFactory: (Int, Network) => Context,
+    private val contextFactory: (Int, Network, ValueTree) => Context,
     private val program: (Context, Environment[Result, Context, Network]) ?=> Result,
     private val networkManagerFactory: Node[Result, Context, Network] => Network,
 ):

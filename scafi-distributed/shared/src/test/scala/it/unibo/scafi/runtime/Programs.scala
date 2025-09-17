@@ -26,20 +26,20 @@ trait Programs:
   def evolveProgram: ProgramWithResult[Int] = ProgramWithResult(
     program = evolve(localId)(_ + 1),
     expected = Map(
-      0 -> 1,
-      1 -> 2,
-      2 -> 3,
-      3 -> 4,
+      0 -> 2,
+      1 -> 3,
+      2 -> 4,
+      3 -> 5,
     ),
   )
 
   def neighborsDiscoveryProgram: ProgramWithResult[Map[ID, Int]] = ProgramWithResult(
     program = neighborValues(localId).neighborValues,
     expected = Map(
-      0 -> Map(1 -> 1, 2 -> 2),
-      1 -> Map(0 -> 0, 3 -> 3),
-      2 -> Map(0 -> 0, 3 -> 3),
-      3 -> Map(1 -> 1, 2 -> 2),
+      0 -> Map(1 -> 1, 2 -> 2, 0 -> 0),
+      1 -> Map(0 -> 0, 3 -> 3, 1 -> 1),
+      2 -> Map(0 -> 0, 3 -> 3, 2 -> 2),
+      3 -> Map(1 -> 1, 2 -> 2, 3 -> 3),
     ),
   )
 
@@ -50,10 +50,10 @@ trait Programs:
       exchange(200)(returnSending).neighborValues,
     ),
     expected = Map(
-      0 -> Map(2 -> 100),
-      1 -> Map(3 -> 200),
-      2 -> Map(0 -> 100),
-      3 -> Map(1 -> 200),
+      0 -> Map(2 -> 100, 0 -> 100),
+      1 -> Map(3 -> 200, 1 -> 200),
+      2 -> Map(0 -> 100, 2 -> 100),
+      3 -> Map(1 -> 200, 3 -> 200),
     ),
   )
 end Programs
