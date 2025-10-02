@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message TemperatureSensor {
+  string id = 1;
+  float temperature = 2;
+}

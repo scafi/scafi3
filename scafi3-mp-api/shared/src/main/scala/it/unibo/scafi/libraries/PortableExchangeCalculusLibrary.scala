@@ -20,9 +20,10 @@ trait PortableExchangeCalculusLibrary extends PortableLibrary:
    * <h2>Examples</h2>
    *
    * <h3>JavaScript</h3>
-   *   - To send and return the same value: {{{language.exchange(0, nvalue => returnSending(f(value))}}}
-   *   - To send and return different values: {{{language.exchange(0, nvalue => returning(f(value)).send(f2(value)))}}}
-   *     or {{{language.exchange(0, value => ReturnSending(f(value), f2(value)))}}}
+   *   - To send and return the same value: {{{lang.exchange(lang.Field.of(0), nvalue => returnSending(f(nvalue))}}}
+   *   - To send and return different values:
+   *     {{{lang.exchange(lang.Field.of(0), nvalue => returning(f(nvalue)).send(g(nvalue)))}}} or
+   *     {{{lang.exchange(lang.Field.of(0), nvalue => ReturnSending(f(nvalue), g(nvalue)))}}}
    *
    * @param initial
    *   the initial aggregate value

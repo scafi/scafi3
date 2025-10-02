@@ -6,9 +6,9 @@ class BranchingLibraryTest extends JSLibraryTest:
     "work on JS platform using branching library" when:
       "domain branching operation is run" in:
         def aggregateProgram(lang: FullLibrary) =
-          lang.branch(lang.localId.isEven) {
+          lang.branch(lang.localId.isEven) { () =>
             lang.exchange(lang.Field.of(true))(n => returnSending(n))
-          } {
+          } { () =>
             lang.exchange(lang.Field.of(false))(n => returnSending(n))
           }
 
