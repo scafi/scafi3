@@ -6,6 +6,7 @@ package it.unibo.scafi.libraries
 trait PortableLibrary:
   ctx: PortableTypes =>
   export it.unibo.scafi.language.AggregateFoundation
+  export it.unibo.scafi.message.UniversalCodable
 
   /**
    * The language type comprising all the needed syntaxes needed to implement the library functionalities.
@@ -25,5 +26,10 @@ trait PortableLibrary:
   /**
    * [[SharedData]] is isomorphic to [[language.SharedData]].
    */
-  given [T]: Iso[SharedData[T], language.SharedData[T]] = compiletime.deferred
+  given [Value]: Iso[SharedData[Value], language.SharedData[Value]] = compiletime.deferred
+
+  /**
+   * The universal codable instance used for encoding and decoding values to be sent over the network.
+   */
+  given valueCodable[Value, Format]: UniversalCodable[Value, Format] = compiletime.deferred
 end PortableLibrary

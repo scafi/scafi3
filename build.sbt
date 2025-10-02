@@ -60,6 +60,9 @@ ThisBuild / coverageEnabled := true
 ThisBuild / semanticdbEnabled := true
 ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
 
+val ExclusiveTestTag = Tags.Tag("exclusive-test")
+Global / concurrentRestrictions += Tags.exclusive(ExclusiveTestTag)
+
 lazy val commonDependencies =
   libraryDependencies ++= Seq(
     "org.typelevel" %%% "cats-core" % "2.13.0",
@@ -88,6 +91,8 @@ lazy val commonJsSettings = Seq(
       .withOutputPatterns(OutputPatterns.fromJSFile("%s.mjs"))
       .withOptimizer(true)
   },
+  Compile / fastLinkJS / scalaJSLinkerOutputDirectory := target.value / "fastLinkJS",
+  Compile / fullLinkJS / scalaJSLinkerOutputDirectory := target.value / "fullLinkJS",
   coverageEnabled := false,
 )
 
@@ -120,7 +125,7 @@ lazy val `scafi-distributed` = crossProject(JSPlatform, JVMPlatform, NativePlatf
 lazy val `scafi-mp-api` = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Full)
   .in(file("scafi-mp-api"))
-  .dependsOn(`scafi-core` % "compile->compile;test->test")
+  .dependsOn(`scafi-core` % "compile->compile;test->test", `scafi-distributed`)
   .nativeSettings(commonNativeSettings)
   .jsSettings(commonJsSettings)
   .settings(commonDependencies)
@@ -129,6 +134,15 @@ lazy val `scafi-mp-api` = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     libraryDependencies ++= Seq(
       "org.scala-js" %% "scalajs-stubs" % "1.1.0" % "provided",
     ),
+  )
+
+lazy val `scafi-integration` = project
+  .in(file("scafi-integration"))
+  .dependsOn(`scafi-distributed`.jvm % "compile->compile;test->test")
+  .settings(commonDependencies)
+  .settings(
+    publish / skip := true,
+    Test / test := (Test / test).dependsOn(`scafi-mp-api`.js / Compile / fullLinkJS).tag(ExclusiveTestTag).value,
   )
 
 //val alchemistVersion = "42.1.0"
@@ -149,7 +163,13 @@ lazy val `scafi-mp-api` = crossProject(JSPlatform, JVMPlatform, NativePlatform)
 lazy val root = project
   .in(file("."))
   .enablePlugins(ScalaUnidocPlugin)
-  .aggregate(crossProjects(`scafi-core`, `scafi-distributed`, `scafi-mp-api`) /* :+ `alchemist-incarnation`*/.map(_.project)*)
+  .aggregate(
+    (
+      crossProjects(`scafi-core`, `scafi-distributed`, `scafi-mp-api`) 
+      ++ 
+      Seq(`scafi-integration` /* :+ `alchemist-incarnation`*/)
+    ).map(_.project)*
+  )
   .settings(
     name := "scafi3",
     publish / skip := true,

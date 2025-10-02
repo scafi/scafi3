@@ -1,0 +1,14 @@
+{
+    "name": "scafi3-js-test",
+    "type": "commonjs",
+    "scripts": {
+        "prestart": "npm install && node build-protos.js",
+        "start": "node main.mjs"
+    },
+    "devDependencies": {
+        "protobufjs-cli": "^1.1.3"
+    },
+    "dependencies": {
+        "protobufjs": "^7.5.4"
+    }
+}
