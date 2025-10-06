@@ -1,4 +1,4 @@
-package it.unibo.scafi.alchemist.device
+package it.unibo.alchemist.scafi.device
 
 import it.unibo.alchemist.model.{ Environment, Node, NodeProperty, Time, Position as AlchemistPosition }
 import it.unibo.scafi.message.{ Export, Import }

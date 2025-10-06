@@ -95,6 +95,11 @@ trait FieldBasedSharedData:
         SafeIterable(filtered)
       override def onlySelf: A = a(localId)
 
+      override def mapValues[B](f: A => B): SharedData[B] = Field[B](
+        f(a.default),
+        a.neighborValues.view.mapValues(f).toMap,
+      )
+
   override given convert[T]: Conversion[T, SharedData[T]] = Field[T](_)
 
   override def device: SharedData[DeviceId] = Field[DeviceId](localId, alignedDevices.map(id => (id, id)).toMap)
