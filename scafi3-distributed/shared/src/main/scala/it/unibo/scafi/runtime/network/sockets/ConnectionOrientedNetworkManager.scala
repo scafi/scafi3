@@ -53,6 +53,10 @@ trait ConnectionOrientedNetworkManager[ID](deviceId: ID, port: Port)(using Execu
 
   override def receive: Import[DeviceId] = Import(inValues.asScala.toMap)
 
+  override def deliverableReceived(from: DeviceId, message: ValueTree): Unit =
+    inValues.put(from, message)
+    ()
+
   private def client(connections: Map[Endpoint, Connection]): Future[Unit] =
     (for
       msgs <- outChannel.take
@@ -69,7 +73,7 @@ trait ConnectionOrientedNetworkManager[ID](deviceId: ID, port: Port)(using Execu
 
   private def establishConnection(endpoint: Endpoint): Future[Connection] = out(endpoint)
 
-  private def server(port: Port): Future[ListenerRef] = in(port)(inValues.put(_, _): Unit)
+  private def server(port: Port): Future[ListenerRef] = in(port)(deliverableReceived)
 
   override def close(): Unit =
     try
