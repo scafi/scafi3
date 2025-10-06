@@ -1,46 +1,59 @@
 package it.unibo.alchemist.scafi.device
 
-import it.unibo.alchemist.model.{ Environment, Node, NodeProperty, Time, Position as AlchemistPosition }
-import it.unibo.scafi.message.{ Export, Import }
+import it.unibo.alchemist.model.molecules.SimpleMolecule
+import it.unibo.alchemist.model.{Environment, Node, NodeProperty, Time, Position as AlchemistPosition}
+import it.unibo.scafi.alchemist.device.sensors.AlchemistEnvironmentVariables
+import it.unibo.scafi.message.{Export, Import, ValueTree}
 import it.unibo.scafi.runtime.network.NetworkManager
 import org.apache.commons.math3.random.RandomGenerator
 
-class ScaFiDevice[T, Position <: AlchemistPosition[Position]](
+import scala.math.Ordering.Implicits.infixOrderingOps
+
+class Scafi3Device[Position <: AlchemistPosition[Position]](
     val random: RandomGenerator,
-    val env: Environment[T, Position],
-    val node: Node[T],
+    val environment: Environment[Any, Position],
+    val node: Node[Any],
     val retention: Time | Null,
 ) extends NetworkManager,
-      NodeProperty[T]:
+      NodeProperty[Any],
+      AlchemistEnvironmentVariables:
 
   override type DeviceId = Int
 
-//  private var inbox: Map[Int, TimedMessage[ExportValue]] = Map.empty
+  private case class TimedMessage(receivedAt: Time, payload: ValueTree)
 
-  private def time: Time = ??? // env.getSimulation.nn.getTime.nn // TODO: maybe it should be a public var
+  private var inbox: Map[Int, TimedMessage] = Map.empty
 
-//  override def send(e: Export[Int, ExportValue]): Unit = ???
-//    inbox += localId -> TimedMessage(time, e(localId))
-//    env
-//      .getNeighborhood(node)
-//      .nn
-//      .forEach: n =>
-//        val node: Node[T] = n.nn
-//        node.asProperty(classOf[ScaFiDevice[T, Position, ExportValue]]).inbox += localId -> TimedMessage(
-//          time, // TODO: current impl uses time of the sender
-//          e(localId),
-//        )
+  private def time: Time = environment.getSimulation.getTime
 
-//  override def receive(): Import[Int, ExportValue] =
-//    inbox = inbox.filterNot(_._2.time.plus(retention) < time)
-//    inbox.map((id, timedMessage) => id -> timedMessage.message)
+  lazy val localId: Int = node.getId
 
-  override def send(message: Export[Int]): Unit = ???
+  override def send(message: Export[Int]): Unit =
+    environment
+      .getNeighborhood(node)
+      .forEach: neighbor =>
+        val scafiDevice = neighbor.asProperty(classOf[Scafi3Device[Position]])
+        val messageForNeighbor = message(neighbor.getId)
+        scafiDevice.deliverableReceived(localId, messageForNeighbor)
 
-  override def receive: Import[Int] = ???
+  override def receive: Import[Int] =
+    inbox = inbox.filterNot { case (_, timedMessage) => timedMessage.receivedAt.plus(retention) < time }
+    val messages = inbox.map { case (id, timedMessage) => id -> timedMessage.payload }
+    Import(messages)
 
-  override def getNode: Node[T] = node
+  override def getNode: Node[Any] = node
 
-  override def cloneOnNewNode(node: Node[T]): NodeProperty[T] =
-    ScaFiDevice(random, env, node, retention)
-end ScaFiDevice
+  override def cloneOnNewNode(node: Node[Any]): NodeProperty[Any] =
+    Scafi3Device(random, environment, node, retention)
+
+  override def get[T](name: String): T = node.getConcentration(SimpleMolecule(name)).asInstanceOf[T]
+
+  override def isDefined(name: String): Boolean = node.contains(SimpleMolecule(name))
+
+  override def set[T](name: String, value: T): T =
+    node.setConcentration(SimpleMolecule(name), value.asInstanceOf[Any])
+    value
+
+  override def deliverableReceived(from: Int, message: ValueTree): Unit =
+    inbox += from -> TimedMessage(time, message)
+end Scafi3Device

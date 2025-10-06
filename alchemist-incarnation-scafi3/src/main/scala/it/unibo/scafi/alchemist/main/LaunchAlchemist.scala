@@ -1,7 +1,8 @@
 package it.unibo.scafi.alchemist.main
 
-@main def main(): Unit =
-  println("Fd")
+object LaunchAlchemist
+
+//@main def main(): Unit =
 //  val sim = EuclideanSimulationKt
 //    .loadYamlSimulation[Any, Euclidean2DPosition](
 //      "simulation-gradient.yml",
