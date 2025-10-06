@@ -15,7 +15,7 @@ import it.unibo.scafi.alchemist.device.ScaFiDevice
 import com.github.benmanes.caffeine.cache.{ Caffeine, LoadingCache }
 import org.apache.commons.math3.random.RandomGenerator
 
-class ExchangeIncarnation[T, Position <: AlchemistPosition[Position]] extends Incarnation[T, Position]:
+class Scafi3Incarnation[T, Position <: AlchemistPosition[Position]] extends Incarnation[T, Position]:
 
   override def getProperty(node: Node[T], molecule: Molecule, property: String): Double =
     val concentration = node.getConcentration(molecule)
@@ -116,4 +116,4 @@ class ExchangeIncarnation[T, Position <: AlchemistPosition[Position]] extends In
       }
       .nn
   end ScalaScriptEngine
-end ExchangeIncarnation
+end Scafi3Incarnation
