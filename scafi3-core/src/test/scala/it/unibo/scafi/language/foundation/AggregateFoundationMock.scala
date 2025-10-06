@@ -18,6 +18,7 @@ class AggregateFoundationMock(deviceId: Int = 0) extends AggregateFoundation, Fi
     extension [A](a: MockAggregate[A])
       override def withoutSelf: SafeIterable[A] = MockAggregate(a.mockedValues.tail)
       override def onlySelf: A = a.mockedValues.head
+      override def mapValues[B](f: A => B): MockAggregate[B] = MockAggregate(a.mockedValues.map(f))
 
   override given sharedDataApplicative: Applicative[MockAggregate] = new Applicative[MockAggregate]:
     override def pure[A](x: A): MockAggregate[A] = MockAggregate(Seq(x))

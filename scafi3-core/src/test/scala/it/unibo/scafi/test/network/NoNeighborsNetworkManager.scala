@@ -1,6 +1,6 @@
 package it.unibo.scafi.test.network
 
-import it.unibo.scafi.message.{ Export, Import }
+import it.unibo.scafi.message.{ Export, Import, ValueTree }
 import it.unibo.scafi.runtime.network.NetworkManager
 
 /**
@@ -15,3 +15,5 @@ class NoNeighborsNetworkManager[ID] extends NetworkManager:
   override def receive: Import[ID] = Import.empty
 
   override def send(message: Export[ID]): Unit = ()
+
+  override def deliverableReceived(from: ID, message: ValueTree): Unit = ()
