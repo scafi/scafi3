@@ -1,7 +1,6 @@
 package it.unibo.alchemist
 
 import javax.script.ScriptEngineManager
-
 import it.unibo.alchemist.model.conditions.AbstractCondition
 import it.unibo.alchemist.model.molecules.SimpleMolecule
 import it.unibo.alchemist.model.nodes.GenericNode
@@ -11,9 +10,9 @@ import it.unibo.alchemist.model.times.DoubleTime
 import it.unibo.alchemist.model.{ Position as AlchemistPosition, * }
 import it.unibo.scafi.alchemist.actions.RunScaFiProgram
 import it.unibo.scafi.alchemist.device.ScaFiDevice
-
 import com.github.benmanes.caffeine.cache.{ Caffeine, LoadingCache }
 import org.apache.commons.math3.random.RandomGenerator
+import org.danilopianini.util.ListSet
 
 class Scafi3Incarnation[T, Position <: AlchemistPosition[Position]] extends Incarnation[T, Position]:
 
@@ -29,6 +28,7 @@ class Scafi3Incarnation[T, Position <: AlchemistPosition[Position]] extends Inca
       case double: Double => double
       case number: Number => number.doubleValue()
       case string: String => string.toDoubleOption.getOrElse(Double.NaN)
+      case boolean: Boolean => if boolean then 1.0 else 0.0
       case _ => Double.NaN
 
   override def createMolecule(s: String): Molecule = SimpleMolecule(s)
@@ -38,56 +38,7 @@ class Scafi3Incarnation[T, Position <: AlchemistPosition[Position]] extends Inca
     ScalaScriptEngine.concentrationCache.get(descriptor.toString).asInstanceOf[T]
 
   @SuppressWarnings(Array("scalafix:DisableSyntax.asInstanceOf", "scalafix:DisableSyntax.null"))
-  override def createConcentration(): T = null.asInstanceOf[T]
-
-  override def createNode(
-      randomGenerator: RandomGenerator,
-      environment: Environment[T, Position],
-      parameter: Any,
-  ): Node[T] =
-    val node = GenericNode[T](environment)
-    node.addProperty(
-      ScaFiDevice[T, Position, Any](node, environment, DoubleTime(1)),
-    ) // TODO: take retention as parameter
-    node
-
-  override def createTimeDistribution(
-      randomGenerator: RandomGenerator,
-      environment: Environment[T, Position],
-      node: Node[T],
-      parameter: Any,
-  ): TimeDistribution[T] =
-    val frequency = parameter match
-      case param: String => param.toDoubleOption.getOrElse(1.0)
-      case param: Number => param.doubleValue()
-      case _ => throw new IllegalArgumentException(s"Type ${parameter.getClass.getSimpleName} not supported")
-    val initialDelay = randomGenerator.nextDouble() / frequency
-    DiracComb(DoubleTime(initialDelay), frequency)
-
-  override def createReaction(
-      randomGenerator: RandomGenerator,
-      environment: Environment[T, Position],
-      node: Node[T],
-      timeDistribution: TimeDistribution[T],
-      parameter: Any,
-  ): Reaction[T] =
-    val event = Event[T](node, timeDistribution)
-    event.setActions(
-      java.util.List.of(createAction(randomGenerator, environment, node, timeDistribution, event, parameter)),
-    )
-    event
-
-  override def createCondition(
-      randomGenerator: RandomGenerator,
-      environment: Environment[T, Position],
-      node: Node[T],
-      time: TimeDistribution[T],
-      actionable: Actionable[T],
-      additionalParameters: Any,
-  ): Condition[T] = new AbstractCondition[T](node):
-    override def getContext: Context = Context.LOCAL
-    override def getPropensityContribution: Double = 1
-    override def isValid: Boolean = true
+  override def createConcentration(): Unit = {}
 
   @SuppressWarnings(Array("scalafix:DisableSyntax.isInstanceOf"))
   override def createAction(
@@ -98,8 +49,70 @@ class Scafi3Incarnation[T, Position <: AlchemistPosition[Position]] extends Inca
       actionable: Actionable[T],
       additionalParameters: Any,
   ): Action[T] =
-    require(additionalParameters.isInstanceOf[String], "Additional parameters must be a string for the program to run")
-    RunScaFiProgram[T, Position](node, environment, time, additionalParameters.toString)
+    require(node != null, "Scafi3 requires a device and cannot execute in a Global Reaction")
+    additionalParameters match
+      case params: String => RunScaFiProgram[T, Position](node, environment, time, params)
+      case params =>
+        throw IllegalArgumentException(
+          s"Invalid parameters for Scafi3. `String` required, but ${params.getClass} has been provided: $params",
+        )
+
+  override def createCondition(
+      randomGenerator: RandomGenerator,
+      environment: Environment[T, Position],
+      node: Node[T],
+      time: TimeDistribution[T],
+      actionable: Actionable[T],
+      additionalParameters: Any,
+  ): Condition[T] =
+    require(node != null, "Scafi3 requires a device to not be null")
+    new AbstractCondition[T](node):
+      override def getContext: Context = Context.LOCAL
+      override def getPropensityContribution: Double = 1.0
+      override def isValid: Boolean = true
+
+  override def createReaction(
+      randomGenerator: RandomGenerator,
+      environment: Environment[T, Position],
+      node: Node[T],
+      timeDistribution: TimeDistribution[T],
+      parameter: Any,
+  ): Reaction[T] =
+    val event = Event[T](node, timeDistribution)
+    event.setActions(ListSet.of(createAction(randomGenerator, environment, node, timeDistribution, event, parameter)))
+    event
+
+  override def createTimeDistribution(
+      randomGenerator: RandomGenerator,
+      environment: Environment[T, Position],
+      node: Node[T],
+      parameter: Any,
+  ): TimeDistribution[T] =
+    val frequency = parameter match
+      case param: Null => 1.0
+      case param: Number => param.doubleValue()
+      case param: String => param.toDoubleOption.getOrElse(1.0)
+      case param =>
+        throw new IllegalArgumentException(s"Invalid time distribution parameter of type ${param.getClass}: $param")
+    val initialDelay = randomGenerator.nextDouble() / frequency
+    DiracComb(DoubleTime(initialDelay), frequency)
+
+  override def createNode(
+      randomGenerator: RandomGenerator,
+      environment: Environment[T, Position],
+      parameter: Any,
+  ): Node[T] =
+    val node = GenericNode[T](environment)
+    val retention = parameter match {
+      case _: Null => null
+      case params: Number => DoubleTime(params.doubleValue())
+      case params: String => DoubleTime(params.toDouble)
+      case params => throw IllegalArgumentException(s"Invalid retention parameter for Scafi3: $params")
+    }
+    node.addProperty(
+      ScaFiDevice[T, Position, Any](randomGenerator, environment, node, retention),
+    )
+    node
 
   private object ScalaScriptEngine:
     private val engine = ScriptEngineManager().getEngineByName("scala").nn
