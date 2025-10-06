@@ -33,9 +33,8 @@ class Scafi3Incarnation[Position <: AlchemistPosition[Position]] extends Incarna
 
   override def createMolecule(s: String): Molecule = SimpleMolecule(s)
 
-  @SuppressWarnings(Array("scalafix:DisableSyntax.asInstanceOf"))
   override def createConcentration(descriptor: Any): Any =
-    ScalaScriptEngine.concentrationCache.get(descriptor.toString).asInstanceOf[Any]
+    ScalaScriptEngine.concentrationCache.get(descriptor.toString)
 
   @SuppressWarnings(Array("scalafix:DisableSyntax.asInstanceOf", "scalafix:DisableSyntax.null"))
   override def createConcentration(): Any = null.asInstanceOf[Any]
