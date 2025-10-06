@@ -115,20 +115,18 @@ lazy val `scafi3-distributed` = crossProject(JSPlatform, JVMPlatform, NativePlat
     ),
   )
 
-//val alchemistVersion = "42.1.0"
-//lazy val `alchemist-incarnation-scafi3` = project
-//  .settings(
-//    fork := true,
-//    name := "alchemist-incarnation-scafi3",
-//    libraryDependencies ++= Seq(
-//      "it.unibo.alchemist" % "alchemist" % alchemistVersion,
-//      "it.unibo.alchemist" % "alchemist-swingui" % alchemistVersion,
-//      "it.unibo.alchemist" % "alchemist-api" % alchemistVersion,
-//      "it.unibo.alchemist" % "alchemist-test" % alchemistVersion,
-//    ),
-//  )
-////  .dependsOn(core.jvm)
-//  .dependsOn(`scafi-core`)
+val alchemistVersion = "42.3.7"
+lazy val `alchemist-incarnation-scafi3` = project
+  .settings(
+    fork := true,
+    name := "alchemist-incarnation-scafi3",
+    libraryDependencies ++= Seq(
+      "it.unibo.alchemist" % "alchemist" % alchemistVersion,
+      "it.unibo.alchemist" % "alchemist-api" % alchemistVersion,
+      "it.unibo.alchemist" % "alchemist-euclidean-geometry" % alchemistVersion,
+    ),
+  )
+  .dependsOn(`scafi-core`.jvm)
 
 lazy val root = project
   .in(file("."))
