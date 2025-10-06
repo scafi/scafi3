@@ -1,13 +1,11 @@
 package it.unibo.scafi.alchemist.device
 
-import it.unibo.alchemist.model.{Environment, Node, NodeProperty, Time, Position as AlchemistPosition}
-import it.unibo.scafi.message.{Export, Import}
+import it.unibo.alchemist.model.{ Environment, Node, NodeProperty, Time, Position as AlchemistPosition }
+import it.unibo.scafi.message.{ Export, Import }
 import it.unibo.scafi.runtime.network.NetworkManager
 import org.apache.commons.math3.random.RandomGenerator
 
-import math.Ordering.Implicits.infixOrderingOps
-
-class ScaFiDevice[T, Position <: AlchemistPosition[Position], ExportValue](
+class ScaFiDevice[T, Position <: AlchemistPosition[Position]](
     val random: RandomGenerator,
     val env: Environment[T, Position],
     val node: Node[T],
@@ -17,11 +15,9 @@ class ScaFiDevice[T, Position <: AlchemistPosition[Position], ExportValue](
 
   override type DeviceId = Int
 
-  private var inbox: Map[Int, TimedMessage[ExportValue]] = Map.empty
+//  private var inbox: Map[Int, TimedMessage[ExportValue]] = Map.empty
 
   private def time: Time = ??? // env.getSimulation.nn.getTime.nn // TODO: maybe it should be a public var
-
-  override def localId: Int = node.getId
 
 //  override def send(e: Export[Int, ExportValue]): Unit = ???
 //    inbox += localId -> TimedMessage(time, e(localId))

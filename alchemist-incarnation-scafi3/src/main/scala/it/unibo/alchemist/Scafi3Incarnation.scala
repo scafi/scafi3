@@ -8,9 +8,9 @@ import it.unibo.alchemist.model.reactions.Event
 import it.unibo.alchemist.model.timedistributions.DiracComb
 import it.unibo.alchemist.model.times.DoubleTime
 import it.unibo.alchemist.model.{ Position as AlchemistPosition, * }
-import it.unibo.scafi.alchemist.actions.RunScaFiProgram
 import it.unibo.scafi.alchemist.device.ScaFiDevice
 import com.github.benmanes.caffeine.cache.{ Caffeine, LoadingCache }
+import it.unibo.alchemist.actions.RunScafi3Program
 import org.apache.commons.math3.random.RandomGenerator
 import org.danilopianini.util.ListSet
 
@@ -38,7 +38,7 @@ class Scafi3Incarnation[T, Position <: AlchemistPosition[Position]] extends Inca
     ScalaScriptEngine.concentrationCache.get(descriptor.toString).asInstanceOf[T]
 
   @SuppressWarnings(Array("scalafix:DisableSyntax.asInstanceOf", "scalafix:DisableSyntax.null"))
-  override def createConcentration(): Unit = {}
+  override def createConcentration(): T = null.asInstanceOf[T]
 
   @SuppressWarnings(Array("scalafix:DisableSyntax.isInstanceOf"))
   override def createAction(
@@ -51,7 +51,7 @@ class Scafi3Incarnation[T, Position <: AlchemistPosition[Position]] extends Inca
   ): Action[T] =
     require(node != null, "Scafi3 requires a device and cannot execute in a Global Reaction")
     additionalParameters match
-      case params: String => RunScaFiProgram[T, Position](node, environment, time, params)
+      case params: String => RunScafi3Program[T, Position](node, params)
       case params =>
         throw IllegalArgumentException(
           s"Invalid parameters for Scafi3. `String` required, but ${params.getClass} has been provided: $params",
@@ -89,7 +89,7 @@ class Scafi3Incarnation[T, Position <: AlchemistPosition[Position]] extends Inca
       parameter: Any,
   ): TimeDistribution[T] =
     val frequency = parameter match
-      case param: Null => 1.0
+      case _: Null => 1.0
       case param: Number => param.doubleValue()
       case param: String => param.toDoubleOption.getOrElse(1.0)
       case param =>
@@ -110,7 +110,7 @@ class Scafi3Incarnation[T, Position <: AlchemistPosition[Position]] extends Inca
       case params => throw IllegalArgumentException(s"Invalid retention parameter for Scafi3: $params")
     }
     node.addProperty(
-      ScaFiDevice[T, Position, Any](randomGenerator, environment, node, retention),
+      ScaFiDevice[T, Position](randomGenerator, environment, node, retention),
     )
     node
 
