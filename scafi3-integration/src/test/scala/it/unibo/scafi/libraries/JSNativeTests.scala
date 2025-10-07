@@ -25,20 +25,20 @@ class JSNativeTests extends AnyFlatSpec with JSPlatformTest with ScalaFutures:
     sequence:
       jsAggregateResult("neighbors-discovery", rows = 2, cols = 2)
     .futureValue should contain theSameElementsAs Seq(
-      0 -> jsField(default = 0, neighbors = Map(1 -> 1, 2 -> 2)),
-      1 -> jsField(default = 1, neighbors = Map(0 -> 0, 3 -> 3)),
-      2 -> jsField(default = 2, neighbors = Map(0 -> 0, 3 -> 3)),
-      3 -> jsField(default = 3, neighbors = Map(1 -> 1, 2 -> 2)),
+      0 -> jsField(default = 0, neighbors = Map(0 -> 0, 1 -> 1, 2 -> 2)),
+      1 -> jsField(default = 1, neighbors = Map(0 -> 0, 1 -> 1, 3 -> 3)),
+      2 -> jsField(default = 2, neighbors = Map(0 -> 0, 2 -> 2, 3 -> 3)),
+      3 -> jsField(default = 3, neighbors = Map(1 -> 1, 2 -> 2, 3 -> 3)),
     )
 
   "Exchange aggregate program with branch restriction" should "correctly spread local values to aligned neighbors" in:
     sequence:
       jsAggregateResult("restricted-exchange", rows = 2, cols = 2)
     .futureValue should contain theSameElementsAs Seq(
-      0 -> jsField(default = true, neighbors = Map(2 -> true)),
-      1 -> jsField(default = false, neighbors = Map(3 -> false)),
-      2 -> jsField(default = true, neighbors = Map(0 -> true)),
-      3 -> jsField(default = false, neighbors = Map(1 -> false)),
+      0 -> jsField(default = true, neighbors = Map(0 -> true, 2 -> true)),
+      1 -> jsField(default = false, neighbors = Map(1 -> false, 3 -> false)),
+      2 -> jsField(default = true, neighbors = Map(0 -> true, 2 -> true)),
+      3 -> jsField(default = false, neighbors = Map(1 -> false, 3 -> false)),
     )
 
   "Protobuf exchange aggregate program" should "correctly exchange protobuf messages" in sensorTestWith("protobuf")
@@ -50,10 +50,10 @@ class JSNativeTests extends AnyFlatSpec with JSPlatformTest with ScalaFutures:
     sequence:
       jsAggregateResult(s"${format}-exchange", rows = 2, cols = 2)
     .futureValue should contain theSameElementsAs Seq(
-      0 -> jsField(default = jsSensor(0), neighbors = Map(1 -> jsSensor(1), 2 -> jsSensor(2))),
-      1 -> jsField(default = jsSensor(1), neighbors = Map(0 -> jsSensor(0), 3 -> jsSensor(3))),
-      2 -> jsField(default = jsSensor(2), neighbors = Map(0 -> jsSensor(0), 3 -> jsSensor(3))),
-      3 -> jsField(default = jsSensor(3), neighbors = Map(1 -> jsSensor(1), 2 -> jsSensor(2))),
+      0 -> jsField(default = jsSensor(0), neighbors = Map(0 -> jsSensor(0), 1 -> jsSensor(1), 2 -> jsSensor(2))),
+      1 -> jsField(default = jsSensor(1), neighbors = Map(0 -> jsSensor(0), 1 -> jsSensor(1), 3 -> jsSensor(3))),
+      2 -> jsField(default = jsSensor(2), neighbors = Map(0 -> jsSensor(0), 2 -> jsSensor(2), 3 -> jsSensor(3))),
+      3 -> jsField(default = jsSensor(3), neighbors = Map(1 -> jsSensor(1), 2 -> jsSensor(2), 3 -> jsSensor(3))),
     )
 
   private def jsAggregateResult(testName: String, rows: Int, cols: Int): Seq[Future[(Int, ProgramOutput)]] =

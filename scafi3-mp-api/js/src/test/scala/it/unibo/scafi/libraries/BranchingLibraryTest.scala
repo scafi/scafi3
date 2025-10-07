@@ -14,7 +14,7 @@ class BranchingLibraryTest extends JSLibraryTest:
 
         val (env, status) = test(aggregateProgram)
         forAll(status): (id, result) =>
-          val alignedNeighbors = env
+          val alignedNeighbors = Set(id) ++ env // self is always aligned
             .neighborsOf(id)
             .getOrElse(fail(s"Node with id $id not found!"))
             .map(_.id)
