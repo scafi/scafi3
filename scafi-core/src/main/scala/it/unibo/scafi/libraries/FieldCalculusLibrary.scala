@@ -28,7 +28,7 @@ object FieldCalculusLibrary:
   )(value: Value): language.SharedData[Value] = language.neighborValues(value)
 
   /**
-   * `rep` <b>repeatedly</b> applies a function to an initial value for every execution round.
+   * `evolve` <b>repeatedly</b> applies a function to an initial value for every execution round.
    *
    * @param init
    *   the initial value

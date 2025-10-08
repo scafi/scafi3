@@ -1,5 +1,7 @@
 package it.unibo.scafi.runtime
 
+import scala.annotation.tailrec
+
 import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.message.{ Export, ValueTree }
 import it.unibo.scafi.runtime.network.NetworkManager
@@ -12,25 +14,24 @@ final class ScafiEngine[
 ](
     deviceId: ID,
     network: Network,
-    factory: (ID, Network) => Context,
+    factory: (ID, Network, ValueTree) => Context,
 )(program: Context ?=> Result):
   private var lastExport: Export[ID] = Export(ValueTree.empty, Map.empty)
+  private var lastSelfMessages = ValueTree.empty
+
   private def round(): AggregateResult =
-    val ctx: Context = factory(deviceId, network) // Here it is used the network (receive) for generate the context
-    val result: Result = program(using ctx)
+    val ctx = factory(deviceId, network, lastSelfMessages) // Here the network is used (receive) to generate the context
+    val result = program(using ctx)
     val exportResult = ctx.exportFromOutboundMessages
     network.send(exportResult)
-    AggregateResult(result, exportResult)
+    AggregateResult(result, exportResult, ctx.selfMessagesForNextRound)
 
   /**
    * Executes a single round of the program.
    * @return
    *   the result of the single round.
    */
-  def cycle(): Result =
-    val cycleResult = round()
-    lastExport = cycleResult.exportResult
-    cycleResult.result
+  def cycle(): Result = cycleWhile(_ => false)
 
   /**
    * Retrieves the last [[Export]] result produced by the engine. If no round has been performed, it returns an empty
@@ -48,10 +49,12 @@ final class ScafiEngine[
    * @return
    *   the result of the last round.
    */
+  @tailrec
   def cycleWhile(condition: AggregateResult => Boolean): Result =
-    var result: AggregateResult = round()
-    while condition(result) do result = round()
-    result.result
+    val aggregateResult = round()
+    lastExport = aggregateResult.exportResult
+    lastSelfMessages = aggregateResult.selfMessages
+    if condition(aggregateResult) then cycleWhile(condition) else aggregateResult.result
 
   /**
    * The result of the aggregate computation.
@@ -63,5 +66,6 @@ final class ScafiEngine[
   final case class AggregateResult(
       result: Result,
       exportResult: Export[ID],
+      selfMessages: ValueTree,
   )
 end ScafiEngine

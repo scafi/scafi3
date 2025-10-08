@@ -26,7 +26,7 @@ object ReturnSending:
    * @tparam Value
    *   the type of the value
    * @return
-   *   a RetSend instance with the same value for ret and send
+   *   a ReturnSending instance with the same value for returning and sending
    */
   def apply[Value](returnSending: Value): ReturnSending[Value] = ReturnSending(returnSending, returnSending)
 
@@ -46,7 +46,7 @@ object ReturnSending:
      * @tparam SendValue
      *   the type of the value to send
      * @return
-     *   a RetSend instance with the value to return and the value to send
+     *   a ReturnSending instance with the value to return and the value to send
      */
     inline infix def send[SendValue >: Value](send: SendValue): ReturnSending[SendValue] =
       ReturnSending(returning, send)
@@ -66,13 +66,13 @@ object ReturnSending:
   inline def returning[Value](returning: Value): Continuation[Value] = Continuation(returning)
 
   /**
-   * Alias for `RetSend(T)`.
+   * Alias for `ReturnSending(T)`.
    * @param value
    *   the value to return and send
    * @tparam Value
    *   the type of the value
    * @return
-   *   a RetSend instance with the same value for ret and send
+   *   a ReturnSending instance with the same value for returning and sending
    */
   inline def returnSending[Value](value: Value): ReturnSending[Value] = ReturnSending(value)
 end ReturnSending

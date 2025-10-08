@@ -11,6 +11,7 @@ trait OutboundMessage:
   self: AlignmentManager & AggregateContext & AggregateFoundation =>
 
   private val registeredMessages = mutable.Map.empty[Path, MapWithDefault[DeviceId, Any]]
+  private val registeredSelfMessages = mutable.Map.empty[Path, Any]
 
   /**
    * Write a value at the current path with a [[default]] and possible [[overrides]].
@@ -22,10 +23,11 @@ trait OutboundMessage:
    *   the type of the value to be written.
    */
   protected def writeValue[Format, Value: EncodableTo[Format]](default: Value, overrides: Map[DeviceId, Value]): Unit =
-    registeredMessages.update(
-      Path(currentPath*),
-      MapWithDefault(overrides.view.mapValues(encode).toMap, encode(default)),
-    )
+    val path = Path(currentPath*)
+    registeredSelfMessages.update(path, overrides.getOrElse(localId, default))
+    registeredMessages.update(path, MapWithDefault(overrides.view.mapValues(encode).toMap, encode(default)))
+
+  override def selfMessagesForNextRound: ValueTree = ValueTree(registeredSelfMessages.toMap)
 
   override def exportFromOutboundMessages: Export[DeviceId] =
     val messages = mutable.Map.empty[DeviceId, ValueTree].withDefaultValue(ValueTree.empty)
