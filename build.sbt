@@ -23,11 +23,11 @@ ThisBuild / developers := List(
     url("https://github.com/cric96")
   ),
   Developer(
-    "davidedomini",
-    "Danide Domini",
-    "davide.domini@unibo.it",
-    url("https://github.com/davidedomini")
-  )
+    "tassiluca",
+    "Luca Tassinari",
+    "luca.tassinari.2000@gmail.com",
+    url("https://github.com/tassiluca")
+  ),
 )
 ThisBuild / scalacOptions ++= Seq(
   "-Werror",
@@ -89,26 +89,26 @@ lazy val commonJsSettings = Seq(
   coverageEnabled := false,
 )
 
-lazy val `scafi-core` = crossProject(JSPlatform, JVMPlatform, NativePlatform)
+lazy val `scafi3-core` = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Pure)
-  .in(file("scafi-core"))
+  .in(file("scafi3-core"))
   .configs()
   .nativeSettings(commonNativeSettings)
   .jsSettings(commonJsSettings)
   .settings(commonDependencies)
   .settings(
-    name := "scafi-core",
+    name := "scafi3-core",
   )
 
-lazy val `scafi-distributed` = crossProject(JSPlatform, JVMPlatform, NativePlatform)
+lazy val `scafi3-distributed` = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Full)
-  .in(file("scafi-distributed"))
-  .dependsOn(`scafi-core` % "compile->compile;test->test")
+  .in(file("scafi3-distributed"))
+  .dependsOn(`scafi3-core` % "compile->compile;test->test")
   .nativeSettings(commonNativeSettings)
   .jsSettings(commonJsSettings)
   .settings(commonDependencies)
   .settings(
-    name := "scafi-distributed",
+    name := "scafi3-distributed",
     libraryDependencies ++= Seq(
       "io.bullet" %%% "borer-core" % "1.16.1",
       "io.bullet" %%% "borer-derivation" % "1.16.1",
@@ -133,7 +133,7 @@ lazy val `scafi-distributed` = crossProject(JSPlatform, JVMPlatform, NativePlatf
 lazy val root = project
   .in(file("."))
   .enablePlugins(ScalaUnidocPlugin)
-  .aggregate(crossProjects(`scafi-core`, `scafi-distributed`) /* :+ `alchemist-incarnation`*/.map(_.project)*)
+  .aggregate(crossProjects(`scafi3-core`, `scafi3-distributed`) /* :+ `alchemist-incarnation`*/.map(_.project)*)
   .settings(
     name := "scafi3",
     publish / skip := true,
