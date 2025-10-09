@@ -100,6 +100,17 @@ trait FieldBasedSharedData:
         a.neighborValues.view.mapValues(f).toMap,
       )
 
+      override def alignedMap[B, C](other: SharedData[B])(f: (A, B) => C): SharedData[C] =
+        require(
+          a.neighborValues.keySet.diff(other.neighborValues.keySet).isEmpty,
+          s"Cannot alignedMap fields with different aligned devices: ${a.neighborValues.keySet} vs ${other.neighborValues.keySet}",
+        )
+        Field[C](
+          f(a.default, other.default),
+          a.neighborValues.view.map { case (id, value) => id -> f(value, other(id)) }.toMap,
+        )
+    end extension
+
   override given convert[T]: Conversion[T, SharedData[T]] = Field[T](_)
 
   override def device: SharedData[DeviceId] = Field[DeviceId](localId, alignedDevices.map(id => (id, id)).toMap)

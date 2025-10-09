@@ -124,6 +124,7 @@ lazy val `alchemist-incarnation-scafi3` = project
       "it.unibo.alchemist" % "alchemist" % alchemistVersion,
       "it.unibo.alchemist" % "alchemist-api" % alchemistVersion,
       "it.unibo.alchemist" % "alchemist-euclidean-geometry" % alchemistVersion,
+      "org.scalatest" %%% "scalatest" % "3.2.19" % Test,
     ),
   )
   .dependsOn(`scafi3-core`.jvm)

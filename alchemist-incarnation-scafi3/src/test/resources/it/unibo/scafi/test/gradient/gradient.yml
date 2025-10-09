@@ -1,0 +1,25 @@
+incarnation: scafi3
+
+network-model:
+  type: ConnectWithinDistance
+  parameters: [ 5 ]
+
+_pool: &program
+  - time-distribution: 1
+    program: it.unibo.scafi.test.Gradient.gradient2
+
+deployments:
+  - type: Point
+    parameters: [ -1, -1 ]
+    programs:
+      - *program
+    contents:
+      - molecule: source
+        concentration: true
+  - type: Grid
+    parameters: [ 0, 0, 3, 3, 1, 1 ]
+    programs:
+      - *program
+    contents:
+      - molecule: source
+        concentration: false

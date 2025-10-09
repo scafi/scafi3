@@ -1,9 +1,8 @@
 package it.unibo.alchemist.scafi.device
 
-import it.unibo.alchemist.model.molecules.SimpleMolecule
-import it.unibo.alchemist.model.{Environment, Node, NodeProperty, Time, Position as AlchemistPosition}
-import it.unibo.scafi.alchemist.device.sensors.AlchemistEnvironmentVariables
-import it.unibo.scafi.message.{Export, Import, ValueTree}
+import it.unibo.alchemist.model.{ Environment, Node, NodeProperty, Time, Position as AlchemistPosition }
+import it.unibo.alchemist.scafi.device.Scafi3Device.given
+import it.unibo.scafi.message.{ Export, Import, ValueTree }
 import it.unibo.scafi.runtime.network.NetworkManager
 import org.apache.commons.math3.random.RandomGenerator
 
@@ -15,8 +14,7 @@ class Scafi3Device[Position <: AlchemistPosition[Position]](
     val node: Node[Any],
     val retention: Time | Null,
 ) extends NetworkManager,
-      NodeProperty[Any],
-      AlchemistEnvironmentVariables:
+      NodeProperty[Any]:
 
   override type DeviceId = Int
 
@@ -37,23 +35,26 @@ class Scafi3Device[Position <: AlchemistPosition[Position]](
         scafiDevice.deliverableReceived(localId, messageForNeighbor)
 
   override def receive: Import[Int] =
-    inbox = inbox.filterNot { case (_, timedMessage) => timedMessage.receivedAt.plus(retention) < time }
-    val messages = inbox.map { case (id, timedMessage) => id -> timedMessage.payload }
-    Import(messages)
+    retention match
+      case _: Time =>
+        inbox = inbox.filterNot { case (_, timedMessage) => timedMessage.receivedAt.plus(retention) < time }
+        val messages = inbox.map { case (id, timedMessage) => id -> timedMessage.payload }
+        Import(messages)
+
+      case null =>
+        val messages = inbox.map { case (id, timedMessage) => id -> timedMessage.payload }
+        inbox = Map.empty
+        Import(messages)
 
   override def getNode: Node[Any] = node
 
   override def cloneOnNewNode(node: Node[Any]): NodeProperty[Any] =
     Scafi3Device(random, environment, node, retention)
 
-  override def get[T](name: String): T = node.getConcentration(SimpleMolecule(name)).asInstanceOf[T]
-
-  override def isDefined(name: String): Boolean = node.contains(SimpleMolecule(name))
-
-  override def set[T](name: String, value: T): T =
-    node.setConcentration(SimpleMolecule(name), value.asInstanceOf[Any])
-    value
-
   override def deliverableReceived(from: Int, message: ValueTree): Unit =
     inbox += from -> TimedMessage(time, message)
 end Scafi3Device
+
+object Scafi3Device:
+  given CanEqual[Time, Time] = CanEqual.derived
+  given CanEqual[Null, Time | Null] = CanEqual.derived
