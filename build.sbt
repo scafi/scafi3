@@ -126,7 +126,7 @@ lazy val `alchemist-incarnation-scafi3` = project
       "it.unibo.alchemist" % "alchemist-euclidean-geometry" % alchemistVersion,
     ),
   )
-  .dependsOn(`scafi-core`.jvm)
+  .dependsOn(`scafi3-core`.jvm)
 
 lazy val root = project
   .in(file("."))
