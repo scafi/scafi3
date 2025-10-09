@@ -104,7 +104,7 @@ class Scafi3Incarnation[Position <: AlchemistPosition[Position]] extends Incarna
     val retention = parameter match
       case params: Number => DoubleTime(params.doubleValue())
       case params: String => DoubleTime(params.toDouble)
-      case params => throw IllegalArgumentException(s"Invalid retention parameter for Scafi3: $params")
+      case _ => null
     node.addProperty(
       Scafi3Device[Position](randomGenerator, environment, node, retention),
     )
