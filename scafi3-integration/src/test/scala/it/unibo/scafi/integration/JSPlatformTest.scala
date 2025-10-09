@@ -36,7 +36,7 @@ trait JSPlatformTest extends PlatformTest:
         throw new RuntimeException(s"Node process failed: $err")
 
   private def scafiJsBundlePath = Paths
-    .get(System.getProperty("user.dir"), "scafi-mp-api", "js", "target", "fullLinkJS", "main.mjs")
+    .get(System.getProperty("user.dir"), "scafi3-mp-api", "js", "target", "fullLinkJS", "main.mjs")
     .toAbsolutePath
     .toUri
     .toString
