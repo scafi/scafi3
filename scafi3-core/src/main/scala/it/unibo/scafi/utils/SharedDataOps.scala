@@ -22,3 +22,7 @@ trait SharedDataOps[F[A] <: SafeIterable[A]]:
      *   the value of the "self" node
      */
     def onlySelf: A
+
+    def mapValues[B](f: A => B): F[B]
+
+    def alignedMap[B, C](other: F[B])(f: (A, B) => C): F[C]

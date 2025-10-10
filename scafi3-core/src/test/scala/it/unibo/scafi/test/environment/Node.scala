@@ -68,4 +68,6 @@ object Node:
         .map(neighbor => neighbor.id -> neighbor.lastExportResult(node.id))
         .toMap
       Import(neighborsValueTrees)
+
+    override def deliverableReceived(from: Int, message: ValueTree): Unit = ()
 end Node

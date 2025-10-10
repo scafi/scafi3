@@ -1,6 +1,6 @@
 package it.unibo.scafi.runtime.network
 
-import it.unibo.scafi.message.{ Export, Import }
+import it.unibo.scafi.message.{ Export, Import, ValueTree }
 
 /**
  * NetworkManager is a trait that defines the interface for managing network communication. It provides methods to send
@@ -25,3 +25,6 @@ trait NetworkManager:
    *   the [[Import]] received from the network.
    */
   def receive: Import[DeviceId]
+
+  def deliverableReceived(from: DeviceId, message: ValueTree): Unit
+end NetworkManager
