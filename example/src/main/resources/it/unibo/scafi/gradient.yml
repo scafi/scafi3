@@ -1,0 +1,35 @@
+incarnation: scafi3
+
+network-model:
+  type: ConnectWithinDistance
+  parameters: [ 5 ]
+
+_pool: &program
+  - time-distribution: 1
+    program: it.unibo.scafi.Gradient.gradient
+
+monitors:
+  - type: SwingGUI
+    parameters:
+      graphics: effects/Gradient.json
+
+launcher:
+  parameters:
+    batch: []
+    autoStart: false
+
+deployments:
+  - type: Point
+    parameters: [ -1, -1 ]
+    programs:
+      - *program
+    contents:
+      - molecule: source
+        concentration: true
+  - type: Grid
+    parameters: [ 0, 0, 3, 3, 1, 1 ]
+    programs:
+      - *program
+    contents:
+      - molecule: source
+        concentration: false

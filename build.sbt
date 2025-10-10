@@ -29,7 +29,7 @@ ThisBuild / developers := List(
     url("https://github.com/tassiluca")
   ),
 )
-ThisBuild / scalacOptions ++= Seq(
+val commonScalacOptions = Seq(
   "-Werror",
   "-Wunused:all",
   "-Wvalue-discard",
@@ -60,7 +60,7 @@ ThisBuild / scalacOptions ++= Seq(
 ThisBuild / semanticdbEnabled := true
 ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
 
-lazy val commonDependencies =
+lazy val commonSettings = Seq(
   libraryDependencies ++= Seq(
     "org.typelevel" %%% "cats-core" % "2.13.0",
     "org.scalactic" %%% "scalactic" % "3.2.19",
@@ -68,7 +68,9 @@ lazy val commonDependencies =
     "com.outr" %%% "scribe" % "3.17.0",
     "org.scalatest" %%% "scalatest" % "3.2.19" % Test,
     "org.scalatestplus" %%% "scalacheck-1-18" % "3.2.19.0" % Test,
-  )
+  ),
+  scalacOptions ++= commonScalacOptions,
+)
 
 lazy val commonNativeSettings = Seq(
   nativeConfig ~= {
@@ -95,7 +97,7 @@ lazy val `scafi3-core` = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .configs()
   .nativeSettings(commonNativeSettings)
   .jsSettings(commonJsSettings)
-  .settings(commonDependencies)
+  .settings(commonSettings)
   .settings(
     name := "scafi3-core",
   )
@@ -106,7 +108,7 @@ lazy val `scafi3-distributed` = crossProject(JSPlatform, JVMPlatform, NativePlat
   .dependsOn(`scafi3-core` % "compile->compile;test->test")
   .nativeSettings(commonNativeSettings)
   .jsSettings(commonJsSettings)
-  .settings(commonDependencies)
+  .settings(commonSettings)
   .settings(
     name := "scafi3-distributed",
     libraryDependencies ++= Seq(
@@ -117,6 +119,7 @@ lazy val `scafi3-distributed` = crossProject(JSPlatform, JVMPlatform, NativePlat
 
 val alchemistVersion = "42.3.7"
 lazy val `alchemist-incarnation-scafi3` = project
+  .settings(commonSettings)
   .settings(
     fork := true,
     name := "alchemist-incarnation-scafi3",
@@ -128,6 +131,20 @@ lazy val `alchemist-incarnation-scafi3` = project
     ),
   )
   .dependsOn(`scafi3-core`.jvm)
+
+lazy val example = project
+  .settings(
+    name := "scafi3-example",
+    publish / skip := true,
+    publishArtifact := false,
+    libraryDependencies ++= Seq(
+      "it.unibo.alchemist" % "alchemist-swingui" % alchemistVersion,
+    ),
+    scalacOptions ++= Seq(
+      "-language:experimental.saferExceptions"
+    ),
+  )
+  .dependsOn(`scafi3-core`.jvm, `alchemist-incarnation-scafi3`)
 
 lazy val root = project
   .in(file("."))
