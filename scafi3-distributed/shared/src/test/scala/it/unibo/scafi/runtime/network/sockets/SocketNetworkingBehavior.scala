@@ -3,11 +3,14 @@ package it.unibo.scafi.runtime.network.sockets
 import java.util.concurrent.CopyOnWriteArrayList
 
 import scala.concurrent.Future
+import scala.concurrent.duration.DurationInt
 
 import it.unibo.scafi.message.Codables.forStringsInBinaryFormat
 import it.unibo.scafi.runtime.network.sockets.InetTypes.{ autoRefine, Endpoint, FreePort, Localhost, Port }
 import it.unibo.scafi.test.AsyncSpec
+import it.unibo.scafi.utils.Async
 
+import cats.implicits.catsSyntaxFlatMapOps
 import org.scalatest.time.{ Millis, Seconds, Span }
 
 trait SocketNetworkingBehavior extends AsyncSpec:
@@ -53,10 +56,19 @@ trait SocketNetworkingBehavior extends AsyncSpec:
       usingServer(msg => receivedMessages.add(msg): Unit): client =>
         client send messages verifying eventually(receivedMessages should contain theSameElementsInOrderAs messages)
 
+    it should "be able to maintain connection and integrity across partial data frames" in:
+      val receivedMessages = CopyOnWriteArrayList[net.MessageIn]()
+      val chunk1 = Seq("Hello", "World", "Scafi")
+      val chunk2 = Seq("Networking", "Is", "Fun")
+      usingServer(msg => receivedMessages.add(msg): Unit): client =>
+        (client send chunk1) >> Async.operations.sleep(1.second) >> (client send chunk2) verifying
+          eventually(receivedMessages should contain theSameElementsInOrderAs (chunk1 ++ chunk2))
+
     it should "close connections with clients attempting to flood the server" in:
       val tooLargeMessage = "A" * 65_536
       usingServer(nop): client =>
         client send Seq(tooLargeMessage) verifying eventually(client.isOpen shouldBe false)
+  end both
 
   private def usingServer[Result](using
       net: ConnectionOrientedNetworking,

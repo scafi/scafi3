@@ -1,11 +1,10 @@
 package it.unibo.scafi.runtime.network.sockets
 
-import java.nio.ByteBuffer
+import java.nio.{ ByteBuffer, ByteOrder }
 
-import scala.LazyList.continually
+import scala.annotation.tailrec
 import scala.concurrent.{ ExecutionContext, Future }
-import scala.util.{ Try, Using }
-import scala.util.Using.Releasable
+import scala.util.{ Failure, Success, Try }
 
 import it.unibo.scafi.message.{ BinaryDecodable, BinaryEncodable }
 import it.unibo.scafi.message.Codable.{ decode, encode }
@@ -29,42 +28,51 @@ trait ConnectionOrientedTemplate(using ec: ExecutionContext, conf: ConnectionCon
     override def send(msg: MessageOut): Future[Unit] =
       for
         serializedMsg <- Future(encode(msg))
-        lengthBytes <- Future(ByteBuffer.allocate(Integer.BYTES).putInt(serializedMsg.length).array())
+        lengthBytes <- Future(serializedMsg.length.toBytes)
         data = lengthBytes ++ serializedMsg
         _ <- write(data)
       yield ()
 
     /**
      * Writes the given buffer over the underlying connection.
-     * @param buffer
+     * @param data
      *   the data to be sent.
      * @return
      *   a `Future` that completes when the data has been sent successfully, or fails with the reason of the failure.
      */
-    def write(buffer: Array[Byte]): Future[Unit]
+    def write(data: Array[Byte]): Future[Unit]
 
   /**
    * A connection listener template with pre-cooked message serving logic.
    * @tparam Client
-   *   the [[Releasable]] client abstraction type.
+   *   the client abstraction type.
    */
-  trait ListenerTemplate[Client: Releasable](onReceive: MessageIn => Unit) extends Listener:
-    protected def serve(using client: Client): Try[Unit] = Using(client): _ =>
-      continually(validate(readMessageLength))
-        .filter(_ > 0)
-        .map(readMessage andThen decode)
-        .foreach(onReceive)
+  trait ListenerTemplate[Client](onReceive: MessageIn => Unit) extends Listener:
+    @tailrec
+    final protected def serve(using client: Client): Try[Unit] = readMessageLength match
+      case Success(None) => Success(())
+      case Success(Some(0)) => serve
+      case Success(Some(len)) if len.isValid =>
+        val result = for
+          rawMessage <- readMessage(len)
+          message <- Try(decode(rawMessage))
+          _ <- Try(onReceive(message))
+        yield ()
+        if result.isSuccess then serve else result
+      case Success(_) => Failure(IllegalArgumentException("Message length validation failed"))
+      case Failure(e) => Failure(e)
 
-    private def validate(msgLen: Int): Int = msgLen ensuring (_ < conf.maxMessageSize)
+    extension (msgLen: Int) private def isValid: Boolean = msgLen < conf.maxMessageSize
 
     /**
-     * Reads the length of the next message from the client socket.
+     * Reads the length of the next message from the client socket, if available.
      * @param client
      *   the client socket to read from.
      * @return
-     *   the length of the message
+     *   a `Success` containing a `Some[Int]` with the length of the next message, or `None` if the end of the stream is
+     *   reached. A `Failure` is returned if an error occurs during reading.
      */
-    def readMessageLength(using client: Client): Int
+    def readMessageLength(using client: Client): Try[Option[Int]]
 
     /**
      * Reads a message of the specified length from the client socket.
@@ -73,9 +81,9 @@ trait ConnectionOrientedTemplate(using ec: ExecutionContext, conf: ConnectionCon
      * @param client
      *   the client socket to read from.
      * @return
-     *   an `Array[Byte]` containing the message data.
+     *   a `Success` containing the message data as an array of bytes, or a `Failure` if an error occurs during reading.
      */
-    def readMessage(length: Int)(using client: Client): Array[Byte]
+    def readMessage(length: Int)(using client: Client): Try[Array[Byte]]
 
     /**
      * @return
@@ -85,4 +93,9 @@ trait ConnectionOrientedTemplate(using ec: ExecutionContext, conf: ConnectionCon
      */
     def accept: Future[Unit]
   end ListenerTemplate
+
+  extension (n: Int)
+    /** @return the big-endian byte representation of this integer. */
+    protected def toBytes: Array[Byte] =
+      ByteBuffer.allocate(Integer.BYTES).order(ByteOrder.BIG_ENDIAN).putInt(n).array()
 end ConnectionOrientedTemplate
