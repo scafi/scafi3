@@ -54,7 +54,7 @@ trait ConnectionOrientedNetworkManager[ID](deviceId: ID, port: Port)(using Execu
   override def receive: Import[DeviceId] = Import(inValues.asScala.toMap)
 
   private def client(connections: Map[Endpoint, Connection]): Future[Unit] =
-    for
+    (for
       msgs <- outChannel.take
       nvalues = msgs.flatMap((nid, valueTree) => nid.endpoint.map(_ -> valueTree))
       newConnections <- Future.traverse(nvalues): (endpoint, valueTree) =>
@@ -65,7 +65,7 @@ trait ConnectionOrientedNetworkManager[ID](deviceId: ID, port: Port)(using Execu
           .flatMap(conn => conn.send((deviceId, valueTree)).map(_ => Right(endpoint -> conn)))
           .recover { case e => Left(e) }
       _ <- client(newConnections.collect { case Right(nc) => nc }.toMap)
-    yield ()
+    yield ()).andThen(_ => connections.values.foreach(_.close()))
 
   private def establishConnection(endpoint: Endpoint): Future[Connection] = out(endpoint)
 

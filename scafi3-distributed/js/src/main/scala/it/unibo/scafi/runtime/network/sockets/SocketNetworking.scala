@@ -6,6 +6,7 @@ import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.{ ExecutionContext, Future, Promise }
 import scala.scalajs.js
 import scala.scalajs.js.typedarray.Uint8Array
+import scala.util.{ Success, Try }
 import scala.util.chaining.scalaUtilChainingOps
 
 trait SocketNetworking(using ec: ExecutionContext, conf: ConnectionConfiguration) extends ConnectionOrientedTemplate:
@@ -50,18 +51,22 @@ trait SocketNetworking(using ec: ExecutionContext, conf: ConnectionConfiguration
         .onData: chunk =>
           val buffer = clientChannels.getOrElseUpdate(socket, ArrayBuffer[Byte]())
           for i <- 0 until chunk.length do buffer += chunk(i).toByte
-          serve(using socket): Unit
+          serve(using socket).fold(_ => socket.destroy(), _ => ())
         .onceClose(_ => clientChannels.remove(socket): Unit): Unit
 
-    override def readMessageLength(using client: Socket): Int =
+    override def readMessageLength(using client: Socket): Try[Option[Int]] =
       val channel = clientChannels(client)
-      ByteBuffer.wrap(channel.slice(0, Integer.BYTES).toArray).getInt ensuring (channel.length >= Integer.BYTES + _)
+      if channel.length >= Integer.BYTES then
+        channel.read(Integer.BYTES).map(bytes => Some(ByteBuffer.wrap(bytes).getInt))
+      else Success(None)
 
-    override def readMessage(length: Int)(using client: Socket): Array[Byte] =
-      val buffer = clientChannels(client)
-      val msgBytes = buffer.slice(Integer.BYTES, Integer.BYTES + length).toArray
-      buffer.remove(0, Integer.BYTES + length)
-      msgBytes
+    override def readMessage(length: Int)(using client: Socket): Try[Array[Byte]] = clientChannels(client).read(length)
+
+    extension (buffer: ArrayBuffer[Byte])
+      private def read(length: Int): Try[Array[Byte]] = Try:
+        val bytes = buffer.slice(from = 0, until = length).toArray
+        buffer.remove(index = 0, count = length)
+        bytes
 
     override def accept: Future[Unit] = acceptPromise.future
 
@@ -69,8 +74,8 @@ trait SocketNetworking(using ec: ExecutionContext, conf: ConnectionConfiguration
 
     override def close(): Unit =
       open = false
-      serverSocket.close()
-      acceptPromise.trySuccess(()): Unit
+      clientChannels.keys.foreach(s => if !s.destroyed then s.destroy())
+      serverSocket.close(() => acceptPromise.trySuccess(()): Unit)
 
     override def isOpen: Boolean = open
   end ServerSocketListener

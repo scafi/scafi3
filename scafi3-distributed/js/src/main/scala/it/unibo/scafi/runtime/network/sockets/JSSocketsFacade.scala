@@ -3,7 +3,6 @@ package it.unibo.scafi.runtime.network.sockets
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
 import scala.scalajs.js.typedarray.Uint8Array
-import scala.util.Using.Releasable
 
 /**
  * Node.js emitter of events that can be listened to.
@@ -103,6 +102,13 @@ trait Server extends EventEmitter:
 
   /** Stops the server from accepting new connections and keeps existing connections. */
   def close(): Unit = js.native
+
+  /**
+   * Stops the server from accepting new connections and keeps existing connections.
+   * @param callback
+   *   the one-time listener called when the server is fully closed.
+   */
+  def close(callback: js.Function0[Unit]): Unit = js.native
 end Server
 
 /**
@@ -149,11 +155,6 @@ trait Socket extends EventEmitter:
    */
   def destroyed: Boolean = js.native
 end Socket
-
-object Socket:
-
-  given Releasable[Socket] with
-    override def release(resource: Socket): Unit = resource.destroy()
 
 object EventEmitter:
 
