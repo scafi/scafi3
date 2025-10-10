@@ -2,6 +2,7 @@ package it.unibo.scafi.runtime.network.sockets
 
 import java.nio.{ ByteBuffer, ByteOrder }
 
+import scala.annotation.tailrec
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.{ Failure, Success, Try }
 
@@ -47,17 +48,19 @@ trait ConnectionOrientedTemplate(using ec: ExecutionContext, conf: ConnectionCon
    *   the client abstraction type.
    */
   trait ListenerTemplate[Client](onReceive: MessageIn => Unit) extends Listener:
-    protected def serve(using client: Client): Try[Unit] = readMessageLength flatMap:
-      case None => Success(())
-      case Some(0) => serve
-      case Some(len) if len.isValid =>
-        for
+    @tailrec
+    final protected def serve(using client: Client): Try[Unit] = readMessageLength match
+      case Success(None) => Success(())
+      case Success(Some(0)) => serve
+      case Success(Some(len)) if len.isValid =>
+        val result = for
           rawMessage <- readMessage(len)
           message <- Try(decode(rawMessage))
           _ <- Try(onReceive(message))
-          _ <- serve
         yield ()
-      case _ => Failure(IllegalArgumentException("Message length validation failed"))
+        if result.isSuccess then serve else result
+      case Success(_) => Failure(IllegalArgumentException("Message length validation failed"))
+      case Failure(e) => Failure(e)
 
     extension (msgLen: Int) private def isValid: Boolean = msgLen < conf.maxMessageSize
 
