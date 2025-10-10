@@ -39,7 +39,6 @@ class Scafi3Incarnation[Position <: AlchemistPosition[Position]] extends Incarna
   @SuppressWarnings(Array("scalafix:DisableSyntax.asInstanceOf", "scalafix:DisableSyntax.null"))
   override def createConcentration(): Any = null.asInstanceOf[Any]
 
-  @SuppressWarnings(Array("scalafix:DisableSyntax.isInstanceOf"))
   override def createAction(
       randomGenerator: RandomGenerator,
       environment: Environment[Any, Position],
@@ -105,16 +104,14 @@ class Scafi3Incarnation[Position <: AlchemistPosition[Position]] extends Incarna
       case params: Number => DoubleTime(params.doubleValue())
       case params: String => DoubleTime(params.toDouble)
       case _ => null
-    node.addProperty(
-      Scafi3Device[Position](randomGenerator, environment, node, retention),
-    )
+    node.addProperty(Scafi3Device[Position](randomGenerator, environment, node, retention))
     node
 
   private object ScalaScriptEngine:
     private val engine = ScriptEngineManager().getEngineByName("scala").nn
 
     val concentrationCache: LoadingCache[String, Any] =
-      Caffeine.newBuilder().nn.build[String, Any] { s => engine.eval(s) }.nn
+      Caffeine.newBuilder().nn.build[String, Any](engine.eval).nn
 
     @SuppressWarnings(Array("scalafix:DisableSyntax.asInstanceOf"))
     val propertyCache: LoadingCache[String, Any => Double] = Caffeine
