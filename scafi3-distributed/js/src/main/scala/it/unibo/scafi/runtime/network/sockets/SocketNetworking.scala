@@ -5,25 +5,14 @@ import java.nio.ByteBuffer
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.{ ExecutionContext, Future, Promise }
 import scala.scalajs.js
-import scala.scalajs.js.typedarray.Uint8Array
 import scala.util.{ Success, Try }
 import scala.util.chaining.scalaUtilChainingOps
 
+import it.unibo.scafi.utils.Uint8ArrayOps.{ toByteArray, toUint8Array }
+
 trait SocketNetworking(using ec: ExecutionContext, conf: ConnectionConfiguration) extends ConnectionOrientedTemplate:
 
-  override def out(endpoint: Endpoint): Future[Connection] =
-    for
-      socket <- createSocket(endpoint)
-      conn = new ConnectionTemplate:
-        override def write(buffer: Array[Byte]): Future[Unit] = fromPromise: p =>
-          val data = new Uint8Array(buffer.length)
-          for i <- buffer.indices do data(i) = buffer(i)
-          socket.write(data):
-            case e: js.Error => p.tryFailure(Exception(e.message)): Unit
-            case _ => p.trySuccess(()): Unit
-        override def isOpen: Boolean = !socket.destroyed
-        override def close(): Unit = socket.destroy()
-    yield conn
+  override def out(endpoint: Endpoint): Future[Connection] = createSocket(endpoint).map(ConnectionImpl.apply)
 
   private def createSocket(endpoint: Endpoint): Future[Socket] = fromPromise: p =>
     val socket = Net.connect(endpoint.port, endpoint.address)
@@ -31,6 +20,16 @@ trait SocketNetworking(using ec: ExecutionContext, conf: ConnectionConfiguration
       .onceConnect(() => p.trySuccess(socket): Unit)
       .onceClose(_ => p.tryFailure(Exception("Socket server closed connection")).pipe(_ => socket.destroy()))
       .onError(err => p.tryFailure(Exception(err.message)).pipe(_ => socket.destroy())): Unit
+
+  private class ConnectionImpl(socket: Socket) extends ConnectionTemplate:
+    override def write(buffer: Array[Byte]): Future[Unit] = fromPromise: p =>
+      socket.write(buffer.toUint8Array):
+        case e: js.Error => p.tryFailure(Exception(e.message)): Unit
+        case _ => p.trySuccess(()): Unit
+
+    override def isOpen: Boolean = !socket.destroyed
+
+    override def close(): Unit = socket.destroy()
 
   override def in(port: Port)(onReceive: MessageIn => Unit): Future[ListenerRef] =
     val listener = ServerSocketListener(onReceive)
@@ -50,7 +49,7 @@ trait SocketNetworking(using ec: ExecutionContext, conf: ConnectionConfiguration
         .setTimeout(conf.inactivityTimeout.toIntMillis)(() => socket.destroy())
         .onData: chunk =>
           val buffer = clientChannels.getOrElseUpdate(socket, ArrayBuffer[Byte]())
-          for i <- 0 until chunk.length do buffer += chunk(i).toByte
+          buffer.addAll(chunk.toByteArray)
           serve(using socket).fold(_ => socket.destroy(), _ => ())
         .onceClose(_ => clientChannels.remove(socket): Unit): Unit
 
