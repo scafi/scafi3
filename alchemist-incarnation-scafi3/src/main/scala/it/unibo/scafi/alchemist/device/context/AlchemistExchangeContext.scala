@@ -7,9 +7,9 @@ import it.unibo.scafi.context.xc.ExchangeAggregateContext
 import it.unibo.scafi.message.Codables.forInMemoryCommunications
 import it.unibo.scafi.message.{Import, ValueTree}
 
-class AlchemistExchangeContext[P <: Position[P]](
-    node: Node[Any],
-    environment: Environment[Any, P],
+class AlchemistExchangeContext[T, P <: Position[P]](
+    node: Node[T],
+    environment: Environment[T, P],
     inbox: Import[Int],
     state: ValueTree,
 ) extends ExchangeAggregateContext[Int](node.getId, inbox, state),
@@ -21,12 +21,12 @@ class AlchemistExchangeContext[P <: Position[P]](
     neighborValues(devicePosition)(using forInMemoryCommunications).mapValues: (position: P) =>
       devicePosition.distanceTo(environment.makePosition(position.getCoordinates))
 
-  override def get[T](name: String): T = node.getConcentration(SimpleMolecule(name)).asInstanceOf[T]
+  override def get[Value](name: String): Value = node.getConcentration(SimpleMolecule(name)).asInstanceOf[Value]
 
   override def isDefined(name: String): Boolean = node.contains(SimpleMolecule(name))
 
-  override def set[T](name: String, value: T): T =
-    node.setConcentration(SimpleMolecule(name), value.asInstanceOf[Any])
+  override def set[Value](name: String, value: Value): Value =
+    node.setConcentration(SimpleMolecule(name), value.asInstanceOf[T])
     value
 
   override def deviceId: Int = node.getId

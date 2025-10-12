@@ -15,11 +15,11 @@ import it.unibo.scafi.runtime.ScafiEngine
  * @param programName the name of the program to run.
  * @tparam Position the position type of the node.
  */
-class RunScafi3Program[Position <: AlchemistPosition[Position]](
-    node: Node[Any],
-    environment: Environment[Any, Position],
+class RunScafi3Program[T, Position <: AlchemistPosition[Position]](
+    node: Node[T],
+    environment: Environment[T, Position],
     val programName: String,
-) extends AbstractAction[Any](node):
+) extends AbstractAction[T](node):
   private val programIdentifier = SimpleMolecule(programName)
   private val programPath: Array[String] = programName.split('.')
   private val classPath: String = programPath.take(programPath.length - 1).mkString("", ".", "$")
@@ -27,24 +27,24 @@ class RunScafi3Program[Position <: AlchemistPosition[Position]](
   private val module = clazz.getField("MODULE$").nn.get(clazz)
   private val method = clazz.getMethods.nn.toList.find(_.nn.getName.nn == programPath.last).get.nn
 
-  val localDevice: Scafi3Device[Position] = node.asProperty(classOf[Scafi3Device[Position]])
+  val localDevice: Scafi3Device[T, Position] = node.asProperty(classOf[Scafi3Device[T, Position]])
 
-  private val scafiProgram: ScafiEngine[Int, ? <: AggregateContext, Scafi3Device[Position], Any] = ScafiEngine(
+  private val scafiProgram: ScafiEngine[Int, ? <: AggregateContext, Scafi3Device[T, Position], T] = ScafiEngine(
     node.getId,
     localDevice,
-    (_, net, state) => AlchemistExchangeContext[Position](node, environment, net.receive, state)
+    (_, net, state) => AlchemistExchangeContext[T, Position](node, environment, net.receive, state)
   )(runProgram)
 
   declareDependencyTo(programIdentifier)
 
   @SuppressWarnings(Array("DisableSyntax.asInstanceOf"))
-  private def runProgram(using context: AggregateContext): Any =
-    method.invoke(module, context)
+  private def runProgram(using context: AggregateContext): T =
+    method.invoke(module, context).asInstanceOf[T]
 
   override def getContext: Context = Context.NEIGHBORHOOD
 
-  override def cloneAction(node: Node[Any], reaction: Reaction[Any]): Action[Any] =
-    RunScafi3Program[Position](node, environment, programName)
+  override def cloneAction(node: Node[T], reaction: Reaction[T]): Action[T] =
+    RunScafi3Program[T, Position](node, environment, programName)
 
   override def execute(): Unit =
     val result = scafiProgram.cycle()

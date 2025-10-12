@@ -8,13 +8,13 @@ import org.apache.commons.math3.random.RandomGenerator
 
 import scala.math.Ordering.Implicits.infixOrderingOps
 
-class Scafi3Device[Position <: AlchemistPosition[Position]](
+class Scafi3Device[T, Position <: AlchemistPosition[Position]](
     val random: RandomGenerator,
-    val environment: Environment[Any, Position],
-    val node: Node[Any],
+    val environment: Environment[T, Position],
+    val node: Node[T],
     val retention: Time | Null,
 ) extends NetworkManager,
-      NodeProperty[Any]:
+      NodeProperty[T]:
 
   override type DeviceId = Int
 
@@ -30,7 +30,7 @@ class Scafi3Device[Position <: AlchemistPosition[Position]](
     environment
       .getNeighborhood(node)
       .forEach: neighbor =>
-        val scafiDevice = neighbor.asProperty(classOf[Scafi3Device[Position]])
+        val scafiDevice = neighbor.asProperty(classOf[Scafi3Device[T, Position]])
         val messageForNeighbor = message(neighbor.getId)
         scafiDevice.deliverableReceived(localId, messageForNeighbor)
 
@@ -46,9 +46,9 @@ class Scafi3Device[Position <: AlchemistPosition[Position]](
         inbox = Map.empty
         Import(messages)
 
-  override def getNode: Node[Any] = node
+  override def getNode: Node[T] = node
 
-  override def cloneOnNewNode(node: Node[Any]): NodeProperty[Any] =
+  override def cloneOnNewNode(node: Node[T]): NodeProperty[T] =
     Scafi3Device(random, environment, node, retention)
 
   override def deliverableReceived(from: Int, message: ValueTree): Unit =
