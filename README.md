@@ -102,8 +102,7 @@ The foundation of ScaFi is the **field calculus**, which provides three core pri
 ```scala
 import it.unibo.scafi.language.xc.ExchangeLanguage
 import it.unibo.scafi.language.xc.calculus.ExchangeCalculus
-import it.unibo.scafi.libraries.FieldCalculusLibrary.*
-import it.unibo.scafi.libraries.CommonLibrary.localId
+import it.unibo.scafi.libraries.All.*
 
 // Define your aggregate program using context functions
 def myProgram(using context: ExchangeCalculus & ExchangeLanguage): Int =
@@ -126,13 +125,11 @@ def myProgram(using context: ExchangeCalculus & ExchangeLanguage): Int =
 A classic aggregate programming example—computing distance from a source:
 
 ```scala
-import it.unibo.scafi.libraries.GradientLibrary.*
-import it.unibo.scafi.libraries.CommonLibrary.*
-import it.unibo.scafi.message.Codables.given
+import it.unibo.scafi.libraries.All.*
 
-def gradient(using context: ExchangeCalculus & ExchangeLanguage): Double =
+def gradient(using context: ExchangeCalculus & ExchangeLanguage { type DeviceId = Int }): Double =
   // Compute distance from source using neighbor distance + edge cost
-  distanceTo[Array[Byte], Double](
+  distanceTo[Double, Double](
     source = localId == 0, // Device 0 is the source
     distances = neighborValues(1.0) // Each hop costs 1.0
   )
@@ -143,9 +140,9 @@ def gradient(using context: ExchangeCalculus & ExchangeLanguage): Double =
 Control information flow with domain branching:
 
 ```scala
-import it.unibo.scafi.libraries.BranchingLibrary.*
+import it.unibo.scafi.libraries.All.*
 
-def conditionalBehavior(using context: ExchangeCalculus & ExchangeLanguage): String =
+def conditionalBehavior(using context: ExchangeCalculus & ExchangeLanguage { type DeviceId = Int }): String =
   val distanceFromSource = gradient
   
   // Split the network into two independent computational domains
@@ -161,18 +158,17 @@ def conditionalBehavior(using context: ExchangeCalculus & ExchangeLanguage): Str
 Under the hood, ScaFi implements the **Exchange Calculus**, a more expressive variant of field calculus:
 
 ```scala
-import it.unibo.scafi.libraries.ExchangeCalculusLibrary.*
-import it.unibo.scafi.language.xc.syntax.ReturnSending.returning
+import it.unibo.scafi.libraries.All.*
 
 def exchangeExample(using context: ExchangeCalculus & ExchangeLanguage): Int =
   // exchange: send and receive different values
   exchange(0) { receivedValues =>
     val maxFromNeighbors = receivedValues.withoutSelf.max
-    val myValue = localId + maxFromNeighbors
+    val myValue = 1 + maxFromNeighbors
     
     // Return one value but send another to neighbors
     returning(myValue) send (myValue + 1)
-  }
+  }(localId)
 ```
 
 ### Complete Example: Self-Healing Gradient
@@ -181,9 +177,7 @@ Here's a complete example showing ScaFi's resilience:
 
 ```scala
 import it.unibo.scafi.language.xc.{ExchangeLanguage, ExchangeCalculus}
-import it.unibo.scafi.libraries.GradientLibrary.*
-import it.unibo.scafi.libraries.CommonLibrary.*
-import it.unibo.scafi.message.Codables.given
+import it.unibo.scafi.libraries.All.*
 
 // Define an aggregate program that computes a self-healing gradient
 def selfHealingGradient(
@@ -193,7 +187,7 @@ def selfHealingGradient(
   
   // Automatically computes and maintains shortest distance from source
   // Adapts to topology changes and device failures
-  distanceTo[Array[Byte], Double](isSource, neighborValues(hopDistance))
+  distanceTo[Double, Double](isSource, neighborValues(hopDistance))
 
 // In practice, this would be executed by the ScaFi engine across devices
 // Each device runs the same program but operates on its local context
