@@ -6,7 +6,7 @@ network-model:
 
 _pool: &program
   - time-distribution: 1
-    program: it.unibo.scafi.test.Gradient.gradient2
+    program: it.unibo.scafi.test.Gradient.gradient
 
 deployments:
   - type: Point

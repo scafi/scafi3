@@ -7,14 +7,26 @@ import it.unibo.alchemist.model.nodes.GenericNode
 import it.unibo.alchemist.model.reactions.Event
 import it.unibo.alchemist.model.timedistributions.DiracComb
 import it.unibo.alchemist.model.times.DoubleTime
-import it.unibo.alchemist.model.{ Position as AlchemistPosition, * }
-import com.github.benmanes.caffeine.cache.{ Caffeine, LoadingCache }
+import it.unibo.alchemist.model.{Position as AlchemistPosition, *}
+import com.github.benmanes.caffeine.cache.{Caffeine, LoadingCache}
+import dotty.tools.dotc.Main
 import it.unibo.alchemist.actions.RunScafi3Program
 import it.unibo.alchemist.scafi.device.Scafi3Device
 import org.apache.commons.math3.random.RandomGenerator
 import org.danilopianini.util.ListSet
+import org.slf4j.LoggerFactory
+
+import java.net.URLClassLoader
+import java.nio.file.Files
+import java.io.File
 
 class Scafi3Incarnation[T, Position <: AlchemistPosition[Position]] extends Incarnation[T, Position]:
+  private val logger = LoggerFactory.getLogger(getClass)
+  private val classLoaders: LoadingCache[String, URLClassLoader] =
+    Caffeine.newBuilder().maximumSize(1000).build: name =>
+      val outputFolder = Files.createTempDirectory(name).toFile
+      URLClassLoader(Array(outputFolder.toURI.toURL), Thread.currentThread().getContextClassLoader)
+
   override def createMolecule(s: String): Molecule = SimpleMolecule(s)
 
   @SuppressWarnings(Array("scalafix:DisableSyntax.asInstanceOf", "scalafix:DisableSyntax.null"))
@@ -72,10 +84,42 @@ class Scafi3Incarnation[T, Position <: AlchemistPosition[Position]] extends Inca
     require(node != null, "Scafi3 requires a device and cannot execute in a Global Reaction")
     additionalParameters match
       case params: String => RunScafi3Program[T, Position](node, environment, params)
+      case params: java.util.Map[String, String] @unchecked =>
+        val code = params.get("code")
+        val entrypoint = params.get("entrypoint")
+        val (hasErrors, errors) = compileScafiProgram(code, classLoaders.get(entrypoint))
+        if hasErrors then
+          throw IllegalArgumentException(
+            s"Could not compile Scafi3 program:\n${errors.mkString("\n")}",
+          )
+        RunScafi3Program[T, Position](node, environment, entrypoint, classLoaders.get(entrypoint))
       case params =>
         throw IllegalArgumentException(
           s"Invalid parameters for Scafi3. `String` required, but ${params.getClass} has been provided: $params",
         )
+
+  private def compileScafiProgram(code: String, classLoader: URLClassLoader): (Boolean, List[String]) =
+    logger.info("Compiling Scafi3 program into folder {}", classLoader.getURLs.head.getPath)
+    val outputFolder = File(classLoader.getURLs.head.getFile).toPath
+    require(outputFolder.toFile.exists() && outputFolder.toFile.isDirectory, s"Output folder $outputFolder does not exist or is not a directory")
+    val sourceFilePath = Files.writeString(outputFolder.resolve("Program.scala"), code)
+    // Compile file
+    compileWithOptions(sourceFilePath.toAbsolutePath.toString, outputFolder.toAbsolutePath.toString)
+
+  private def compileWithOptions(sourceFile: String, outputDir: String): (Boolean, List[String]) =
+    val cp = Thread.currentThread().getContextClassLoader match
+      case urlClassLoader: URLClassLoader => urlClassLoader.getURLs.map(_.getPath).mkString(File.pathSeparator)
+      case _                             => System.getProperty("java.class.path")
+    val args = Array(
+      "-d", outputDir,       // Destination folder
+      "-classpath", cp,      // Classpath from current thread
+      "-deprecation",        // Show deprecation warnings
+      "-explain",            // Explain errors in detail
+      "-experimental",
+      sourceFile
+    )
+    val reporter = Main.process(args)
+    (reporter.hasErrors, List(reporter.summary))
 
   private object ScalaScriptEngine:
     private val engine = ScriptEngineManager().getEngineByName("scala").nn

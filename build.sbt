@@ -127,6 +127,7 @@ lazy val `alchemist-incarnation-scafi3` = project
       "it.unibo.alchemist" % "alchemist" % alchemistVersion,
       "it.unibo.alchemist" % "alchemist-api" % alchemistVersion,
       "it.unibo.alchemist" % "alchemist-euclidean-geometry" % alchemistVersion,
+      "org.scala-lang" %% "scala3-compiler" % scala3Version,
       "org.scalatest" %%% "scalatest" % "3.2.19" % Test,
     ),
   )

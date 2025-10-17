@@ -7,23 +7,30 @@ import it.unibo.alchemist.scafi.device.Scafi3Device
 import it.unibo.scafi.alchemist.device.context.AlchemistExchangeContext
 import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.runtime.ScafiEngine
+import it.unibo.alchemist.actions.RunScafi3Program.given
+
+import java.net.URLClassLoader
 
 /**
  * An Alchemist [[Action]] that runs a [[it.unibo.scafi.runtime.ScafiEngine]] program.
  *
- * @param node the node on which the action is executed.
- * @param programName the name of the program to run.
- * @tparam Position the position type of the node.
+ * @param node
+ *   the node on which the action is executed.
+ * @param programName
+ *   the name of the program to run.
+ * @tparam Position
+ *   the position type of the node.
  */
 class RunScafi3Program[T, Position <: AlchemistPosition[Position]](
     node: Node[T],
     environment: Environment[T, Position],
     val programName: String,
+    val classLoader: URLClassLoader | Null = null
 ) extends AbstractAction[T](node):
   private val programIdentifier = SimpleMolecule(programName)
   private val programPath: Array[String] = programName.split('.')
   private val classPath: String = programPath.take(programPath.length - 1).mkString("", ".", "$")
-  private val clazz = Class.forName(classPath).nn
+  private val clazz = if classLoader != null then classLoader.loadClass(classPath) else Class.forName(classPath).nn
   private val module = clazz.getField("MODULE$").nn.get(clazz)
   private val method = clazz.getMethods.nn.toList.find(_.nn.getName.nn == programPath.last).get.nn
 
@@ -32,14 +39,10 @@ class RunScafi3Program[T, Position <: AlchemistPosition[Position]](
   private val scafiProgram: ScafiEngine[Int, ? <: AggregateContext, Scafi3Device[T, Position], T] = ScafiEngine(
     node.getId,
     localDevice,
-    (_, net, state) => AlchemistExchangeContext[T, Position](node, environment, net.receive, state)
+    (_, net, state) => AlchemistExchangeContext[T, Position](node, environment, net.receive, state),
   )(runProgram)
 
   declareDependencyTo(programIdentifier)
-
-  @SuppressWarnings(Array("DisableSyntax.asInstanceOf"))
-  private def runProgram(using context: AggregateContext): T =
-    method.invoke(module, context).asInstanceOf[T]
 
   override def getContext: Context = Context.NEIGHBORHOOD
 
@@ -49,4 +52,12 @@ class RunScafi3Program[T, Position <: AlchemistPosition[Position]](
   override def execute(): Unit =
     val result = scafiProgram.cycle()
     node.setConcentration(programIdentifier, result)
+
+  @SuppressWarnings(Array("DisableSyntax.asInstanceOf"))
+  private def runProgram(using context: AggregateContext): T =
+    method.invoke(module, context).asInstanceOf[T]
+
 end RunScafi3Program
+
+object RunScafi3Program:
+  given CanEqual[URLClassLoader | Null, Null] = CanEqual.derived

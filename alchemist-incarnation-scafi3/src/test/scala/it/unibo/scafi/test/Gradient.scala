@@ -14,7 +14,7 @@ object Gradient:
   type Lang = AggregateFoundation { type DeviceId = Int } & FieldCalculusSyntax & DistanceSensor[Double] &
     AlchemistEnvironmentVariables
 
-  def gradient2(using Lang): Double =
+  def gradient(using Lang): Double =
     share(Double.MaxValue): prevValues =>
       val distances = senseDistance[Double]
       val minDistance = prevValues.alignedMap(distances)(_ + _).withoutSelf.min
