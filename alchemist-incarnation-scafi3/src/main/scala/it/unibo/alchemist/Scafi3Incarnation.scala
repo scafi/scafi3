@@ -10,6 +10,7 @@ import it.unibo.alchemist.model.times.DoubleTime
 import it.unibo.alchemist.model.{Position as AlchemistPosition, *}
 import com.github.benmanes.caffeine.cache.{Caffeine, LoadingCache}
 import dotty.tools.dotc.Main
+import it.unibo.alchemist.Scafi3Incarnation.CACHE_SIZE
 import it.unibo.alchemist.actions.RunScafi3Program
 import it.unibo.alchemist.scafi.device.Scafi3Device
 import org.apache.commons.math3.random.RandomGenerator
@@ -23,7 +24,7 @@ import java.io.File
 class Scafi3Incarnation[T, Position <: AlchemistPosition[Position]] extends Incarnation[T, Position]:
   private val logger = LoggerFactory.getLogger(getClass)
   private val classLoaders: LoadingCache[String, URLClassLoader] =
-    Caffeine.newBuilder().maximumSize(1000).build: name =>
+    Caffeine.newBuilder().maximumSize(CACHE_SIZE).build: name =>
       val outputFolder = Files.createTempDirectory(name).toFile
       URLClassLoader(Array(outputFolder.toURI.toURL), Thread.currentThread().getContextClassLoader)
 
@@ -137,3 +138,6 @@ class Scafi3Incarnation[T, Position <: AlchemistPosition[Position]] extends Inca
       .nn
   end ScalaScriptEngine
 end Scafi3Incarnation
+
+object Scafi3Incarnation:
+  private val CACHE_SIZE = 1000
