@@ -7,7 +7,6 @@ import it.unibo.alchemist.scafi.device.Scafi3Device
 import it.unibo.scafi.alchemist.device.context.AlchemistExchangeContext
 import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.runtime.ScafiEngine
-import it.unibo.alchemist.actions.RunScafi3Program.given
 
 import java.net.URLClassLoader
 
