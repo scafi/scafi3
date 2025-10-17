@@ -156,6 +156,7 @@ lazy val root = project
     name := "scafi3",
     publish / skip := true,
     publishArtifact := false,
+    ScalaUnidoc / unidoc / unidocProjectFilter := inAnyProject -- inProjects(example)
   )
 
 def crossProjects(crossProjects: CrossProject*) = crossProjects.flatMap(cp => Seq(cp.js, cp.jvm, cp.native))
