@@ -92,7 +92,7 @@ class Scafi3Incarnation[T, Position <: AlchemistPosition[Position]] extends Inca
           throw IllegalArgumentException(
             s"Could not compile Scafi3 program:\n${errors.mkString("\n")}",
           )
-        RunScafi3Program[T, Position](node, environment, entrypoint, classLoaders.get(entrypoint))
+        RunScafi3Program[T, Position](node, environment, entrypoint, Some(classLoaders.get(entrypoint)))
       case params =>
         throw IllegalArgumentException(
           s"Invalid parameters for Scafi3. `String` required, but ${params.getClass} has been provided: $params",

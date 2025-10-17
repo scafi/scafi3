@@ -25,12 +25,12 @@ class RunScafi3Program[T, Position <: AlchemistPosition[Position]](
     node: Node[T],
     environment: Environment[T, Position],
     val programName: String,
-    val classLoader: URLClassLoader | Null = null
+    val classLoader: Option[URLClassLoader] = None,
 ) extends AbstractAction[T](node):
   private val programIdentifier = SimpleMolecule(programName)
   private val programPath: Array[String] = programName.split('.')
   private val classPath: String = programPath.take(programPath.length - 1).mkString("", ".", "$")
-  private val clazz = if classLoader != null then classLoader.loadClass(classPath) else Class.forName(classPath).nn
+  private val clazz = classLoader.map(_.loadClass(classPath)).getOrElse(Class.forName(classPath))
   private val module = clazz.getField("MODULE$").nn.get(clazz)
   private val method = clazz.getMethods.nn.toList.find(_.nn.getName.nn == programPath.last).get.nn
 
@@ -58,6 +58,3 @@ class RunScafi3Program[T, Position <: AlchemistPosition[Position]](
     method.invoke(module, context).asInstanceOf[T]
 
 end RunScafi3Program
-
-object RunScafi3Program:
-  given CanEqual[URLClassLoader | Null, Null] = CanEqual.derived
