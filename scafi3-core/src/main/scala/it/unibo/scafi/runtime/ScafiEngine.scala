@@ -1,6 +1,7 @@
 package it.unibo.scafi.runtime
 
 import scala.annotation.tailrec
+import scala.concurrent.{ ExecutionContext, Future }
 
 import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.message.{ Export, ValueTree }
@@ -42,6 +43,15 @@ final class ScafiEngine[
    */
   def lastExportResult: Export[ID] = lastExport
 
+  def asyncCycleWhile(condition: Result => Future[Boolean])(using ExecutionContext): Future[Result] =
+    for
+      aggregateResult <- Future(round())
+      _ = lastExport = aggregateResult.exportResult
+      _ = lastSelfMessages = aggregateResult.selfMessages
+      continue <- condition(aggregateResult.result)
+      result <- if continue then asyncCycleWhile(condition) else Future.successful(aggregateResult.result)
+    yield result
+
   /**
    * Executes the program until the condition is met.
    * @param condition
@@ -50,11 +60,11 @@ final class ScafiEngine[
    *   the result of the last round.
    */
   @tailrec
-  def cycleWhile(condition: AggregateResult => Boolean): Result =
+  def cycleWhile(condition: Result => Boolean): Result =
     val aggregateResult = round()
     lastExport = aggregateResult.exportResult
     lastSelfMessages = aggregateResult.selfMessages
-    if condition(aggregateResult) then cycleWhile(condition) else aggregateResult.result
+    if condition(aggregateResult.result) then cycleWhile(condition) else aggregateResult.result
 
   /**
    * The result of the aggregate computation.

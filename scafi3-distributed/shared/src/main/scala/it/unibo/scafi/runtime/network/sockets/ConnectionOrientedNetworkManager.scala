@@ -16,7 +16,7 @@ import it.unibo.scafi.utils.Channel
  * @tparam ID
  *   the type of the self's device identifier.
  */
-trait ConnectionOrientedNetworkManager[ID](deviceId: ID, port: Port)(using ExecutionContext)
+trait ConnectionOrientedNetworkManager[ID](val deviceId: ID, port: Port)(using ExecutionContext)
     extends NetworkManager
     with ConnectionOrientedNetworking
     with AutoCloseable:
