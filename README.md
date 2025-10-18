@@ -70,9 +70,9 @@ object myproject extends ScalaModule {
   def scalaVersion = "3.7.3"
   
   def ivyDeps = Agg(
-    ivy"it.unibo.scafi:scafi3-core_3:1.0.5",
+    ivy"it.unibo.scafi:::scafi3-core:1.0.5",
     // For distributed systems support
-    ivy"it.unibo.scafi:scafi3-distributed_3:1.0.5"
+    ivy"it.unibo.scafi:::scafi3-distributed:1.0.5"
   )
 }
 ```
@@ -88,7 +88,7 @@ class MyProjectModule(val platform: Platform) extends CrossPlatformScalaModule {
   def scalaVersion = "3.7.3"
   
   def ivyDeps = Agg(
-    ivy"it.unibo.scafi:scafi3-core_3:1.0.5",
+    ivy"it.unibo.scafi:::scafi3-core:1.0.5",
   )
 }
 ```
@@ -221,7 +221,7 @@ The `using` syntax provides implicit access to the aggregate computation context
 
 - **Examples**: Check the test suite for comprehensive examples
 - **API Documentation**: [ScalaDoc](https://scafi.github.io/scafi3/)
-- **Research**: Based on [Aggregate Computing](https://doi.org/10.1109/MC.2015.261) and [ScaFi: A Scala DSL and Toolkit for Aggregate Programming](https://doi.org/10.1016/j.jss.2024.111976)
+- **Research**: Based on [Aggregate Computing](https://doi.org/10.1109/MC.2015.261) and [XC calculus](https://doi.org/10.1016/j.jss.2024.111976)
 
 ## License
 
