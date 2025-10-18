@@ -12,11 +12,11 @@
 
 **ScaFi 3** (Scala Fields 3) is a modern Scala 3 DSL and toolkit for **Aggregate Programming**, a paradigm for designing resilient and self-organizing distributed systems.
 
-## 🌟 What is Aggregate Programming?
+## What is Aggregate Programming?
 
 Aggregate Programming enables you to program collective behaviors across networks of devices—from IoT sensors to robot swarms—by thinking in terms of **computational fields**: distributed data structures that span across the entire system. Instead of programming individual devices, you express global behaviors that automatically adapt to the network topology and evolve over time.
 
-## 🎯 Philosophy and Design
+## Philosophy and Design
 
 ScaFi 3 embraces a **functional, composable, and type-safe** approach to distributed programming:
 
@@ -38,7 +38,7 @@ ScaFi programs are:
 - **Resilient**: Automatically handle device failures and network topology changes
 - **Pure**: Computation logic is separated from side effects and device-specific concerns
 
-## 📦 Installation
+## Installation
 
 ### With SBT
 
@@ -70,9 +70,9 @@ object myproject extends ScalaModule {
   def scalaVersion = "3.7.3"
   
   def ivyDeps = Agg(
-    ivy"it.unibo.scafi::scafi3-core:1.0.5",
+    ivy"it.unibo.scafi:scafi3-core_3:1.0.5",
     // For distributed systems support
-    ivy"it.unibo.scafi::scafi3-distributed:1.0.5"
+    ivy"it.unibo.scafi:scafi3-distributed_3:1.0.5"
   )
 }
 ```
@@ -88,12 +88,12 @@ class MyProjectModule(val platform: Platform) extends CrossPlatformScalaModule {
   def scalaVersion = "3.7.3"
   
   def ivyDeps = Agg(
-    ivy"it.unibo.scafi::scafi3-core::1.0.5",
+    ivy"it.unibo.scafi:scafi3-core_3:1.0.5",
   )
 }
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Basic Field Operations
 
@@ -193,7 +193,7 @@ def selfHealingGradient(
 // Each device runs the same program but operates on its local context
 ```
 
-## 🏗️ Key Concepts
+## Key Concepts
 
 ### Shared Data Types
 `SharedData[T]` represents a field value—a mapping from device IDs to values of type `T`. It includes:
@@ -210,19 +210,19 @@ The `using` syntax provides implicit access to the aggregate computation context
 - Message history for state evolution
 - Network communication primitives
 
-## 🔧 Advanced Features
+## Advanced Features
 
 - **Multi-platform**: Run on JVM, JavaScript (browser/Node.js), and Native targets
 - **Type-safe serialization**: Automatic codecs with compile-time guarantees using the `CodableFromTo` type class
 - **Modular libraries**: Compose pre-built libraries for common patterns (gradients, broadcasting, leader election)
 - **Integration ready**: Distributed module for real network deployments with socket-based communication
 
-## 📚 Learn More
+## Learn More
 
 - **Examples**: Check the test suite for comprehensive examples
 - **API Documentation**: [ScalaDoc](https://scafi.github.io/scafi3/)
-- **Research**: Based on the [Aggregate Computing](https://doi.org/10.1109/MC.2015.261) research
+- **Research**: Based on [Aggregate Computing](https://doi.org/10.1109/MC.2015.261) and [ScaFi: A Scala DSL and Toolkit for Aggregate Programming](https://doi.org/10.1016/j.jss.2024.111976)
 
-## 📄 License
+## License
 
 ScaFi 3 is released under the [Apache 2.0 License](./LICENSE). 
