@@ -70,9 +70,9 @@ object myproject extends ScalaModule {
   def scalaVersion = "3.7.3"
   
   def ivyDeps = Agg(
-    ivy"it.unibo.scafi:::scafi3-core:1.0.5",
+    mvn"it.unibo.scafi::scafi3-core:1.0.5",
     // For distributed systems support
-    ivy"it.unibo.scafi:::scafi3-distributed:1.0.5"
+    mvn"it.unibo.scafi::scafi3-distributed:1.0.5"
   )
 }
 ```
@@ -88,7 +88,7 @@ class MyProjectModule(val platform: Platform) extends CrossPlatformScalaModule {
   def scalaVersion = "3.7.3"
   
   def ivyDeps = Agg(
-    ivy"it.unibo.scafi:::scafi3-core:1.0.5",
+    mvn"it.unibo.scafi::scafi3-core:1.0.5",
   )
 }
 ```
