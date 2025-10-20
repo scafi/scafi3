@@ -122,7 +122,7 @@ def myProgram(using context: ExchangeCalculus & ExchangeLanguage): Int =
 
 ### Distance Gradient
 
-A classic aggregate programming example—computing distance from a source:
+A classic aggregate programming example—computing hop count distance from a source:
 
 ```scala
 import it.unibo.scafi.libraries.All.*
@@ -142,7 +142,7 @@ Control information flow with domain branching:
 ```scala
 import it.unibo.scafi.libraries.All.*
 
-def conditionalBehavior(using context: ExchangeCalculus & ExchangeLanguage { type DeviceId = Int }): String =
+def conditionalBehavior(gradient: Double)(using context: ExchangeCalculus & ExchangeLanguage { type DeviceId = Int }): String =
   val distanceFromSource = gradient
   
   // Split the network into two independent computational domains
