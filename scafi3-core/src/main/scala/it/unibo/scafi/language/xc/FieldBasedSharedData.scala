@@ -85,7 +85,6 @@ trait FieldBasedSharedData:
           a.neighborValues + (id -> value),
         )
         override def default: A = a.defaultValue
-        override def neighbors: Map[DeviceId, A] = a.neighborValues.filterNot(_._1 == localId)
         override def values: Map[DeviceId, A] = a.neighborValues
       end extension
 
@@ -105,13 +104,9 @@ trait FieldBasedSharedData:
     )
 
   override given sharedDataOps: SharedDataOps[Field] = new SharedDataOps[Field]:
-    extension [A](a: Field[A])
-      override def withoutSelf: SafeIterable[A] =
-        Field[A](
-          a.defaultValue,
-          a.neighborValues - localId,
-        )
-      override def onlySelf: A = a(localId)
+    extension [A](field: Field[A])
+      override def withoutSelf: SafeIterable[A] = SafeIterable(field.neighborValues.values)
+      override def onlySelf: A = field(localId)
 
   override given convert[T]: Conversion[T, SharedData[T]] = Field[T](_)
 
