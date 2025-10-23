@@ -86,6 +86,7 @@ trait FieldBasedSharedData:
         )
         override def default: A = a.defaultValue
         override def values: Map[DeviceId, A] = a.neighborValues
+        override def get(id: DeviceId): Option[A] = a.neighborValues.get(id)
       end extension
 
   override given sharedDataApplicative: Applicative[Field] = new Applicative[Field]:
