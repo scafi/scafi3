@@ -1,6 +1,7 @@
 package it.unibo.scafi.language.xc.calculus
 
 import it.unibo.scafi.UnitTest
+import it.unibo.scafi.collections.SafeIterable
 
 trait ExchangeCalculusSemanticsTests:
   this: UnitTest =>
@@ -16,8 +17,8 @@ trait ExchangeCalculusSemanticsTests:
     it should "provide the default value" in:
       nv.default shouldEqual 10
     it should "allow to retrieve a value map" in:
-      val v: Map[lang.DeviceId, Int] = nv.neighbors.toMap
-      v.values.toList should contain theSameElementsAs lang.device.toIterable
+      val v: SafeIterable[Int] = nv.withoutSelf
+      v.toList should contain theSameElementsAs lang.device.toIterable
         .map(id => valuesMap.getOrElse(id, 10))
         .toList
     it should "allow to retrieve a value" in:
