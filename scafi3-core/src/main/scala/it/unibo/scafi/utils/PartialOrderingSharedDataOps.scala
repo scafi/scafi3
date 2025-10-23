@@ -8,5 +8,6 @@ object PartialOrderingSharedDataOps:
     infix def <=(that: lang.SharedData[V]): lang.SharedData[Boolean] = data.alignedMap(that)(ordering.lteq)
     infix def >(that: lang.SharedData[V]): lang.SharedData[Boolean] = data.alignedMap(that)(ordering.gt)
     infix def >=(that: lang.SharedData[V]): lang.SharedData[Boolean] = data.alignedMap(that)(ordering.gteq)
-    infix def tryCompareTo(that: lang.SharedData[V]): lang.SharedData[Option[Int]] = data.alignedMap(that)(ordering.tryCompare)
+    infix def tryCompareTo(that: lang.SharedData[V]): lang.SharedData[Option[Int]] =
+      data.alignedMap(that)(ordering.tryCompare)
     infix def equiv(that: lang.SharedData[V]): lang.SharedData[Boolean] = data.alignedMap(that)(ordering.equiv)

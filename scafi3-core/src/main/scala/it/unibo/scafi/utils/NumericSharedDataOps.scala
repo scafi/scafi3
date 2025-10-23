@@ -19,4 +19,5 @@ object NumericSharedDataOps:
   extension [V: Integral as integral](using lang: AggregateFoundation)(data: lang.SharedData[V])
     infix def /(that: lang.SharedData[V]): lang.SharedData[V] = data.alignedMap(that)(integral.quot)
     infix def %(that: lang.SharedData[V]): lang.SharedData[V] = data.alignedMap(that)(integral.rem)
-    infix def /%(that: lang.SharedData[V]): lang.SharedData[(V, V)] = data.alignedMap(that)((a, b) => (integral.quot(a, b), integral.rem(a, b)))
+    infix def /%(that: lang.SharedData[V]): lang.SharedData[(V, V)] =
+      data.alignedMap(that)((a, b) => (integral.quot(a, b), integral.rem(a, b)))
