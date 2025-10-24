@@ -65,7 +65,7 @@ trait FieldBasedSharedData:
   protected def alignedDevices: Iterable[DeviceId]
 
   override given fieldOps: ShareDataOps[SharedData, DeviceId] = new ShareDataOps[SharedData, DeviceId]:
-    extension [T](nv: SharedData[T])
+    extension [T](nv: Field[T])
       override def default: T = nv.default
       override def values: MapView[DeviceId, T] = nv.alignedValues.view
       override def set(id: DeviceId, value: T): SharedData[T] = Field[T](
@@ -89,7 +89,7 @@ trait FieldBasedSharedData:
     )
 
   override given sharedDataOps: SharedDataOps[SharedData] = new SharedDataOps[SharedData]:
-    extension [A](a: SharedData[A])
+    extension [A](a: Field[A])
       override def withoutSelf: SafeIterable[A] =
         val filtered = a.alignedValues.view.filterKeys(_ != localId).values
         SafeIterable(filtered)
