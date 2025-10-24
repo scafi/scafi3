@@ -40,14 +40,18 @@ object CommonLibrary:
   def device(using language: AggregateFoundation): language.SharedData[language.DeviceId] = language.device
 
   /**
-   * TOOD.
+   * Given a token, performs a manual alignment calling the body function..
    *
-   * @param path
+   * @param token
+   *   to be used for alignment
    * @param body
-   * @param aggregateFoundation
+   *   the code to align
    * @tparam T
+   *   the type of the result
+   * @return
+   *   an aligned computation
    * @return
    */
-  def align[T](path: Any)(body: () => T)(using aggregateFoundation: AggregateFoundation): T =
-    aggregateFoundation.align(path)(body)
+  def align[T](token: Any)(body: () => T)(using aggregateFoundation: AggregateFoundation): T =
+    aggregateFoundation.align(token)(body)
 end CommonLibrary

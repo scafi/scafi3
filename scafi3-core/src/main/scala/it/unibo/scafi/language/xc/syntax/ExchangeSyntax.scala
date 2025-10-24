@@ -7,7 +7,7 @@ import it.unibo.scafi.message.CodableFromTo
  * This trait provides the syntax for the exchange calculus main construct: `exchange`.
  */
 trait ExchangeSyntax:
-  self: AggregateFoundation =>
+  this: AggregateFoundation =>
 
   /**
    * This method is the main construct of the exchange calculus. It allows both to send and receive messages, and to
