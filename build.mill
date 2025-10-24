@@ -1,0 +1,91 @@
+package build
+import mill.*, scalalib.*, scalanativelib.*, scalajslib.*
+
+val scala3Version = "3.7.3"
+val commonScalacOptions = Seq(
+  "-Werror",
+  "-Wunused:all",
+  "-Wvalue-discard",
+  "-Wnonunit-statement",
+  "-Yexplicit-nulls",
+  "-Wsafe-init",
+  "-Ycheck-reentrant",
+  "-Xcheck-macros",
+  "-rewrite",
+  "-indent",
+  "-unchecked",
+  "-explain",
+  "-encoding", "UTF-8",
+  "-feature",
+  "-preview",
+  "-deprecation",
+  "-language:strictEquality",
+  "-language:implicitConversions",
+  "-language:experimental.saferExceptions",
+  "-language:experimental.modularity",
+  "-Wconf:msg=unused value of type org.scalatest.Assertion:s",
+  "-Wconf:msg=unused value of type org.scalatest.compatible.Assertion:s",
+  "-Wconf:msg=unused value of type org.specs2.specification.core.Fragment:s",
+  "-Wconf:msg=unused value of type org.specs2.matcher.MatchResult:s",
+  "-Wconf:msg=unused value of type org.scalamock:s",
+)
+
+trait CommonModule extends ScalaModule {
+  def scalaVersion = scala3Version
+  def scalacOptions = commonScalacOptions
+}
+
+trait MultiplatformModule extends CommonModule, ScalaJSModule, ScalaNativeModule {
+  def scalaJSVersion = "1.19.0"
+  def scalaNativeVersion = "0.5.8"
+  def mvnDeps = Seq(
+    mvn"org.typelevel::cats-core::2.13.0"
+  )
+  object test extends ScalaTests, ScalaJSTests, ScalaNativeTests, TestModule.ScalaTest {
+    def mvnDeps = Seq(
+      mvn"org.scalatest::scalatest::3.2.19",
+      mvn"org.scalactic::scalactic::3.2.19",
+      mvn"org.scalatestplus::scalacheck-1-18::3.2.19.0"
+    )
+  }
+}
+
+trait JvmModule extends CommonModule {
+  object test extends ScalaTests, TestModule.ScalaTest {
+    def mvnDeps = Seq(
+      mvn"org.scalatest::scalatest::3.2.19",
+    )
+  }
+}
+
+object `alchemist-incarnation-scafi3` extends JvmModule {
+  def moduleDeps = Seq(`scafi3-core`)
+  def mvnDeps = Seq(
+    mvn"com.github.ben-manes.caffeine:caffeine:3.2.2",
+    mvn"org.slf4j:slf4j-api:2.0.17",
+    mvn"it.unibo.alchemist:alchemist:42.3.13",
+    mvn"it.unibo.alchemist:alchemist-api:42.3.13",
+    mvn"it.unibo.alchemist:alchemist-euclidean-geometry:42.3.13",
+    mvn"org.scala-lang::scala3-compiler:${scala3Version}"
+  )
+}
+object example extends JvmModule {
+  def moduleDeps = Seq(`alchemist-incarnation-scafi3`, `scafi3-core`)
+  def scalacOptions = Seq(
+    "-language:experimental.saferExceptions"
+  )
+}
+object `scafi3-core` extends MultiplatformModule
+object `scafi3-distributed` extends CommonModule {
+  trait SharedModule extends CommonModule {
+    def moduleDeps = Seq(`scafi3-core`)
+    def mvnDeps = Seq(
+      mvn"io.bullet::borer-core::1.16.1"
+      mvn"io.bullet::borer-derivation::1.16.1"
+    )
+  }
+
+  object shared extends MultiplatformModule, SharedModule
+  object `jvm-native` extends SharedModule, JvmModule, ScalaNativeModule
+  object js extends SharedModule, ScalaJSModule
+}
