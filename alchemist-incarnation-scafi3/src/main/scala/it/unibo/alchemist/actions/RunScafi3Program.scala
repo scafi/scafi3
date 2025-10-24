@@ -11,7 +11,7 @@ import it.unibo.scafi.context.AggregateContext
 import it.unibo.scafi.runtime.ScafiEngine
 
 /**
- * An Alchemist [[Action]] that runs a [[it.unibo.scafi.runtime.ScafiEngine]] program.
+ * An Alchemist [[it.unibo.alchemist.model.Action]] that runs a [[it.unibo.scafi.runtime.ScafiEngine]] program.
  *
  * @param node
  *   the node on which the action is executed.
