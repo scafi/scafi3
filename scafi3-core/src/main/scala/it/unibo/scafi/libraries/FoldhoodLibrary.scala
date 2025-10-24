@@ -1,15 +1,13 @@
 package it.unibo.scafi.libraries
 
+import cats.syntax.all.{ catsSyntaxTuple2Semigroupal, toFunctorOps }
 import it.unibo.scafi.language.AggregateFoundation
 import it.unibo.scafi.language.fc.syntax.FieldCalculusSyntax
+import it.unibo.scafi.libraries.FieldCalculusLibrary.neighborValues
+import it.unibo.scafi.libraries.FoldingLibrary.foldWithoutSelf
 import it.unibo.scafi.message.{ Codable, CodableFromTo }
 import it.unibo.scafi.sensors.DistanceSensor
 import it.unibo.scafi.sensors.DistanceSensor.senseDistance
-
-import cats.syntax.all.{ catsSyntaxTuple2Semigroupal, toFunctorOps }
-
-import FieldCalculusLibrary.neighborValues as fcNbr
-import FoldingLibrary.foldWithoutSelf
 
 object FoldhoodLibrary:
 
@@ -31,7 +29,7 @@ object FoldhoodLibrary:
    */
   def nbr[Format, A: CodableFromTo[Format], L <: AggregateFoundation & FieldCalculusSyntax](expr: => A)(using
       c: FoldhoodContext[L],
-  ): A = c.current(fcNbr(expr))
+  ): A = c.current(neighborValues(expr))
 
   /**
    * The distances construct is used to access the distance from the corresponding neighbors during the evaluation of a
@@ -113,7 +111,7 @@ object FoldhoodLibrary:
         val value: lang.SharedData[X] = expr
         neighbouringValues = value.map[Any | Null](x => x) :: neighbouringValues
         value.onlySelf
-    var zippedNeighbouringValues: lang.SharedData[List[Any | Null]] = fcNbr(List.empty[Any | Null])
+    var zippedNeighbouringValues: lang.SharedData[List[Any | Null]] = neighborValues(List.empty[Any | Null])
     val selfExprValue: A = expr(using initial)
     for nv <- neighbouringValues do
       zippedNeighbouringValues = (zippedNeighbouringValues, nv).mapN((list, value) => value :: list)

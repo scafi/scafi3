@@ -1,16 +1,15 @@
 package it.unibo.scafi.language.xc
 
-import scala.collection.MapView
-
+import cats.Applicative
 import it.unibo.scafi.collections.SafeIterable
 import it.unibo.scafi.language.ShareDataOps
 import it.unibo.scafi.language.xc.calculus.ExchangeCalculus
 import it.unibo.scafi.utils.SharedDataOps
 
-import cats.Applicative
+import scala.collection.MapView
 
 /**
- * Implements the foundational semantics for the NValues of the exchange calculus.
+ * Implements the foundational semantics for the SharedData of the exchange calculus.
  */
 trait FieldBasedSharedData:
   this: ExchangeCalculus =>
@@ -33,7 +32,7 @@ trait FieldBasedSharedData:
 
     /**
      * @return
-     *   a filtered view of the NValues data that only contains the values for aligned devices
+     *   a filtered view of the SharedData data that only contains the values for aligned devices
      */
     def alignedValues: Map[DeviceId, Value] =
       if neighborValues.isEmpty then Map(localId -> default) // self is always aligned, even if there are no neighbors

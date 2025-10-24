@@ -12,7 +12,7 @@ trait ExchangeCalculusSemanticsTests:
       s"Devices: ${lang.device.toSet} is not a superset of ${0 until 10}",
     )
     val valuesMap: Map[Int, Int] = Map(0 -> 1, 1 -> 2, 2 -> 3, 3 -> 42, 4 -> 125)
-    val nv = lang.mockNValues(10, valuesMap)
+    val nv = lang.mockSharedData(10, valuesMap)
     it should "provide the default value" in:
       nv.default shouldEqual 10
     it should "allow to retrieve a value map" in:
@@ -43,5 +43,5 @@ trait ExchangeCalculusSemanticsTests:
       val example: lang.SharedData[String] = "a"
       example(lang.localId) shouldEqual "a"
       example(lang.unalignedDeviceId) shouldEqual "a"
-    "NValues" should behave like nvalues[C]
+    "SharedData" should behave like nvalues[C]
 end ExchangeCalculusSemanticsTests
