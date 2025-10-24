@@ -1,9 +1,9 @@
 package it.unibo.scafi.utils
 
-import it.unibo.scafi.language.AggregateFoundation
+import it.unibo.scafi.language.xc.FieldBasedSharedData
 
 object StringSharedDataOps:
-  extension (using lang: AggregateFoundation)(data: lang.SharedData[String])
+  extension (using lang: FieldBasedSharedData)(data: lang.SharedData[String])
     infix def +(that: lang.SharedData[String]): lang.SharedData[String] = data.alignedMap(that)(_ + _)
     def toUpperCase: lang.SharedData[String] = data.mapValues(_.toUpperCase)
     def toLowerCase: lang.SharedData[String] = data.mapValues(_.toLowerCase)
@@ -27,6 +27,5 @@ object StringSharedDataOps:
     def split(regex: String, limit: Int): lang.SharedData[Array[String]] = data.mapValues(_.split(regex, limit))
     def toCharArray: lang.SharedData[Array[Char]] = data.mapValues(_.toCharArray)
     def reverse: lang.SharedData[String] = data.mapValues(_.reverse)
-    def mkString(sep: String): lang.SharedData[String] = data.mapValues(_.mkString(sep))
   end extension
 end StringSharedDataOps
