@@ -2,8 +2,8 @@ package it.unibo.scafi.language.xc
 
 import it.unibo.scafi.language.fc.syntax.FieldCalculusSyntax
 import it.unibo.scafi.language.xc.calculus.ExchangeCalculus
-import it.unibo.scafi.language.xc.syntax.{ ExchangeSyntax, ReturnSending }
 import it.unibo.scafi.language.xc.syntax.ReturnSending.returning
+import it.unibo.scafi.language.xc.syntax.{ ExchangeSyntax, ReturnSending }
 import it.unibo.scafi.message.{ CodableFromTo, Codables }
 
 /**
@@ -14,7 +14,7 @@ import it.unibo.scafi.message.{ CodableFromTo, Codables }
  * exchange calculus.
  */
 trait ExchangeLanguage extends ExchangeSyntax, FieldCalculusSyntax:
-  self: ExchangeCalculus =>
+  this: ExchangeCalculus =>
 
   override def exchange[Format, Value: CodableFromTo[Format]](initial: SharedData[Value])(
       f: SharedData[Value] => ReturnSending[SharedData[Value]],
