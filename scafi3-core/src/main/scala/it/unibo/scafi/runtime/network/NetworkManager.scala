@@ -13,6 +13,12 @@ trait NetworkManager:
   type DeviceId
 
   /**
+   * @return
+   *   the device identifier of the current device
+   */
+  def localId: DeviceId
+
+  /**
    * Sends the [[message]] to neighbor devices.
    * @param message
    *   the [[Export]] to send to neighbor devices.

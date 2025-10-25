@@ -9,7 +9,7 @@ import it.unibo.scafi.runtime.network.NetworkManager
  * @tparam ID
  *   the type of the deviceId of neighbor devices.
  */
-class NoNeighborsNetworkManager[ID] extends NetworkManager:
+class NoNeighborsNetworkManager[ID](override val localId: ID) extends NetworkManager:
   override type DeviceId = ID
 
   override def receive: Import[ID] = Import.empty

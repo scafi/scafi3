@@ -10,7 +10,7 @@ class Environment[Result, Context <: IntAggregateContext, Network <: IntNetworkM
         Node[Result, Context, Network],
         Node[Result, Context, Network],
     ) => Boolean,
-    private val contextFactory: (Int, Network, ValueTree) => Context,
+    private val contextFactory: (Network, ValueTree) => Context,
     private val program: (Context, Environment[Result, Context, Network]) ?=> Result,
     private val retainTime: Int = 1,
     private val networkFactory: Environment[Result, Context, Network] ?=> Node[Result, Context, Network] => Network,

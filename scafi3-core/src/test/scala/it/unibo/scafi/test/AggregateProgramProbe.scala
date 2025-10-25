@@ -14,11 +14,10 @@ trait AggregateProgramProbe:
       Result,
       Context <: AggregateContext { type DeviceId = ID },
   ](
-      localId: ID,
       network: NetworkManager { type DeviceId = ID },
-      factory: (ID, NetworkManager { type DeviceId = ID }, ValueTree) => Context,
+      factory: (NetworkManager { type DeviceId = ID }, ValueTree) => Context,
   )(
       aggregateProgram: Context ?=> Result,
   ): (Result, Export[ID]) =
-    val engine = ScafiEngine(localId, network, factory)(aggregateProgram)
+    val engine = ScafiEngine(network, factory)(aggregateProgram)
     (engine.cycle(), engine.lastExportResult)

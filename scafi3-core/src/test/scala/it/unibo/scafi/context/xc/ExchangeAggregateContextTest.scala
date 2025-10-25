@@ -28,7 +28,7 @@ class ExchangeAggregateContextTest
   "Exchange construct" should "return a different value than the one sent" in:
     def programRetSend(using Lang) = exchange(localId) { x => returning(x.map(_ + 1)) send x }.default
     val (result, exportValue) =
-      roundForAggregateProgram(0, NoNeighborsNetworkManager[Int](), exchangeContextFactory)(programRetSend)
+      roundForAggregateProgram(NoNeighborsNetworkManager(localId = 0), exchangeContextFactory)(programRetSend)
     result shouldBe 1
     val singlePath = exportValue(0).paths.head // There is only one path
     try exportValue(0).apply[Int](singlePath) shouldBe 0
