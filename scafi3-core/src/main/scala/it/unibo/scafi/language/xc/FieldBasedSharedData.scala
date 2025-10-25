@@ -9,7 +9,7 @@ import it.unibo.scafi.utils.SharedDataOps
 import scala.collection.MapView
 
 /**
- * Implements the foundational semantics for the SharedData of the exchange calculus.
+ * Implements the foundational semantics for the [[SharedData]] of the exchange calculus.
  */
 trait FieldBasedSharedData:
   this: ExchangeCalculus =>
@@ -32,7 +32,7 @@ trait FieldBasedSharedData:
 
     /**
      * @return
-     *   a filtered view of the SharedData data that only contains the values for aligned devices
+     *   a filtered view of the [[SharedData]] data that only contains the values for aligned devices
      */
     def alignedValues: Map[DeviceId, Value] =
       if neighborValues.isEmpty then Map(localId -> default) // self is always aligned, even if there are no neighbors
