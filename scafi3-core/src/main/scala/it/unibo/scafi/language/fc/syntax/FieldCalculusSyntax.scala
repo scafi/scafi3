@@ -4,7 +4,7 @@ import it.unibo.scafi.language.AggregateFoundation
 import it.unibo.scafi.message.CodableFromTo
 
 trait FieldCalculusSyntax:
-  self: AggregateFoundation =>
+  this: AggregateFoundation =>
 
   /**
    * `neighborValues` sends a local value to <b>neighbours</b> and returns the aggregate value of the received messages.

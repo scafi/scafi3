@@ -9,17 +9,17 @@ import it.unibo.scafi.message.CodableFromTo
 trait ExchangeCalculus extends AggregateFoundation:
 
   /**
-   * Operations on NValues are provided by the ExchangeCalculusSemantics as extension methods.
+   * Operations on [[SharedData]] are provided as extension methods.
    *
    * @return
-   *   an instance of NValuesOps
+   *   an instance of [[SharedDataOps]]
    * @see
    *   [[ShareDataOps]]
    */
   given fieldOps: ShareDataOps[SharedData, DeviceId] = scala.compiletime.deferred
 
   /**
-   * Local values can be considered NValues.
+   * Local values can be considered [[SharedData]].
    *
    * @tparam T
    *   can be any local value

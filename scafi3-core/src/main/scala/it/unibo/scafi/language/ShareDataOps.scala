@@ -3,7 +3,7 @@ package it.unibo.scafi.language
 import scala.collection.MapView
 
 /**
- * This trait defines the operations that can be performed on NValues.
+ * This trait defines the operations that can be performed on [[SharedData]].
  * @tparam SharedData
  *   the type of the NeighboringValue
  * @tparam DeviceId
@@ -15,7 +15,7 @@ trait ShareDataOps[SharedData[_], DeviceId]:
 
     /**
      * @return
-     *   the default value of the NValues
+     *   the default value of the [[SharedData]]
      */
     def default: Value
 
@@ -26,13 +26,13 @@ trait ShareDataOps[SharedData[_], DeviceId]:
     def values: MapView[DeviceId, Value]
 
     /**
-     * Maps the NValues to a new one with the value corresponding to the given device id set to the given value.
+     * Maps the [[SharedData]] to a new one with the value corresponding to the given device id set to the given value.
      * @param id
      *   the device id
      * @param value
      *   the new value
      * @return
-     *   the new NValues
+     *   the new [[SharedData]]
      */
     def set(id: DeviceId, value: Value): SharedData[Value]
 
