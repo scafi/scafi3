@@ -15,7 +15,7 @@ trait ShareDataOps[SharedData[_], DeviceId]:
 
     /**
      * @return
-     *   the default value of the SharedData
+     *   the default value of the [[SharedData]]
      */
     def default: Value
 
@@ -26,13 +26,13 @@ trait ShareDataOps[SharedData[_], DeviceId]:
     def values: MapView[DeviceId, Value]
 
     /**
-     * Maps the SharedData to a new one with the value corresponding to the given device id set to the given value.
+     * Maps the [[SharedData]] to a new one with the value corresponding to the given device id set to the given value.
      * @param id
      *   the device id
      * @param value
      *   the new value
      * @return
-     *   the new SharedData
+     *   the new [[SharedData]]
      */
     def set(id: DeviceId, value: Value): SharedData[Value]
 
