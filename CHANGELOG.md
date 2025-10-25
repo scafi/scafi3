@@ -1,3 +1,13 @@
+## [1.3.1](https://github.com/scafi/scafi3/compare/v1.3.0...v1.3.1) (2025-10-25)
+
+### Dependency updates
+
+* **deps:** update alchemistversion to v42.3.14 ([843ce8a](https://github.com/scafi/scafi3/commit/843ce8ad50a0aaa1c4e347f31f3e22c1b9deb9cd))
+
+### Bug Fixes
+
+* avoid the pitfall of possibly infinitely recursive calls due to an extension method delegating to a class method with the same name, for instance `default` on SharedDataOps and Field ([#168](https://github.com/scafi/scafi3/issues/168)) ([accc4ef](https://github.com/scafi/scafi3/commit/accc4ef3e62c05c52045ba800f3cebcfc2d81e30))
+
 ## [1.3.0](https://github.com/scafi/scafi3/compare/v1.2.0...v1.3.0) (2025-10-23)
 
 ### Features
