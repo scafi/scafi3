@@ -37,9 +37,8 @@ class RunScafi3Program[T, Position <: AlchemistPosition[Position]](
   val localDevice: Scafi3Device[T, Position] = node.asProperty(classOf[Scafi3Device[T, Position]])
 
   private val scafiProgram: ScafiEngine[Int, ? <: AggregateContext, Scafi3Device[T, Position], T] = ScafiEngine(
-    node.getId,
     localDevice,
-    (_, net, state) => AlchemistExchangeContext[T, Position](node, environment, net.receive, state),
+    (net, state) => AlchemistExchangeContext[T, Position](node, environment, net.receive, state),
   )(runProgram)
 
   declareDependencyTo(programIdentifier)

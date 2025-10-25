@@ -11,13 +11,13 @@ class Node[Result, Context <: IntAggregateContext, Network <: IntNetworkManager]
     val environment: Environment[Result, Context, Network],
     val id: Int,
     val retain: Int,
-    private val contextFactory: (Int, Network, ValueTree) => Context,
+    private val contextFactory: (Network, ValueTree) => Context,
     private val program: (Context, Environment[Result, Context, Network]) ?=> Result,
     private val networkManagerFactory: Node[Result, Context, Network] => Network,
 ):
   lazy val networkManager: Network = networkManagerFactory(this)
   private var currentResult: Result = uninitialized
-  private lazy val engine = ScafiEngine(id, networkManager, contextFactory): ctx ?=>
+  private lazy val engine = ScafiEngine(networkManager, contextFactory): ctx ?=>
     program(using ctx, environment)
 
   /**
@@ -59,6 +59,8 @@ object Node:
       node: Node[Result, Context, Network],
   ) extends NetworkManager:
     override type DeviceId = Int
+
+    override val localId: Int = node.id
 
     override def send(message: Export[Int]): Unit = () // In-memory message communication
 

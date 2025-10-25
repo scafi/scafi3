@@ -25,7 +25,7 @@ class Scafi3Device[T, Position <: AlchemistPosition[Position]](
 
   private def time: Time = environment.getSimulation.getTime
 
-  lazy val localId: Int = node.getId
+  override lazy val localId: Int = node.getId
 
   override def send(message: Export[Int]): Unit =
     environment
