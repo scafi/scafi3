@@ -1,12 +1,13 @@
 package it.unibo.scafi.language.xc
 
-import cats.Applicative
+import scala.collection.MapView
+
 import it.unibo.scafi.collections.SafeIterable
 import it.unibo.scafi.language.ShareDataOps
 import it.unibo.scafi.language.xc.calculus.ExchangeCalculus
 import it.unibo.scafi.utils.SharedDataOps
 
-import scala.collection.MapView
+import cats.Applicative
 
 /**
  * Implements the foundational semantics for the [[SharedData]] of the exchange calculus.
