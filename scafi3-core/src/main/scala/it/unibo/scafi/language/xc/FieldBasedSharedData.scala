@@ -1,13 +1,12 @@
 package it.unibo.scafi.language.xc
 
-import scala.collection.MapView
-
+import cats.Applicative
 import it.unibo.scafi.collections.SafeIterable
 import it.unibo.scafi.language.ShareDataOps
 import it.unibo.scafi.language.xc.calculus.ExchangeCalculus
 import it.unibo.scafi.utils.SharedDataOps
 
-import cats.Applicative
+import scala.collection.MapView
 
 /**
  * Implements the foundational semantics for the [[SharedData]] of the exchange calculus.
@@ -65,7 +64,7 @@ trait FieldBasedSharedData:
   protected def alignedDevices: Iterable[DeviceId]
 
   override given fieldOps: ShareDataOps[SharedData, DeviceId] = new ShareDataOps[SharedData, DeviceId]:
-    extension [T](nv: SharedData[T])
+    extension [T](nv: Field[T])
       override def default: T = nv.default
       override def values: MapView[DeviceId, T] = nv.alignedValues.view
       override def set(id: DeviceId, value: T): SharedData[T] = Field[T](
@@ -89,7 +88,7 @@ trait FieldBasedSharedData:
     )
 
   override given sharedDataOps: SharedDataOps[SharedData] = new SharedDataOps[SharedData]:
-    extension [A](a: SharedData[A])
+    extension [A](a: Field[A])
       override def withoutSelf: SafeIterable[A] =
         val filtered = a.alignedValues.view.filterKeys(_ != localId).values
         SafeIterable(filtered)
