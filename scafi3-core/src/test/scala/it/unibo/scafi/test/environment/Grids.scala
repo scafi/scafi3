@@ -38,7 +38,7 @@ object Grids:
    * @param sizeY
    *   The number of nodes along the Y-axis.
    * @param contextFactory
-   *   A function to create the context for each node, given its ID and a `NetworkManager`.
+   *   A function to create the context for each node, given its `NetworkManager`.
    * @param networkFactory
    *   A function to create the network manager for each node, given the node and the environment as context.
    * @param program
@@ -55,7 +55,7 @@ object Grids:
   def mooreGrid[Result, Context <: IntAggregateContext, Network <: IntNetworkManager](
       sizeX: Int,
       sizeY: Int,
-      contextFactory: (Int, Network, ValueTree) => Context,
+      contextFactory: (Network, ValueTree) => Context,
       networkFactory: Environment[Result, Context, Network] ?=> Node[Result, Context, Network] => Network,
   )(
       program: (Context, Environment[Result, Context, Network]) ?=> Result,
@@ -76,7 +76,7 @@ object Grids:
    * @param sizeY
    *   The number of nodes along the Y-axis.
    * @param contextFactory
-   *   A function to create the context for each node, given its ID and a `NetworkManager`.
+   *   A function to create the context for each node, given its `NetworkManager`.
    * @param networkFactory
    *   A function to create the network manager for each node, given the node and the environment as context.
    * @param program
@@ -93,7 +93,7 @@ object Grids:
   def vonNeumannGrid[Result, Context <: IntAggregateContext, Network <: IntNetworkManager](
       sizeX: Int,
       sizeY: Int,
-      contextFactory: (Int, Network, ValueTree) => Context,
+      contextFactory: (Network, ValueTree) => Context,
       networkFactory: Environment[Result, Context, Network] ?=> Node[Result, Context, Network] => Network,
   )(
       program: (Context, Environment[Result, Context, Network]) ?=> Result,

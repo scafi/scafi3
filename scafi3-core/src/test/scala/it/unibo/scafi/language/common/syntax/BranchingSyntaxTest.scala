@@ -23,7 +23,7 @@ trait BranchingSyntaxTest extends AggregateProgramProbe:
     AggregateContext & AggregateFoundation { type DeviceId = Int } & BranchingSyntax & FieldCalculusSyntax
 
   def branchSpecification[Context <: BranchingContext](
-      contextFactory: (Int, NetworkManager { type DeviceId = Int }, ValueTree) => Context,
+      contextFactory: (NetworkManager { type DeviceId = Int }, ValueTree) => Context,
   ): Unit =
     "Branch operator" should "partition the network based on a condition" in:
       val env = mooreGrid(5, 5, contextFactory, inMemoryNetwork):

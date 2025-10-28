@@ -16,7 +16,7 @@ import it.unibo.scafi.utils.Channel
  * @tparam ID
  *   the type of the self's device identifier.
  */
-trait ConnectionOrientedNetworkManager[ID](deviceId: ID, port: Port)(using ExecutionContext)
+trait ConnectionOrientedNetworkManager[ID](override val localId: ID, port: Port)(using ExecutionContext)
     extends NetworkManager
     with ConnectionOrientedNetworking
     with AutoCloseable:
@@ -66,7 +66,7 @@ trait ConnectionOrientedNetworkManager[ID](deviceId: ID, port: Port)(using Execu
           .get(endpoint)
           .filter(_.isOpen)
           .fold(establishConnection(endpoint))(Future.successful)
-          .flatMap(conn => conn.send((deviceId, valueTree)).map(_ => Right(endpoint -> conn)))
+          .flatMap(conn => conn.send((localId, valueTree)).map(_ => Right(endpoint -> conn)))
           .recover { case e => Left(e) }
       _ <- client(newConnections.collect { case Right(nc) => nc }.toMap)
     yield ()).andThen(_ => connections.values.foreach(_.close()))

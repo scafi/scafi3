@@ -1,3 +1,20 @@
+## [2.0.0](https://github.com/scafi/scafi3/compare/v1.3.1...v2.0.0) (2025-10-28)
+
+### ⚠ BREAKING CHANGES
+
+* **core:** remove `localId` from `ScafiEngine` constructor since it can be derived from the network (#167)
+
+### Dependency updates
+
+* **deps:** update alchemistversion to v42.3.15 ([6fd7072](https://github.com/scafi/scafi3/commit/6fd707263e4f466cd30146c43e7fa4097583d90a))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.150 ([ef94022](https://github.com/scafi/scafi3/commit/ef94022c643a609abb8a5e786fea369b1a16b59a))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.151 ([376d879](https://github.com/scafi/scafi3/commit/376d87988a644aecb839a553de52965e523d73cc))
+* **deps:** update dependency semantic-release-preconfigured-conventional-commits to v1.1.152 ([54032d4](https://github.com/scafi/scafi3/commit/54032d47293a596ed6c070718e8245548eed6207))
+
+### Refactoring
+
+* **core:** remove `localId` from `ScafiEngine` constructor since it can be derived from the network ([#167](https://github.com/scafi/scafi3/issues/167)) ([965829d](https://github.com/scafi/scafi3/commit/965829d6e26b56560014f39ca5d4747f87b68ca9))
+
 ## [1.3.1](https://github.com/scafi/scafi3/compare/v1.3.0...v1.3.1) (2025-10-25)
 
 ### Dependency updates

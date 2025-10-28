@@ -40,8 +40,7 @@ end ExchangeAggregateContext
 
 object ExchangeAggregateContext:
   def exchangeContextFactory[ID, Network <: NetworkManager { type DeviceId = ID }](
-      localId: ID,
       network: Network,
       selfMessagesFromPreviousRound: ValueTree,
   ): ExchangeAggregateContext[ID] =
-    new ExchangeAggregateContext[ID](localId, network.receive, selfMessagesFromPreviousRound) {}
+    new ExchangeAggregateContext[ID](network.localId, network.receive, selfMessagesFromPreviousRound) {}
