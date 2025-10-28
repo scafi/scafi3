@@ -1,7 +1,6 @@
 package it.unibo.scafi.language
 
 import it.unibo.scafi.collections.SafeIterable
-import it.unibo.scafi.utils.SharedDataOps
 
 import cats.Applicative
 

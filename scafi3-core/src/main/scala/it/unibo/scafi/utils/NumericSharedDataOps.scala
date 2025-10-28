@@ -1,9 +1,9 @@
 package it.unibo.scafi.utils
 
-import it.unibo.scafi.language.AggregateFoundation
+import it.unibo.scafi.language.xc.FieldBasedSharedData
 
 object NumericSharedDataOps:
-  extension [V: Numeric as numeric](using lang: AggregateFoundation)(data: lang.SharedData[V])
+  extension [V: Numeric as numeric](using lang: FieldBasedSharedData)(data: lang.SharedData[V])
     infix def +(that: lang.SharedData[V]): lang.SharedData[V] = data.alignedMap(that)(numeric.plus)
     infix def -(that: lang.SharedData[V]): lang.SharedData[V] = data.alignedMap(that)(numeric.minus)
     infix def *(that: lang.SharedData[V]): lang.SharedData[V] = data.alignedMap(that)(numeric.times)
@@ -13,10 +13,10 @@ object NumericSharedDataOps:
     def toDouble: lang.SharedData[Double] = data.mapValues(numeric.toDouble)
     def abs: lang.SharedData[V] = data.mapValues(numeric.abs)
 
-  extension [V: Fractional as fractional](using lang: AggregateFoundation)(data: lang.SharedData[V])
+  extension [V: Fractional as fractional](using lang: FieldBasedSharedData)(data: lang.SharedData[V])
     infix def /(that: lang.SharedData[V]): lang.SharedData[V] = data.alignedMap(that)(fractional.div)
 
-  extension [V: Integral as integral](using lang: AggregateFoundation)(data: lang.SharedData[V])
+  extension [V: Integral as integral](using lang: FieldBasedSharedData)(data: lang.SharedData[V])
     infix def /(that: lang.SharedData[V]): lang.SharedData[V] = data.alignedMap(that)(integral.quot)
     infix def %(that: lang.SharedData[V]): lang.SharedData[V] = data.alignedMap(that)(integral.rem)
     infix def /%(that: lang.SharedData[V]): lang.SharedData[(V, V)] =

@@ -34,7 +34,7 @@ trait Programs:
   )
 
   def neighborsDiscoveryProgram: ProgramWithResult[Map[ID, Int]] = ProgramWithResult(
-    program = neighborValues(localId).neighborValues,
+    program = neighborValues(localId).values,
     expected = Map(
       0 -> Map(1 -> 1, 2 -> 2, 0 -> 0),
       1 -> Map(0 -> 0, 3 -> 3, 1 -> 1),
@@ -45,9 +45,9 @@ trait Programs:
 
   def exchangeWithRestrictionsProgram: ProgramWithResult[Map[ID, Int]] = ProgramWithResult(
     program = branch(localId % 2 == 0)(
-      exchange(100)(returnSending).neighborValues,
+      exchange(100)(returnSending).values,
     )(
-      exchange(200)(returnSending).neighborValues,
+      exchange(200)(returnSending).values,
     ),
     expected = Map(
       0 -> Map(2 -> 100, 0 -> 100),
