@@ -113,7 +113,7 @@ lazy val `scafi3-distributed` = crossProject(JSPlatform, JVMPlatform, NativePlat
     name := "scafi3-distributed",
     libraryDependencies ++= Seq(
       "io.bullet" %%% "borer-core" % "1.16.2",
-      "io.bullet" %%% "borer-derivation" % "1.16.1",
+      "io.bullet" %%% "borer-derivation" % "1.16.2",
     ),
   )
 
