@@ -1,7 +1,12 @@
-import scala.scalanative.build.*
-import sbtcrossproject.CrossProject
+import BuildUtils.{ macosLinkingOptions, moveNativeLibrary }
+import NativeBindingsUtils.autoImport.*
+import bindgen.interface.Binding
 import org.scalajs.linker.interface.OutputPatterns
+import sbtcrossproject.CrossProject
 
+import scala.scalanative.build.{ BuildTarget, GC, LTO, Mode }
+
+val projectName = "scafi3"
 val scala3Version = "3.7.3"
 
 ThisBuild / scalaVersion := scala3Version
@@ -60,6 +65,9 @@ val commonScalacOptions = Seq(
 ThisBuild / semanticdbEnabled := true
 ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
 
+val ExclusiveTestTag = Tags.Tag("exclusive-test")
+Global / concurrentRestrictions += Tags.exclusive(ExclusiveTestTag)
+
 lazy val commonSettings = Seq(
   libraryDependencies ++= Seq(
     "org.typelevel" %%% "cats-core" % "2.13.0",
@@ -73,12 +81,20 @@ lazy val commonSettings = Seq(
 )
 
 lazy val commonNativeSettings = Seq(
-  nativeConfig ~= {
-    _.withLTO(LTO.full)
+  nativeConfig := {
+    nativeConfig.value
+      .withLTO(LTO.full)
       .withMode(Mode.releaseSize)
       .withGC(GC.immix)
       .withBuildTarget(BuildTarget.libraryDynamic)
+      .withBaseName(projectName)
+      .withLinkingOptions(nativeConfig.value.linkingOptions ++ macosLinkingOptions(projectName))
+      .withCheck(true)
+      .withCheckFeatures(true)
+      .withCheckFatalWarnings(true)
   },
+  Compile / nativeLink := moveNativeLibrary(libraryFile = (Compile / nativeLink).value, target.value, projectName),
+  scalacOptions ++= Seq("-Wconf:msg=unused import&src=.*[\\\\/]src_managed[\\\\/].*:silent"),
   coverageEnabled := false,
 )
 
@@ -87,7 +103,10 @@ lazy val commonJsSettings = Seq(
     _.withModuleKind(ModuleKind.ESModule)
       .withOutputPatterns(OutputPatterns.fromJSFile("%s.mjs"))
       .withOptimizer(true)
+      .withCheckIR(true)
   },
+  Compile / fastLinkJS / scalaJSLinkerOutputDirectory := target.value / "fastLinkJS",
+  Compile / fullLinkJS / scalaJSLinkerOutputDirectory := target.value / "fullLinkJS",
   coverageEnabled := false,
 )
 
@@ -115,6 +134,40 @@ lazy val `scafi3-distributed` = crossProject(JSPlatform, JVMPlatform, NativePlat
       "io.bullet" %%% "borer-core" % "1.16.2",
       "io.bullet" %%% "borer-derivation" % "1.16.2",
     ),
+  )
+
+lazy val `scafi3-polyglot-api` = crossProject(JSPlatform, JVMPlatform, NativePlatform)
+  .crossType(CrossType.Full)
+  .in(file("scafi3-polyglot-api"))
+  .dependsOn(`scafi3-core` % "compile->compile;test->test", `scafi3-distributed` % "compile->compile;test->test")
+  .nativeEnablePlugins(BindgenPlugin, NativeBindingsUtils)
+  .nativeSettings(
+    commonNativeSettings,
+    nativeBindings += Binding(
+      header = (Compile / resourceDirectory).value / "include" / "scafi3.h",
+      packageName = "it.unibo.scafi.nativebindings",
+    )
+  )
+  .jsSettings(commonJsSettings)
+  .settings(commonSettings)
+  .settings(
+    name := "scafi3-polyglot-api",
+    publish / skip := true,
+    libraryDependencies ++= Seq(
+      "org.scala-js" %% "scalajs-stubs" % "1.1.0" % "provided",
+    ),
+  )
+
+lazy val `scafi3-integration` = project
+  .in(file("scafi3-integration"))
+  .dependsOn(`scafi3-distributed`.jvm % "compile->compile;test->test")
+  .settings(
+    commonSettings,
+    publish / skip := true,
+    Test / test := (Test / test)
+      .dependsOn(`scafi3-polyglot-api`.js / Compile / fullLinkJS, `scafi3-polyglot-api`.native / Compile / nativeLink)
+      .tag(ExclusiveTestTag)
+      .value,
   )
 
 val alchemistVersion = "42.3.16"
@@ -150,10 +203,10 @@ lazy val example = project
 lazy val root = project
   .in(file("."))
   .enablePlugins(ScalaUnidocPlugin)
-  .aggregate(`alchemist-incarnation-scafi3`)
-  .aggregate(crossProjects(`scafi3-core`, `scafi3-distributed`).map(_.project)*)
+  .aggregate(`alchemist-incarnation-scafi3`, `scafi3-integration`)
+  .aggregate(crossProjects(`scafi3-core`, `scafi3-distributed`, `scafi3-polyglot-api`).map(_.project)*)
   .settings(
-    name := "scafi3",
+    name := projectName,
     publish / skip := true,
     publishArtifact := false,
   )
