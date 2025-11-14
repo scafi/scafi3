@@ -1,11 +1,12 @@
 package it.unibo.scafi.utils
 
-import it.unibo.scafi.language.AggregateFoundation
+import it.unibo.scafi.language.xc.FieldBasedSharedData
 
 object OrderingSharedDataOps:
-  extension [V: Ordering as ordering](using lang: AggregateFoundation)(data: lang.SharedData[V])
-    infix def compare(that: lang.SharedData[V]): lang.SharedData[Int] = data.alignedMap(that)(ordering.compare)
-    infix def min(that: lang.SharedData[V]): lang.SharedData[V] = data.alignedMap(that)(ordering.min)
-    infix def max(that: lang.SharedData[V]): lang.SharedData[V] = data.alignedMap(that)(ordering.max)
+  extension [V: Ordering as ordering](using fieldData: FieldBasedSharedData)(data: fieldData.SharedData[V])
+    infix def compare(that: fieldData.SharedData[V]): fieldData.SharedData[Int] =
+      data.alignedMap(that)(ordering.compare)
+    infix def min(that: fieldData.SharedData[V]): fieldData.SharedData[V] = data.alignedMap(that)(ordering.min)
+    infix def max(that: fieldData.SharedData[V]): fieldData.SharedData[V] = data.alignedMap(that)(ordering.max)
     def max: V = data.withoutSelf.foldLeft(data.onlySelf)(ordering.max)
     def min: V = data.withoutSelf.foldLeft(data.onlySelf)(ordering.min)

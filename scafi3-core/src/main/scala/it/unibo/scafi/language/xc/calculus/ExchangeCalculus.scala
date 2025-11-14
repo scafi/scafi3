@@ -1,6 +1,7 @@
 package it.unibo.scafi.language.xc.calculus
 
-import it.unibo.scafi.language.{ AggregateFoundation, ShareDataOps }
+import it.unibo.scafi.language.AggregateFoundation
+import it.unibo.scafi.language.xc.NeighborValuesOps
 import it.unibo.scafi.message.CodableFromTo
 
 /**
@@ -14,9 +15,9 @@ trait ExchangeCalculus extends AggregateFoundation:
    * @return
    *   an instance of [[SharedDataOps]]
    * @see
-   *   [[ShareDataOps]]
+   *   [[NeighborValuesOps]]
    */
-  given fieldOps: ShareDataOps[SharedData, DeviceId] = scala.compiletime.deferred
+  given neighborValuesOps: NeighborValuesOps[SharedData, DeviceId] = scala.compiletime.deferred
 
   /**
    * Local values can be considered [[SharedData]].
