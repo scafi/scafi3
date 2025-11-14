@@ -8,6 +8,7 @@ import scala.util.chaining.scalaUtilChainingOps
 
 import it.unibo.scafi.context.xc.ExchangeAggregateContext.exchangeContextFactory
 import it.unibo.scafi.message.BinaryCodable
+import it.unibo.scafi.runtime.network.ExpirationConfiguration
 import it.unibo.scafi.runtime.network.sockets.{
   ConnectionConfiguration,
   ConnectionOrientedNetworkManager,
@@ -32,6 +33,8 @@ trait DistributedScenarioTest extends AsyncSpec with Programs:
   given ConnectionConfiguration = new ConnectionConfiguration:
     override val inactivityTimeout: FiniteDuration = 2.seconds
     override val maxMessageSize: Int = 65_536
+
+  given ExpirationConfiguration = ExpirationConfiguration.basic
 
   "Evolve program" should "make single nodes evolve as expected" in
     socketBasedDistributedEnvironment(evolveProgram)

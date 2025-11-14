@@ -32,5 +32,12 @@ trait NetworkManager:
    */
   def receive: Import[DeviceId]
 
+  /**
+   * This method is called when a message is received from a neighbor device.
+   * @param from
+   *   the deviceId of the sender device.
+   * @param message
+   *   the [[ValueTree]] message received.
+   */
   def deliverableReceived(from: DeviceId, message: ValueTree): Unit
 end NetworkManager

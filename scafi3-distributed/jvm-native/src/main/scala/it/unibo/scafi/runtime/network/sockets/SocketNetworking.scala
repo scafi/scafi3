@@ -9,6 +9,8 @@ import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.{ Success, Try }
 import scala.util.chaining.scalaUtilChainingOps
 
+import it.unibo.scafi.runtime.network.sockets.InetTypes.{ assume, Endpoint, Port }
+
 trait SocketNetworking(using ec: ExecutionContext, conf: ConnectionConfiguration) extends ConnectionOrientedTemplate:
 
   override def out(endpoint: Endpoint): Future[Connection] =

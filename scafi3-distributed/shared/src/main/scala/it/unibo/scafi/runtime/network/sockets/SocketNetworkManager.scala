@@ -3,14 +3,15 @@ package it.unibo.scafi.runtime.network.sockets
 import scala.concurrent.ExecutionContext
 
 import it.unibo.scafi.message.{ BinaryCodable, BinaryDecodable, BinaryEncodable }
+import it.unibo.scafi.runtime.network.{ ExpirationConfiguration, Neighborhood, TimeRetention }
 import it.unibo.scafi.runtime.network.CodableInstances.given
-import it.unibo.scafi.runtime.network.Neighborhood
 import it.unibo.scafi.runtime.network.sockets.InetTypes.{ Endpoint, Port }
 
 object SocketNetworkManager:
 
   /**
-   * Creates a new socket-based [[NetworkManager]] with statically assigned neighbors.
+   * Creates a new socket-based [[NetworkManager]] with statically assigned neighbors and configurable [[TimeRetention]]
+   * expiration policy.
    * @param deviceId
    *   the device identifier of the self-node.
    * @param port
@@ -28,8 +29,11 @@ object SocketNetworkManager:
       deviceId: ID,
       port: Port,
       neighbors: => Map[ID, Endpoint],
-  )(using ExecutionContext, ConnectionConfiguration): ConnectionOrientedNetworkManager[ID] =
-    new ConnectionOrientedNetworkManager(deviceId, port) with SocketNetworking with InetAwareNeighborhoodResolver:
+  )(using ExecutionContext, ConnectionConfiguration, ExpirationConfiguration): ConnectionOrientedNetworkManager[ID] =
+    new ConnectionOrientedNetworkManager(deviceId, port)
+      with TimeRetention
+      with SocketNetworking
+      with InetAwareNeighborhoodResolver:
       override def neighborhood: Neighborhood[DeviceId] = neighbors.keySet
       extension (id: ID) override def endpoint: Option[Endpoint] = neighbors.get(id)
 end SocketNetworkManager

@@ -2,11 +2,12 @@ package it.unibo.scafi.runtime.network.sockets
 
 import scala.concurrent.Future
 
+import it.unibo.scafi.runtime.network.sockets.InetTypes.{ Endpoint, Port }
+
 /**
  * Networking platform-independent abstraction for connection-oriented networking operations.
  */
 trait ConnectionOrientedNetworking:
-  export InetTypes.*
 
   /** The incoming message type from remote processes. */
   type MessageIn

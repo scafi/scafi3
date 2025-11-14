@@ -1,14 +1,12 @@
 package it.unibo.scafi.runtime.network.sockets
 
-import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicReference
 
 import scala.concurrent.{ ExecutionContext, Future }
-import scala.jdk.CollectionConverters.MapHasAsScala
 
-import it.unibo.scafi.message.{ Export, Import, ValueTree }
-import it.unibo.scafi.runtime.network.NetworkManager
-import it.unibo.scafi.runtime.network.sockets.InetTypes.Port
+import it.unibo.scafi.message.{ Export, ValueTree }
+import it.unibo.scafi.runtime.network.{ ExpirationPolicy, LatestBufferingNetwork }
+import it.unibo.scafi.runtime.network.sockets.InetTypes.{ Endpoint, Port }
 import it.unibo.scafi.utils.Channel
 
 /**
@@ -17,10 +15,9 @@ import it.unibo.scafi.utils.Channel
  *   the type of the self's device identifier.
  */
 trait ConnectionOrientedNetworkManager[ID](override val localId: ID, port: Port)(using ExecutionContext)
-    extends NetworkManager
-    with ConnectionOrientedNetworking
+    extends LatestBufferingNetwork
     with AutoCloseable:
-  self: InetAwareNeighborhoodResolver =>
+  self: ConnectionOrientedNetworking & InetAwareNeighborhoodResolver & ExpirationPolicy =>
 
   override type DeviceId = ID
 
@@ -31,7 +28,6 @@ trait ConnectionOrientedNetworkManager[ID](override val localId: ID, port: Port)
   override type MessageOut = Envelope
 
   private val outChannel = Channel[Set[MessageOut]]
-  private val inValues = ConcurrentHashMap[DeviceId, ValueTree]()
   private val connectionsListener = AtomicReference[ListenerRef]()
 
   /**
@@ -50,12 +46,6 @@ trait ConnectionOrientedNetworkManager[ID](override val localId: ID, port: Port)
   override def send(message: Export[DeviceId]): Unit =
     try outChannel.push(neighborhood.map(id => id -> message(id)))
     catch case _: Channel.ChannelClosedException => scribe.error("The network manager is closed, cannot send message.")
-
-  override def receive: Import[DeviceId] = Import(inValues.asScala.toMap)
-
-  override def deliverableReceived(from: DeviceId, message: ValueTree): Unit =
-    inValues.put(from, message)
-    ()
 
   private def client(connections: Map[Endpoint, Connection]): Future[Unit] =
     (for

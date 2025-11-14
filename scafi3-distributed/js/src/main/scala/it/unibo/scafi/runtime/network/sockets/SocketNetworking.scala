@@ -8,6 +8,7 @@ import scala.scalajs.js
 import scala.util.{ Success, Try }
 import scala.util.chaining.scalaUtilChainingOps
 
+import it.unibo.scafi.runtime.network.sockets.InetTypes.{ assume, Endpoint, Port }
 import it.unibo.scafi.utils.Uint8ArrayOps.{ toByteArray, toUint8Array }
 
 trait SocketNetworking(using ec: ExecutionContext, conf: ConnectionConfiguration) extends ConnectionOrientedTemplate:
