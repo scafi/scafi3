@@ -117,7 +117,7 @@ lazy val `scafi3-distributed` = crossProject(JSPlatform, JVMPlatform, NativePlat
     ),
   )
 
-val alchemistVersion = "42.3.17"
+val alchemistVersion = "42.3.18"
 lazy val `alchemist-incarnation-scafi3` = project
   .settings(commonSettings)
   .settings(
