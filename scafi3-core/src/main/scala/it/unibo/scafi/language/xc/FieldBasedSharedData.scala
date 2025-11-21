@@ -91,10 +91,8 @@ trait FieldBasedSharedData:
             a.neighborValues.view.map { case (id, value) => id -> f(value, other(id)) }.toMap,
           )
         override def apply(id: DeviceId): A = a.neighborValues.getOrElse(id, a.defaultValue)
-        private[xc] override def set(id: DeviceId, value: A): SharedData[A] = Field[A](
-          a.default,
-          a.neighborValues + (id -> value),
-        )
+        private[xc] override def set(id: DeviceId, value: A): SharedData[A] =
+          Field[A](a.default, a.neighborValues + (id -> value))
         override def default: A = a.defaultValue
         override def values: Map[DeviceId, A] = a.neighborValues
         override def get(id: DeviceId): Option[A] = a.neighborValues.get(id)
