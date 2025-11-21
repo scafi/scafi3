@@ -1,3 +1,4 @@
+import BuildUtils.{ Windows, os }
 import bindgen.interface.Binding
 import bindgen.plugin.BindgenPlugin
 import sbt.*
@@ -77,6 +78,7 @@ object NativeBindingsUtils extends AutoPlugin {
 
   private def generateWithDocker(config: Config)(implicit log: Logger): Seq[File] = {
     val headers = config.bindings.map(_.headerFile).toSet
+    val homeDir = if (os == Windows) "/root" else "/home/sbtuser"
     FileFunction.cached(cacheBaseDirectory = config.cacheDir / "bindgen") { _ =>
       if (!isDockerAvailable) {
         sys.error("Docker is needed to generate native bindings but is not available")
@@ -90,23 +92,27 @@ object NativeBindingsUtils extends AutoPlugin {
         imageName = dockerImageName,
         command = s"sbt ${config.projectId}/bindgenGenerateScalaSources",
         workDir = config.rootDir,
-        volumes = Map(config.rootDir -> "/project", tempHome -> "/home/sbtuser"),
-        envVars = Map("HOME" -> "/home/sbtuser", envVarName -> "true"),
+        volumes = Map(config.rootDir -> "/project", tempHome -> homeDir),
+        envVars = Map("HOME" -> homeDir, envVarName -> "true"),
       )
       generatedFiles(config.buildDir).toSet
     }(headers).toSeq
   }
 
-  private def isDockerAvailable: Boolean = Try(Process("docker --version").! == 0).getOrElse(false)
+  private def isDockerAvailable: Boolean = Try(Process(Seq("docker", "--version")).! == 0).getOrElse(false)
 
   private def generatedFiles(managedDir: File): Seq[File] = (managedDir ** "*.scala").get
 
-  private def imageExists(imageName: String): Boolean = Process(s"docker image inspect $imageName").! == 0
+  private def imageExists(imageName: String): Boolean = Process(Seq("docker", "image", "inspect", imageName)).! == 0
 
   private def buildImage(imageName: String, dockerfile: File)(implicit log: Logger): Unit = {
     log.info(s"Building Docker image '$imageName'. This may take a while but will be done only once...")
-    val command = s"docker build -f ${dockerfile.absolutePath} -t $imageName ${dockerfile.getParentFile.absolutePath}"
-    val exitCode = Process(command).!
+    val exitCode = Process(Seq(
+      "docker", "build",
+      "-f", dockerfile.absolutePath,
+      "-t", imageName,
+      dockerfile.getParentFile.absolutePath
+    )).!
     if (exitCode != 0) sys.error("Docker image build failed")
   }
 
@@ -117,12 +123,15 @@ object NativeBindingsUtils extends AutoPlugin {
     volumes: Map[File, String] = Map.empty,
     envVars: Map[String, String] = Map.empty,
   )(implicit log: Logger): Unit = {
-    val userId = sys.env.get("UID").orElse(Try(Process("id -u").!!.trim).toOption).getOrElse("1000")
-    val groupId = sys.env.get("GID").orElse(Try(Process("id -g").!!.trim).toOption).getOrElse("1000")
-    val mounts = volumes.map { case (hostPath, destPath) => s"-v ${hostPath.absolutePath}:$destPath" }.mkString(" ")
-    val envVarArgs = envVars.map { case (key, value) => s"-e $key=$value" }.mkString(" ")
-    val dockerCmd = s"docker run --rm --user $userId:$groupId $mounts $envVarArgs $imageName $command"
-    val exitCode = Process(Seq("sh", "-c", dockerCmd), cwd = workDir).!
+    val userId = sys.env.get("UID").orElse(Try(Process(Seq("id", "-u")).!!.trim).toOption).getOrElse("1000")
+    val groupId = sys.env.get("GID").orElse(Try(Process(Seq("id", "-g")).!!.trim).toOption).getOrElse("1000")
+    val userGroupOptions = if (os == Windows) Seq() else Seq("--user", s"$userId:$groupId")
+    val mounts = volumes.flatMap { case (hostPath, destPath) => Seq("-v", s"${hostPath.absolutePath}:$destPath") }
+    val envVarArgs = envVars.flatMap { case (key, value) => Seq("-e", s"$key=$value") }
+    val exitCode = Process(
+      Seq("docker", "run", "--rm") ++ userGroupOptions ++ mounts ++ envVarArgs ++ Seq(imageName) ++ command.split("\\s+"),
+      cwd = workDir
+    ).!
     if (exitCode != 0) sys.error(s"Docker container $imageName execution failed")
   }
 
