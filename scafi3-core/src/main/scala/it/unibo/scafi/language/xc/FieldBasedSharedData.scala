@@ -50,6 +50,17 @@ trait FieldBasedSharedData:
      */
     def apply(id: DeviceId): Value = alignedValues.getOrElse(id, defaultValue)
 
+    /**
+     * Returns the value for the given device id if the device is aligned, None otherwise.
+     * @param id
+     *   the device id.
+     * @return
+     *   an Option containing the value for the given device id if aligned, None otherwise.
+     */
+    def get(id: DeviceId): Option[Value] =
+      if alignedDevices.exists(_ == id) then Some(alignedValues.getOrElse(id, defaultValue))
+      else None
+
     override def iterator: Iterator[Value] = alignedDevices
       .map(id => neighborValues.getOrElse(id, defaultValue))
       .iterator
@@ -92,12 +103,17 @@ trait FieldBasedSharedData:
   override given sharedDataApplicative: Applicative[Field] = new Applicative[Field]:
     override def pure[A](x: A): Field[A] = Field(x, Map.empty)
 
-    override def ap[A, B](ff: Field[A => B])(fa: Field[A]): Field[B] = Field(
-      ff.defaultValue(fa.defaultValue),
-      (ff.neighborValues.keySet ++ fa.neighborValues.keySet)
-        .map(deviceId => deviceId -> ff(deviceId)(fa(deviceId)))
-        .toMap,
-    )
+    override def ap[A, B](ff: Field[A => B])(fa: Field[A]): Field[B] =
+      Field(
+        ff.defaultValue(fa.defaultValue),
+        alignedDevices
+          .map(deviceId =>
+            val transform = ff.get(deviceId).getOrElse(ff.defaultValue)
+            val argument = fa.get(deviceId).getOrElse(fa.defaultValue)
+            deviceId -> transform(argument),
+          )
+          .toMap,
+      )
 
     override def map[A, B](fa: Field[A])(f: A => B): Field[B] = Field[B](
       f(fa.defaultValue),
