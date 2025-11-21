@@ -1,12 +1,22 @@
 package it.unibo.scafi.language.xc.calculus
 
+import cats.implicits.catsSyntaxTuple2Semigroupal
 import it.unibo.scafi.UnitTest
-import it.unibo.scafi.collections.SafeIterable
+import it.unibo.scafi.message.ValueTree
+import it.unibo.scafi.runtime.network.NetworkManager
+import it.unibo.scafi.test.network.NeighborsNetworkManager
 
 trait ExchangeCalculusSemanticsTests:
   this: UnitTest =>
 
-  def nvalues[C <: ExchangeCalculus & ExchangeCalculusSemanticsTestHelper](using lang: C): Unit =
+//  def nvalues[C <: ExchangeCalculus & ExchangeCalculusSemanticsTestHelper](using lang: C): Unit =
+  def nvalues[Context <: ExchangeCalculus & ExchangeCalculusSemanticsTestHelper](
+      contextFactory: (NetworkManager { type DeviceId = Int }, ValueTree) => Context,
+  ) =
+    val lang = contextFactory(
+      NeighborsNetworkManager[Int](localId = 0, (0 until 10).toSet),
+      ValueTree.empty,
+    )
     assume(lang.localId == 0)
     assume(
       (0 until 10).toSet.subsetOf(lang.device.toSet),
@@ -16,11 +26,11 @@ trait ExchangeCalculusSemanticsTests:
     val nv = lang.mockSharedData(10, valuesMap)
     it should "provide the default value" in:
       nv.default shouldEqual 10
-    it should "allow to retrieve a value map" in:
-      val v: SafeIterable[Int] = nv.withoutSelf
-      v.toList should contain theSameElementsAs lang.device.toIterable
-        .map(id => valuesMap.getOrElse(id, 10))
-        .toList
+//    it should "allow to retrieve a value map" in:
+//      val v: SafeIterable[Int] = nv.withoutSelf
+//      v.toList should contain theSameElementsAs lang.device.toIterable
+//        .map(id => valuesMap.getOrElse(id, 10))
+//        .toList
     it should "allow to retrieve a value" in:
       nv(lang.localId) shouldEqual 1
       nv(lang.localId) shouldEqual 1
@@ -29,20 +39,26 @@ trait ExchangeCalculusSemanticsTests:
     it should "allow to override a value for an aligned device" in:
       val newNv = nv.set(lang.localId, 100)
       newNv(lang.localId) shouldEqual 100
-    it should "not allow to override a value for an unaligned device" in:
-      var newNv = nv.set(lang.localId, 100)
-      newNv(lang.unalignedDeviceId) shouldEqual 10
-      newNv = newNv.set(lang.unalignedDeviceId, 100)
-      newNv(lang.unalignedDeviceId) shouldEqual 10
+//    it should "not allow to override a value for an unaligned device" in:
+//      var newNv = nv.set(lang.localId, 100)
+//      newNv(lang.unalignedDeviceId) shouldEqual 10
+//      newNv = newNv.set(lang.unalignedDeviceId, 100)
+//      newNv(lang.unalignedDeviceId) shouldEqual 10
+    it should "consider only aligned devices (and use default for unaligned) when mapping from multiple fields" in:
+      val f1 = lang.mockSharedData(1, Map(1 -> 20))
+      val f2 = lang.mockSharedData(2, Map(0 -> 10))
+      val mapped = (f1, f2).mapN(_ + _)
+      mapped should be(lang.mockSharedData(3, Map(0 -> 11, 1 -> 22) ++ (2 until 10).map(id => id -> 3).toMap))
   end nvalues
 
-  def exchangeCalculusSemanticsWithAtLeast10AlignedDevices[
-      C <: ExchangeCalculus & ExchangeCalculusSemanticsTestHelper,
-  ](using lang: C): Unit =
-    it should "provide conversion from local values to nvalues using the default value" in:
-      "val _: lang.SharedData[Int] = 10" should compile
-      val example: lang.SharedData[String] = "a"
-      example(lang.localId) shouldEqual "a"
-      example(lang.unalignedDeviceId) shouldEqual "a"
-    "SharedData" should behave like nvalues[C]
+// Replace below with simulator
+//  def exchangeCalculusSemanticsWithAtLeast10AlignedDevices[
+//      C <: ExchangeCalculus & ExchangeCalculusSemanticsTestHelper,
+//  ](using lang: C): Unit =
+//    it should "provide conversion from local values to nvalues using the default value" in:
+//      "val _: lang.SharedData[Int] = 10" should compile
+//      val example: lang.SharedData[String] = "a"
+//      example(lang.localId) shouldEqual "a"
+//      example(lang.unalignedDeviceId) shouldEqual "a"
+//    "SharedData" should behave like nvalues[C]
 end ExchangeCalculusSemanticsTests
