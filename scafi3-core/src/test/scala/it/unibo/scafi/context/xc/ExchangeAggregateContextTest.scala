@@ -1,17 +1,18 @@
 package it.unibo.scafi.context.xc
 
+import it.unibo.scafi.UnitTest
 import it.unibo.scafi.context.xc.ExchangeAggregateContext.exchangeContextFactory
 import it.unibo.scafi.language.common.syntax.BranchingSyntaxTest
 import it.unibo.scafi.language.fc.syntax.FieldCalculusSyntaxTest
-import it.unibo.scafi.libraries.All.{exchange, localId, returning}
+import it.unibo.scafi.language.xc.calculus.{ ExchangeCalculusSemanticsTestHelper, ExchangeCalculusSemanticsTests }
+import it.unibo.scafi.libraries.All.{ exchange, localId, returning }
+import it.unibo.scafi.message.ValueTree
 import it.unibo.scafi.message.ValueTree.NoPathFoundException
+import it.unibo.scafi.runtime.network.NetworkManager
 import it.unibo.scafi.test.AggregateProgramProbe
 import it.unibo.scafi.test.network.NoNeighborsNetworkManager
+
 import cats.syntax.all.toFunctorOps
-import it.unibo.scafi.UnitTest
-import it.unibo.scafi.language.xc.calculus.{ExchangeCalculusSemanticsTestHelper, ExchangeCalculusSemanticsTests}
-import it.unibo.scafi.message.ValueTree
-import it.unibo.scafi.runtime.network.NetworkManager
 import org.scalatest.Inspectors
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should
@@ -31,7 +32,8 @@ class ExchangeAggregateContextTest
       network: Network,
       selfMessagesFromPreviousRound: ValueTree,
   ): ExchangeAggregateContext[Int] & ExchangeCalculusSemanticsTestHelper =
-    new ExchangeAggregateContext(network.localId, network.receive, selfMessagesFromPreviousRound) with ExchangeCalculusSemanticsTestHelper:
+    new ExchangeAggregateContext(network.localId, network.receive, selfMessagesFromPreviousRound)
+      with ExchangeCalculusSemanticsTestHelper:
       override def mockSharedData[T](default: T, values: Map[DeviceId, T]): SharedData[T] =
         Field(default, values)
 
