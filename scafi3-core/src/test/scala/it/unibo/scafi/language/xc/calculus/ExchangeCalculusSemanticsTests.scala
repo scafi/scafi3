@@ -1,10 +1,11 @@
 package it.unibo.scafi.language.xc.calculus
 
-import cats.implicits.catsSyntaxTuple2Semigroupal
 import it.unibo.scafi.UnitTest
 import it.unibo.scafi.message.ValueTree
 import it.unibo.scafi.runtime.network.NetworkManager
 import it.unibo.scafi.test.network.NeighborsNetworkManager
+
+import cats.implicits.catsSyntaxTuple2Semigroupal
 
 trait ExchangeCalculusSemanticsTests:
   this: UnitTest =>
