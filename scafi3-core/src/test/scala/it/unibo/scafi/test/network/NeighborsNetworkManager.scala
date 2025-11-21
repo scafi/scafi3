@@ -1,6 +1,6 @@
 package it.unibo.scafi.test.network
 
-import it.unibo.scafi.message.{Export, Import, ValueTree}
+import it.unibo.scafi.message.{ Export, Import, ValueTree }
 import it.unibo.scafi.runtime.network.NetworkManager
 
 class NeighborsNetworkManager[ID](override val localId: ID, neighbors: Set[ID]) extends NetworkManager:
