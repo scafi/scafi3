@@ -1,8 +1,8 @@
 package it.unibo.scafi.language
 
 import it.unibo.scafi.collections.SafeIterable
-
 import cats.Applicative
+import cats.kernel.Monoid
 
 trait AggregateFoundation:
   /**
@@ -24,6 +24,15 @@ trait AggregateFoundation:
    * Aggregate values can be composed and mapped.
    */
   given sharedDataApplicative: Applicative[SharedData] = scala.compiletime.deferred
+
+  /**
+   * Shared data of type T is a Monoid if T is a Monoid.
+   * @tparam T
+   *   the type of the values in the SharedData
+   * @return
+   *   a Monoid instance for SharedData[T]
+   */
+  given [T: Monoid] => Monoid[SharedData[T]] = Applicative.monoid
 
   /**
    * Device identifiers must be equatable.
