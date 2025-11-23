@@ -2,8 +2,7 @@ package it.unibo.scafi.language
 
 import it.unibo.scafi.collections.SafeIterable
 
-import cats.Applicative
-import cats.Monoid
+import cats.{Applicative, cats.Monoid}
 
 trait AggregateFoundation:
   /**
