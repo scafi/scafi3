@@ -3,7 +3,7 @@ package it.unibo.scafi.language
 import it.unibo.scafi.collections.SafeIterable
 
 import cats.Applicative
-import cats.kernel.Monoid
+import cats.Monoid
 
 trait AggregateFoundation:
   /**
