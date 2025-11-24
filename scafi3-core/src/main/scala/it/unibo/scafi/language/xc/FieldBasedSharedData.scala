@@ -23,7 +23,7 @@ trait FieldBasedSharedData:
    * @tparam Value
    *   the type of the values
    */
-  protected case class Field[+Value](
+  protected[xc] case class Field[+Value](
       private[xc] val defaultValue: Value,
       private[xc] val neighborValues: Map[DeviceId, Value] = Map.empty,
   ) extends SafeIterable[Value]:
