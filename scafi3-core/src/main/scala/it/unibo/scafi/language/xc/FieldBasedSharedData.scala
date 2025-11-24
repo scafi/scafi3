@@ -99,7 +99,7 @@ trait FieldBasedSharedData:
       end extension
 
   override given sharedDataApplicative: Applicative[Field] = new Applicative[Field]:
-    override def pure[A](x: A): Field[A] = Field(x, Map.empty)
+    override def pure[A](x: A): Field[A] = Field(x, Map(localId -> x))
 
     override def ap[A, B](ff: Field[A => B])(fa: Field[A]): Field[B] =
       Field(
