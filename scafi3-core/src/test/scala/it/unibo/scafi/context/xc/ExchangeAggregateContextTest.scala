@@ -10,9 +10,10 @@ import it.unibo.scafi.message.ValueTree
 import it.unibo.scafi.message.ValueTree.NoPathFoundException
 import it.unibo.scafi.runtime.network.NetworkManager
 import it.unibo.scafi.test.AggregateProgramProbe
-import it.unibo.scafi.test.network.NoNeighborsNetworkManager
-
+import it.unibo.scafi.test.network.{ NeighborsNetworkManager, NoNeighborsNetworkManager }
 import cats.syntax.all.toFunctorOps
+import it.unibo.scafi.laws.{ SharedDataApplicativeLaw, SharedDataMonoidLaw }
+import org.scalacheck.{ Arbitrary, Gen }
 import org.scalatest.Inspectors
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should
@@ -25,8 +26,21 @@ class ExchangeAggregateContextTest
       BranchingSyntaxTest,
       FieldCalculusSyntaxTest,
       ExchangeCalculusSemanticsTests,
+      SharedDataMonoidLaw,
+      SharedDataApplicativeLaw,
       UnitTest:
   type Lang = ExchangeAggregateContext[Int]
+
+  private val lang = exchangeContextFactory(NeighborsNetworkManager[Int](0, Set(1, 2, 4, 6)), ValueTree.empty)
+  private given [A: Arbitrary] => Arbitrary[lang.SharedData[A]] = Arbitrary:
+    for
+      default <- Arbitrary.arbitrary[A]
+      neighbors <- Gen.mapOf:
+        for
+          id <- Arbitrary.arbitrary[Int]
+          value <- Arbitrary.arbitrary[A]
+        yield (id, value)
+    yield lang.Field(default, neighbors)
 
   private def exchangeContextFactoryHelper[Network <: NetworkManager { type DeviceId = Int }](
       network: Network,
@@ -42,6 +56,8 @@ class ExchangeAggregateContextTest
   "ExchangeContext" should behave like branchSpecification(exchangeContextFactory)
   it should behave like fieldCalculusSpecification(exchangeContextFactory)
   "Exchange" should behave like nvalues(exchangeContextFactoryHelper)
+  "Field" should behave like sharedDataMonoidLaws("Field")(lang)
+  it should behave like sharedDataApplicativeLaws("Field")(lang)
 
   "Exchange construct" should "return a different value than the one sent" in:
     def programRetSend(using Lang) = exchange(localId) { x => returning(x.map(_ + 1)) send x }.default
