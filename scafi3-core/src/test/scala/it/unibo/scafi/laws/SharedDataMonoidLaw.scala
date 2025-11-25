@@ -1,9 +1,10 @@
 package it.unibo.scafi.laws
 
+import it.unibo.scafi.context.xc.ExchangeAggregateContext
+
 import cats.Eq
 import cats.kernel.Monoid
 import cats.kernel.laws.discipline.MonoidTests
-import it.unibo.scafi.context.xc.ExchangeAggregateContext
 import org.scalacheck.Arbitrary
 import org.scalatest.Inspectors
 import org.scalatest.flatspec.AnyFlatSpecLike

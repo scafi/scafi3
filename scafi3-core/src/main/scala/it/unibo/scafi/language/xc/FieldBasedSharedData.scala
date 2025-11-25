@@ -141,6 +141,7 @@ trait FieldBasedSharedData:
 //          )
 //          .toMap,
       )
+    end ap
 
     override def map[A, B](fa: Field[A])(f: A => B): Field[B] = Field[B](
       f(fa.defaultValue),
