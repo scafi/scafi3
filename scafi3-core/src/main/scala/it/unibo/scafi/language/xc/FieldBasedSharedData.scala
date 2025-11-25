@@ -13,6 +13,8 @@ trait FieldBasedSharedData:
   this: ExchangeCalculus =>
   override type SharedData[Value] = Field[Value]
 
+  given [A] => CanEqual[Field[A], Field[A]] = CanEqual.derived
+
   /**
    * A Field (NValue in https://doi.org/10.1016/j.jss.2024.111976) is a mapping from device ids to values of type T. For
    * devices not aligned with the current device, the default value is used.
@@ -23,10 +25,26 @@ trait FieldBasedSharedData:
    * @tparam Value
    *   the type of the values
    */
-  protected[xc] case class Field[+Value](
+  protected[scafi] case class Field[+Value](
       private[xc] val defaultValue: Value,
       private[xc] val neighborValues: Map[DeviceId, Value] = Map.empty,
   ) extends SafeIterable[Value]:
+
+    /**
+     * Two fields are equal if they have the same default and the same values for aligned devices or neighborValues not
+     * in the other field contain the default value.
+     * @param obj
+     *   the other field
+     * @return
+     *   true if the fields are equal, false otherwise.
+     */
+//    override def equals(obj: Any): Boolean =
+//      given CanEqual[Value, Value] = CanEqual.derived
+//      obj match
+//        case that: Field[Value @unchecked] =>
+//          this.defaultValue == that.defaultValue &&
+//          this.neighborValues.filterNot(_._2 == this.defaultValue) == that.neighborValues.filterNot(_._2 == that.defaultValue)
+//        case _ => false
 
     /**
      * @return
@@ -76,10 +94,11 @@ trait FieldBasedSharedData:
   override given neighborValuesOps: NeighborValuesOps[Field, DeviceId] =
     new NeighborValuesOps[Field, DeviceId]:
       extension [A](a: Field[A])
-        override def mapValues[B](f: A => B): SharedData[B] = Field[B](
-          f(a.default),
-          a.neighborValues.view.mapValues(f).toMap,
-        )
+        override def mapValues[B](f: A => B): SharedData[B] =
+          Field[B](
+            f(a.default),
+            a.neighborValues.view.mapValues(f).toMap,
+          )
 
         override def alignedMap[B, C](other: SharedData[B])(f: (A, B) => C): SharedData[C] =
           require(
@@ -99,18 +118,28 @@ trait FieldBasedSharedData:
       end extension
 
   override given sharedDataApplicative: Applicative[Field] = new Applicative[Field]:
-    override def pure[A](x: A): Field[A] = Field(x, Map(localId -> x))
+    override def pure[A](x: A): Field[A] = Field(x, Map.empty)
 
     override def ap[A, B](ff: Field[A => B])(fa: Field[A]): Field[B] =
+      given [BB] => CanEqual[BB, BB] = CanEqual.derived
+      val default = ff.defaultValue(fa.defaultValue)
       Field(
-        ff.defaultValue(fa.defaultValue),
+        default,
         alignedDevices
           .map(deviceId =>
-            val transform = ff.get(deviceId).getOrElse(ff.defaultValue)
-            val argument = fa.get(deviceId).getOrElse(fa.defaultValue)
+            val transform = ff(deviceId)
+            val argument = fa(deviceId)
             deviceId -> transform(argument),
           )
+//          .filter { case (_, value) => value != default }
           .toMap,
+//        alignedDevices
+//          .map(deviceId =>
+//            val transform = ff(deviceId)
+//            val argument = fa(deviceId)
+//            deviceId -> transform(argument),
+//          )
+//          .toMap,
       )
 
     override def map[A, B](fa: Field[A])(f: A => B): Field[B] = Field[B](
