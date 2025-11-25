@@ -1,14 +1,14 @@
 package it.unibo.scafi.laws
 
+import it.unibo.scafi.context.xc.ExchangeAggregateContext
+
 import cats.Eq
 import cats.laws.discipline.ApplicativeTests
-import it.unibo.scafi.context.xc.ExchangeAggregateContext
-import org.scalacheck.{Arbitrary, Cogen}
+import org.scalacheck.{ Arbitrary, Cogen }
 import org.scalatest.Inspectors
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatestplus.scalacheck.Checkers
 import org.typelevel.discipline.scalatest.FlatSpecDiscipline
-
 
 trait SharedDataApplicativeLaw extends FlatSpecDiscipline, Inspectors, Checkers:
   self: AnyFlatSpecLike =>
