@@ -18,13 +18,14 @@ trait ExchangeCalculusSemanticsTests:
       NeighborsNetworkManager[Int](localId = 0, (0 until 10).toSet),
       ValueTree.empty,
     )
+    val devices = (0 until 10).toSet
     assume(lang.localId == 0)
     assume(
-      (0 until 10).toSet.subsetOf(lang.device.toSet),
+      devices.subsetOf(lang.device.toSet),
       s"Devices: ${lang.device.toSet} is not a superset of ${0 until 10}",
     )
     val valuesMap: Map[Int, Int] = Map(0 -> 1, 1 -> 2, 2 -> 3, 3 -> 42, 4 -> 125)
-    val nv = lang.mockSharedData(10, valuesMap)
+    val nv = lang.mockSharedData(10, devices, valuesMap)
     it should "provide the default value" in:
       nv.default shouldEqual 10
 //    it should "allow to retrieve a value map" in:
@@ -46,10 +47,10 @@ trait ExchangeCalculusSemanticsTests:
 //      newNv = newNv.set(lang.unalignedDeviceId, 100)
 //      newNv(lang.unalignedDeviceId) shouldEqual 10
     it should "consider only aligned devices (and use default for unaligned) when mapping from multiple fields" in:
-      val f1 = lang.mockSharedData(1, Map(1 -> 20))
-      val f2 = lang.mockSharedData(2, Map(0 -> 10))
+      val f1 = lang.mockSharedData(1, devices, Map(1 -> 20))
+      val f2 = lang.mockSharedData(2, devices, Map(0 -> 10))
       val mapped = (f1, f2).mapN(_ + _)
-      mapped should be(lang.mockSharedData(3, Map(0 -> 11, 1 -> 22) ++ (2 until 10).map(id => id -> 3).toMap))
+      mapped should be(lang.mockSharedData(3, devices, Map(0 -> 11, 1 -> 22) ++ (2 until 10).map(id => id -> 3).toMap))
   end nvalues
 
 // Replace below with simulator

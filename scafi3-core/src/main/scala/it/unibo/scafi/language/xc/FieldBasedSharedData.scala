@@ -27,8 +27,16 @@ trait FieldBasedSharedData:
    */
   protected[scafi] case class Field[+Value](
       private[xc] val defaultValue: Value,
+      private[xc] val devices: Set[DeviceId] = Set.empty,
       private[xc] val neighborValues: Map[DeviceId, Value] = Map.empty,
   ) extends SafeIterable[Value]:
+
+    require(
+      neighborValues.keySet.subsetOf(devices),
+      "Neighbor values must be defined only for known devices\n" +
+        s"Devices: $devices\n" +
+        s"Neighbor values: ${neighborValues.keySet}",
+    )
 
     /**
      * Two fields are equal if they have the same default and the same values for aligned devices or neighborValues not
@@ -38,24 +46,22 @@ trait FieldBasedSharedData:
      * @return
      *   true if the fields are equal, false otherwise.
      */
-//    override def equals(obj: Any): Boolean =
-//      given CanEqual[Value, Value] = CanEqual.derived
-//      obj match
-//        case that: Field[Value @unchecked] =>
-//          this.defaultValue == that.defaultValue &&
-//          this.neighborValues.filterNot(_._2 == this.defaultValue) == that.neighborValues.filterNot(_._2 == that.defaultValue)
-//        case _ => false
+    override def equals(obj: Any): Boolean =
+      given CanEqual[Value, Value] = CanEqual.derived
+      obj match
+        case that: Field[Value @unchecked] =>
+          this.defaultValue == that.defaultValue &&
+          this.devices == that.devices &&
+          this.neighborValues.filterNot(_._2 == this.defaultValue) == that.neighborValues.filterNot(
+            _._2 == that.defaultValue,
+          )
+        case _ => false
 
     /**
      * @return
      *   a filtered view of the [[SharedData]] data that only contains the values for aligned devices
      */
     def alignedValues: Map[DeviceId, Value] =
-      if neighborValues.isEmpty then
-        Map(localId -> defaultValue) // self is always aligned, even if there are no neighbors
-      else if alignedDevices.size == neighborValues.size then
-        neighborValues // all devices are aligned, there is no need to filter
-      else
         alignedDevices
           .map(id => id -> neighborValues.getOrElse(id, defaultValue))
           .toMap // in all other cases, I need to filter based on the aligned devices
@@ -66,7 +72,7 @@ trait FieldBasedSharedData:
      * @return
      *   the value for the given device id, or the default value if the device is not aligned
      */
-    def apply(id: DeviceId): Value = alignedValues.getOrElse(id, defaultValue)
+    def apply(id: DeviceId): Value = neighborValues.getOrElse(id, defaultValue)
 
     /**
      * Returns the value for the given device id if the device is aligned, None otherwise.
@@ -82,7 +88,7 @@ trait FieldBasedSharedData:
     override def iterator: Iterator[Value] = alignedDevices
       .map(id => neighborValues.getOrElse(id, defaultValue))
       .iterator
-    override def toString: String = s"Field($defaultValue, $neighborValues)"
+    override def toString: String = s"Field($defaultValue, $devices, $neighborValues)"
   end Field
 
   /**
@@ -97,6 +103,7 @@ trait FieldBasedSharedData:
         override def mapValues[B](f: A => B): SharedData[B] =
           Field[B](
             f(a.default),
+            a.devices,
             a.neighborValues.view.mapValues(f).toMap,
           )
 
@@ -107,46 +114,43 @@ trait FieldBasedSharedData:
           )
           Field[C](
             f(a.default, other.default),
+            a.devices,
             a.neighborValues.view.map { case (id, value) => id -> f(value, other(id)) }.toMap,
           )
         override def apply(id: DeviceId): A = a.neighborValues.getOrElse(id, a.defaultValue)
         private[xc] override def set(id: DeviceId, value: A): SharedData[A] =
-          Field[A](a.default, a.neighborValues + (id -> value))
+          Field[A](a.default, a.devices, a.neighborValues + (id -> value))
         override def default: A = a.defaultValue
         override def values: Map[DeviceId, A] = a.neighborValues
         override def get(id: DeviceId): Option[A] = a.neighborValues.get(id)
       end extension
 
   override given sharedDataApplicative: Applicative[Field] = new Applicative[Field]:
-    override def pure[A](x: A): Field[A] = Field(x, Map.empty)
+    override def pure[A](x: A): Field[A] = Field(x)
 
     override def ap[A, B](ff: Field[A => B])(fa: Field[A]): Field[B] =
       given [BB] => CanEqual[BB, BB] = CanEqual.derived
       val default = ff.defaultValue(fa.defaultValue)
+      val allDevices = ff.devices ++ fa.devices
+      val overrides = allDevices
+        .map: id =>
+          val transform = ff(id)
+          val value = fa(id)
+          val result = transform(value)
+          id -> result
+//          if result != default then Some(id -> result) else None
+        .toMap
       Field(
         default,
-        alignedDevices
-          .map(deviceId =>
-            val transform = ff(deviceId)
-            val argument = fa(deviceId)
-            deviceId -> transform(argument),
-          )
-//          .filter { case (_, value) => value != default }
-          .toMap,
-//        alignedDevices
-//          .map(deviceId =>
-//            val transform = ff(deviceId)
-//            val argument = fa(deviceId)
-//            deviceId -> transform(argument),
-//          )
-//          .toMap,
+        allDevices,
+        overrides,
       )
-    end ap
 
-    override def map[A, B](fa: Field[A])(f: A => B): Field[B] = Field[B](
-      f(fa.defaultValue),
-      fa.neighborValues.view.mapValues(f).toMap,
-    )
+//    override def map[A, B](fa: Field[A])(f: A => B): Field[B] = Field[B](
+//      f(fa.defaultValue),
+//      fa.devices,
+//      fa.neighborValues.view.mapValues(f).toMap,
+//    )
 
   override given sharedDataOps: SharedDataOps[Field] = new SharedDataOps[Field]:
     extension [A](field: Field[A])
@@ -155,5 +159,6 @@ trait FieldBasedSharedData:
 
   override given convert[T]: Conversion[T, SharedData[T]] = Field[T](_)
 
-  override def device: SharedData[DeviceId] = Field[DeviceId](localId, alignedDevices.map(id => (id, id)).toMap)
+  override def device: SharedData[DeviceId] =
+    Field[DeviceId](localId, alignedDevices.toSet, alignedDevices.map(id => (id, id)).toMap)
 end FieldBasedSharedData
