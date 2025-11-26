@@ -4,17 +4,16 @@ import it.unibo.scafi.UnitTest
 import it.unibo.scafi.context.xc.ExchangeAggregateContext.exchangeContextFactory
 import it.unibo.scafi.language.common.syntax.BranchingSyntaxTest
 import it.unibo.scafi.language.fc.syntax.FieldCalculusSyntaxTest
-import it.unibo.scafi.language.xc.calculus.{ ExchangeCalculusSemanticsTestHelper, ExchangeCalculusSemanticsTests }
-import it.unibo.scafi.laws.{ SharedDataApplicativeLaw, SharedDataMonoidLaw }
-import it.unibo.scafi.libraries.All.{ exchange, localId, returning }
+import it.unibo.scafi.language.xc.calculus.{ExchangeCalculusSemanticsTestHelper, ExchangeCalculusSemanticsTests}
+import it.unibo.scafi.laws.{SharedDataApplicativeLaw, SharedDataMonoidLaw}
+import it.unibo.scafi.libraries.All.{exchange, localId, returning}
 import it.unibo.scafi.message.ValueTree
 import it.unibo.scafi.message.ValueTree.NoPathFoundException
 import it.unibo.scafi.runtime.network.NetworkManager
 import it.unibo.scafi.test.AggregateProgramProbe
-import it.unibo.scafi.test.network.{ NeighborsNetworkManager, NoNeighborsNetworkManager }
-
+import it.unibo.scafi.test.network.{NeighborsNetworkManager, NoNeighborsNetworkManager}
 import cats.syntax.all.toFunctorOps
-import org.scalacheck.{ Arbitrary, Gen }
+import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.Inspectors
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should
@@ -34,14 +33,17 @@ class ExchangeAggregateContextTest
 
   private val lang = exchangeContextFactory(NeighborsNetworkManager[Int](0, Set(1, 2, 4, 6)), ValueTree.empty)
   private given [A: Arbitrary] => Arbitrary[lang.SharedData[A]] = Arbitrary:
+    given CanEqual[A, A] = CanEqual.derived
     for
       default <- Arbitrary.arbitrary[A]
+      // Generate a random set (non empty) of device IDs between 0 and 10
+      devices <- Gen.some(Gen.nonEmptyListOf(Gen.choose(0, 10))).map(_.get.toSet)
       neighbors <- Gen.mapOf:
         for
-          id <- Arbitrary.arbitrary[Int]
+          id <- Gen.oneOf(devices)
           value <- Arbitrary.arbitrary[A]
         yield (id, value)
-    yield lang.Field(default, neighbors)
+    yield lang.Field(default, devices, neighbors)
 
   private def exchangeContextFactoryHelper[Network <: NetworkManager { type DeviceId = Int }](
       network: Network,
@@ -49,8 +51,8 @@ class ExchangeAggregateContextTest
   ): ExchangeAggregateContext[Int] & ExchangeCalculusSemanticsTestHelper =
     new ExchangeAggregateContext(network.localId, network.receive, selfMessagesFromPreviousRound)
       with ExchangeCalculusSemanticsTestHelper:
-      override def mockSharedData[T](default: T, values: Map[DeviceId, T]): SharedData[T] =
-        Field(default, values)
+      override def mockSharedData[T](default: T, devices: Set[DeviceId], values: Map[DeviceId, T]): SharedData[T] =
+        Field(default, devices, values)
 
       override def unalignedDeviceId: DeviceId = -1
 
