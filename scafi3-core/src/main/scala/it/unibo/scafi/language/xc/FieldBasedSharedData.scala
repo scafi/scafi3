@@ -62,9 +62,9 @@ trait FieldBasedSharedData:
      *   a filtered view of the [[SharedData]] data that only contains the values for aligned devices
      */
     def alignedValues: Map[DeviceId, Value] =
-        alignedDevices
-          .map(id => id -> neighborValues.getOrElse(id, defaultValue))
-          .toMap // in all other cases, I need to filter based on the aligned devices
+      alignedDevices
+        .map(id => id -> neighborValues.getOrElse(id, defaultValue))
+        .toMap
 
     /**
      * @param id
