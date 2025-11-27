@@ -7,6 +7,8 @@ import it.unibo.scafi.context.xc.ExchangeAggregateContext
 import it.unibo.scafi.message.{ Import, ValueTree }
 import it.unibo.scafi.message.Codables.forInMemoryCommunications
 
+import cats.syntax.all.*
+
 class AlchemistExchangeContext[T, P <: Position[P]](
     node: Node[T],
     environment: Environment[T, P],
@@ -18,7 +20,7 @@ class AlchemistExchangeContext[T, P <: Position[P]](
 
   override def senseDistance: Field[Double] =
     val devicePosition = environment.getPosition(node)
-    neighborValues(devicePosition)(using forInMemoryCommunications).mapValues: (position: P) =>
+    neighborValues(devicePosition)(using forInMemoryCommunications).map: (position: P) =>
       devicePosition.distanceTo(environment.makePosition(position.getCoordinates))
 
   @SuppressWarnings(Array("scalafix:DisableSyntax.asInstanceOf"))
