@@ -17,5 +17,5 @@ object Gradient:
   def gradient(using Lang): Double =
     share(Double.MaxValue): prevValues =>
       val distances = senseDistance[Double]
-      val minDistance = prevValues.alignedMap(distances)(_ + _).withoutSelf.min
+      val minDistance = (prevValues, distances).mapN(_ + _).withoutSelf.min
       if AlchemistEnvironmentVariables.get[Boolean]("source") then 0.0 else minDistance
