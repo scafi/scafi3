@@ -10,7 +10,7 @@ jobs:
       - name: Checkout the repo
         uses: actions/checkout@v6.0.1
       - name: Generate bindings for polyglot api
-        uses: nicolasfara/build-check-deploy-sbt-action@1.0.32
+        uses: nicolasfara/build-check-deploy-sbt-action@1.0.33
         with:
           build-command: sbt scafi3-polyglot-apiNative/generateBindings
           check-command: true
@@ -50,7 +50,7 @@ jobs:
           make: true
           clang: true
           gcc: true
-      - uses: nicolasfara/build-check-deploy-sbt-action@1.0.32
+      - uses: nicolasfara/build-check-deploy-sbt-action@1.0.33
         with:
           should-run-codecov: ${{ runner.os == 'Linux' }}
           codecov-directory: "target/"
@@ -86,7 +86,7 @@ jobs:
         uses: actions/setup-node@v6.1.0
         with:
           node-version-file: package.json
-      - uses: nicolasfara/build-check-deploy-sbt-action@1.0.32
+      - uses: nicolasfara/build-check-deploy-sbt-action@1.0.33
         with:
           build-command: true
           check-command: true
