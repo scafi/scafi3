@@ -76,6 +76,9 @@ lazy val commonSettings = Seq(
     "com.outr" %%% "scribe" % "3.17.0",
     "org.scalatest" %%% "scalatest" % "3.2.19" % Test,
     "org.scalatestplus" %%% "scalacheck-1-18" % "3.2.19.0" % Test,
+    "org.typelevel" %%% "cats-laws" % "2.13.0" % Test,
+    "org.typelevel" %%% "discipline-core" % "1.7.0" % Test,
+    "org.typelevel" %%% "discipline-scalatest" % "2.3.0" % Test,
   ),
   scalacOptions ++= commonScalacOptions,
 )
