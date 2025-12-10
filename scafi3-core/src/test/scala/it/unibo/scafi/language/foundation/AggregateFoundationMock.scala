@@ -5,6 +5,8 @@ import it.unibo.scafi.language.{ AggregateFoundation, SharedDataOps }
 
 import cats.Applicative
 
+object AggregateFoundationMock
+
 class AggregateFoundationMock(deviceId: Int = 0) extends AggregateFoundation, FieldMock, DeviceMock:
   override type SharedData[T] = MockAggregate[T]
 

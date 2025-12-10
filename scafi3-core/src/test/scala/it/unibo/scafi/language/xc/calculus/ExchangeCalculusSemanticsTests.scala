@@ -1,6 +1,7 @@
 package it.unibo.scafi.language.xc.calculus
 
 import it.unibo.scafi.UnitTest
+import it.unibo.scafi.collections.SafeIterable
 import it.unibo.scafi.message.ValueTree
 import it.unibo.scafi.runtime.network.NetworkManager
 import it.unibo.scafi.test.network.NeighborsNetworkManager
@@ -10,10 +11,9 @@ import cats.implicits.catsSyntaxTuple2Semigroupal
 trait ExchangeCalculusSemanticsTests:
   this: UnitTest =>
 
-//  def nvalues[C <: ExchangeCalculus & ExchangeCalculusSemanticsTestHelper](using lang: C): Unit =
   def nvalues[Context <: ExchangeCalculus & ExchangeCalculusSemanticsTestHelper](
       contextFactory: (NetworkManager { type DeviceId = Int }, ValueTree) => Context,
-  ) =
+  ): Unit =
     val lang = contextFactory(
       NeighborsNetworkManager[Int](localId = 0, (0 until 10).toSet),
       ValueTree.empty,
@@ -28,11 +28,12 @@ trait ExchangeCalculusSemanticsTests:
     val nv = lang.mockSharedData(10, devices, valuesMap)
     it should "provide the default value" in:
       nv.default shouldEqual 10
-//    it should "allow to retrieve a value map" in:
-//      val v: SafeIterable[Int] = nv.withoutSelf
-//      v.toList should contain theSameElementsAs lang.device.toIterable
-//        .map(id => valuesMap.getOrElse(id, 10))
-//        .toList
+    it should "allow to retrieve a value map" in:
+      val v: SafeIterable[Int] = nv.withoutSelf
+      v.toList should contain theSameElementsAs lang.device.toIterable
+        .filterNot(_ == lang.localId)
+        .map(id => valuesMap.getOrElse(id, 10))
+        .toList
     it should "allow to retrieve a value" in:
       nv(lang.localId) shouldEqual 1
       nv(lang.localId) shouldEqual 1
@@ -41,11 +42,11 @@ trait ExchangeCalculusSemanticsTests:
     it should "allow to override a value for an aligned device" in:
       val newNv = nv.set(lang.localId, 100)
       newNv(lang.localId) shouldEqual 100
-//    it should "not allow to override a value for an unaligned device" in:
-//      var newNv = nv.set(lang.localId, 100)
-//      newNv(lang.unalignedDeviceId) shouldEqual 10
-//      newNv = newNv.set(lang.unalignedDeviceId, 100)
-//      newNv(lang.unalignedDeviceId) shouldEqual 10
+    it should "not allow to override a value for an unaligned device" in:
+      var newNv = nv.set(lang.localId, 100)
+      newNv(lang.unalignedDeviceId) shouldEqual 10
+      newNv = newNv.set(lang.unalignedDeviceId, 100)
+      newNv(lang.unalignedDeviceId) shouldEqual 10
     it should "consider only aligned devices (and use default for unaligned) when mapping from multiple fields" in:
       val f1 = lang.mockSharedData(1, devices, Map(1 -> 20))
       val f2 = lang.mockSharedData(2, devices, Map(0 -> 10))
