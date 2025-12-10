@@ -133,9 +133,7 @@ trait FieldBasedSharedData:
     extension [A](field: Field[A])
       override def withoutSelf: SafeIterable[A] =
         given CanEqual[A, A] = CanEqual.derived
-        SafeIterable(
-          field.devices.toList.filterNot(_ == localId).map(id => field.neighborValues.getOrElse(id, field.defaultValue)),
-        )
+        SafeIterable(field.devices.toList.filterNot(_ == localId).map(field.apply))
       override def onlySelf: A = field(localId)
 
   override given convert[T]: Conversion[T, SharedData[T]] = Field[T](_)
