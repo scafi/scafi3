@@ -106,11 +106,13 @@ trait FieldBasedSharedData:
         override def get(id: DeviceId): Option[A] = a.neighborValues.get(id)
         private[xc] override def set(id: DeviceId, value: A): Field[A] =
           given CanEqual[A, A] = CanEqual.derived
-          val newDevices = a.devices + id
-          val newNeighborValues =
-            if value == a.defaultValue then a.neighborValues - id
-            else a.neighborValues + (id -> value)
-          Field(a.defaultValue, newDevices, newNeighborValues)
+          if !a.devices.contains(id) then a
+          else
+            val newDevices = a.devices + id
+            val newNeighborValues =
+              if value == a.defaultValue then a.neighborValues - id
+              else a.neighborValues + (id -> value)
+            Field(a.defaultValue, newDevices, newNeighborValues)
 
   override given sharedDataApplicative: Applicative[Field] = new Applicative[Field]:
     override def pure[A](x: A): Field[A] = Field(x)
@@ -132,7 +134,7 @@ trait FieldBasedSharedData:
       override def withoutSelf: SafeIterable[A] =
         given CanEqual[A, A] = CanEqual.derived
         SafeIterable(
-          field.devices.map(id => field.neighborValues.getOrElse(id, field.defaultValue)).filterNot(_ == field(localId)),
+          field.devices.toList.filterNot(_ == localId).map(id => field.neighborValues.getOrElse(id, field.defaultValue)),
         )
       override def onlySelf: A = field(localId)
 
