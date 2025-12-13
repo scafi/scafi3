@@ -206,7 +206,7 @@ lazy val example = project
 lazy val root = project
   .in(file("."))
   .enablePlugins(ScalaUnidocPlugin)
-  .aggregate(`alchemist-incarnation-scafi3`, `scafi3-integration`)
+  .aggregate(`alchemist-incarnation-scafi3`, `scafi3-integration`, example)
   .aggregate(crossProjects(`scafi3-core`, `scafi3-distributed`, `scafi3-polyglot-api`).map(_.project)*)
   .settings(
     name := projectName,
