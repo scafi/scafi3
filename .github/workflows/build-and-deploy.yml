@@ -39,7 +39,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Download generated bindings for polyglot api
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: bindings-${{ github.sha }}
           path: ./scafi3-polyglot-api/native/target/
