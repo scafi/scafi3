@@ -16,7 +16,7 @@ jobs:
           check-command: true
           should-run-codecov: false
       - name: Upload generated files
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: bindings-${{ github.sha }}
           path: scafi3-polyglot-api/native/target/scala-*/src_managed/main/*
