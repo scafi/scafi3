@@ -1,9 +1,13 @@
 package it.unibo.scafi.message
 
+import it.unibo.scafi.utils.InvocationCoordinate
+
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should
 
 class ExportTest extends AnyFlatSpecLike, should.Matchers:
+  given Conversion[String, InvocationCoordinate] = key => InvocationCoordinate(key, invocationCount = 0)
+
   private val defaultValue: ValueTree = ValueTree(
     Map(
       Path("key1") -> "default1",
@@ -18,6 +22,7 @@ class ExportTest extends AnyFlatSpecLike, should.Matchers:
       Path("key3") -> "overridden3",
     ),
   )
+
   "An Export object" should "be created from a default ValueTree and empty overrides" in:
     val exp = Export[Int](defaultValue, Map.empty)
     exp(0) shouldBe defaultValue

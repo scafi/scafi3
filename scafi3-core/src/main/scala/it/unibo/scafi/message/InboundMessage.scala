@@ -35,17 +35,16 @@ trait InboundMessage:
 
     lazy val neighbors: Set[DeviceId] = input.neighbors + localId
 
-    def alignedDevicesAt(tokens: IndexedSeq[InvocationCoordinate]): Iterable[DeviceId] =
+    def alignedDevicesAt(path: Path): Iterable[DeviceId] =
       cachedPaths
-        .filter: (path, _) =>
-          path.startsWith(tokens)
+        .filter: (cachedPath, _) =>
+          cachedPath.startsWith(path)
         .values
         .flatMap(_.keySet)
         .toSet + localId
 
     @SuppressWarnings(Array("DisableSyntax.asInstanceOf"))
-    def dataAt[Format, Value: DecodableFrom[Format]](tokens: IndexedSeq[InvocationCoordinate]): Map[DeviceId, Value] =
-      val path = Path(tokens*)
+    def dataAt[Format, Value: DecodableFrom[Format]](path: Path): Map[DeviceId, Value] =
       val selfValueAtPath = selfMessagesFromPreviousRound
         .get[Format](path)
         .map(localId -> decode(_))

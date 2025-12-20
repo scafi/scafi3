@@ -1,6 +1,7 @@
 package it.unibo.scafi.message
 
 import it.unibo.scafi.message.ValueTree.NoPathFoundException
+import it.unibo.scafi.utils.InvocationCoordinate
 
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should
@@ -8,6 +9,8 @@ import org.scalatest.matchers.should
 import unsafeExceptions.canThrowAny
 
 class ValueTreeTest extends AnyFlatSpecLike, should.Matchers:
+  given Conversion[String, InvocationCoordinate] = key => InvocationCoordinate(key, invocationCount = 0)
+
   private val emptyValueTree = ValueTree.empty
   private val valueTree = ValueTree(Map(Path("path1") -> "value1", Path("path2") -> "value2"))
 

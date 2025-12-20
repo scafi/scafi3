@@ -5,6 +5,7 @@ import scala.concurrent.duration.{ Duration, DurationInt, SECONDS }
 import it.unibo.scafi.message.{ Export, Path, ValueTree }
 import it.unibo.scafi.runtime.network.TimeRetention
 import it.unibo.scafi.test.AsyncSpec
+import it.unibo.scafi.utils.InvocationCoordinate
 
 trait TimeRetentionNetworkTest extends AsyncSpec:
 
@@ -17,6 +18,9 @@ trait TimeRetentionNetworkTest extends AsyncSpec:
 
   "A network configured with time retention policy" should "drop neighbor values after expiration time" in:
     val network = DummyTimeRetentionNetwork()
-    network.deliverableReceived(from = "device-2", message = ValueTree(Map(Path("dummyPath") -> "dummyValue")))
+    network.deliverableReceived(
+      from = "device-2",
+      message = ValueTree(Map(Path(InvocationCoordinate("dummyPath", invocationCount = 0)) -> "dummyValue")),
+    )
     network.receive.neighbors shouldBe Set("device-2")
     after(6.seconds)(network.receive.neighbors shouldBe Set.empty[String])
