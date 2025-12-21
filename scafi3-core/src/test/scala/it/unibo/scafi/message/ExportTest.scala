@@ -6,7 +6,7 @@ import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should
 
 class ExportTest extends AnyFlatSpecLike, should.Matchers:
-  given Conversion[String, InvocationCoordinate] = key => InvocationCoordinate(key, invocationCount = 0)
+  private given Conversion[String, InvocationCoordinate] = key => InvocationCoordinate(key, invocationCount = 0)
 
   private val defaultValue: ValueTree = ValueTree(
     Map(

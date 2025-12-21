@@ -9,7 +9,7 @@ import org.scalatest.matchers.should
 import unsafeExceptions.canThrowAny
 
 class ValueTreeTest extends AnyFlatSpecLike, should.Matchers:
-  given Conversion[String, InvocationCoordinate] = key => InvocationCoordinate(key, invocationCount = 0)
+  private given Conversion[String, InvocationCoordinate] = key => InvocationCoordinate(key, invocationCount = 0)
 
   private val emptyValueTree = ValueTree.empty
   private val valueTree = ValueTree(Map(Path("path1") -> "value1", Path("path2") -> "value2"))
