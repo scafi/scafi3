@@ -173,7 +173,7 @@ lazy val `scafi3-integration` = project
       .value,
   )
 
-val alchemistVersion = "42.3.31"
+val alchemistVersion = "42.3.32"
 lazy val `alchemist-incarnation-scafi3` = project
   .settings(commonSettings)
   .settings(
