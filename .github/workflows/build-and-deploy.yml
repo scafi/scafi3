@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout the repo
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v6.0.2
       - name: Generate bindings for polyglot api
         uses: nicolasfara/build-check-deploy-sbt-action@1.0.38
         with:
@@ -35,7 +35,7 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Checkout the repo
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v6.0.2
         with:
           fetch-depth: 0
       - name: Download generated bindings for polyglot api
@@ -79,7 +79,7 @@ jobs:
       )
     steps:
       - name: Checkout
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v6.0.2
         with:
           token: ${{ secrets.DEPLOYMENT_TOKEN }}
       - name: Install Node
