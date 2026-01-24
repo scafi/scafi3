@@ -7,7 +7,7 @@ import sbtcrossproject.CrossProject
 import scala.scalanative.build.{ BuildTarget, GC, LTO, Mode }
 
 val projectName = "scafi3"
-val scala3Version = "3.7.3"
+val scala3Version = "3.8.1"
 
 ThisBuild / scalaVersion := scala3Version
 ThisBuild / organization := "it.unibo.scafi"
