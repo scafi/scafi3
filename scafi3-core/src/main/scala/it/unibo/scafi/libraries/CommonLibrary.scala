@@ -50,8 +50,7 @@ object CommonLibrary:
    *   the type of the result
    * @return
    *   an aligned computation
-   * @return
    */
-  def align[T](token: Any)(body: () => T)(using aggregateFoundation: AggregateFoundation): T =
+  def align[T](token: String)(body: () => T)(using aggregateFoundation: AggregateFoundation): T =
     aggregateFoundation.align(token)(body)
 end CommonLibrary

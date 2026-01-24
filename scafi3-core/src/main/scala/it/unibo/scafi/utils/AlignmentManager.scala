@@ -24,7 +24,7 @@ trait AlignmentManager:
    * @return
    *   the current path of the stack.
    */
-  protected def currentPath: IndexedSeq[InvocationCoordinate] = stack.reverse.toIndexedSeq
+  protected def currentPath: Path = Path(stack.reverse.toIndexedSeq)
 
   /**
    * Executes the given function body inside a new scope, updating the current path accordingly. Restores the previous

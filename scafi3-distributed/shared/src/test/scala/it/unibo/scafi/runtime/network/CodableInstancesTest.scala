@@ -18,15 +18,6 @@ class CodableInstancesTest extends AnyWordSpec with should.Matchers:
         val path = Path(InvocationCoordinate("branch/true", 0), InvocationCoordinate("exchange", 0))
         decode[Array[Byte], Path](encode(path)) shouldBe path
 
-    "composed of other tokens" should:
-      "fail to encode and decode" in:
-        case class Unsupported(value: String)
-        val unsupportedToken = Unsupported("branch/true")
-        (the[Exception] thrownBy encode(Path(unsupportedToken))).getMessage should include(
-          s"Unsupported Path token type ${unsupportedToken.getClass.getName}",
-        )
-        an[Exception] should be thrownBy decode[Array[Byte], Path]("Unsupported path".getBytes)
-
   "ValueTree" when:
     "composed of encoded values" should:
       "be both encodable and decodable" in:

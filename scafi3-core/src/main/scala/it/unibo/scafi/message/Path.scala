@@ -1,10 +1,15 @@
 package it.unibo.scafi.message
 
-trait Path extends IndexedSeq[Any]
+import it.unibo.scafi.utils.InvocationCoordinate
+
+trait Path extends IndexedSeq[InvocationCoordinate]
 
 object Path:
-  def apply[Token](tokens: Token*): Path = new Path:
-    override def apply(i: Int): Token = tokens(i)
+  def apply(tokens: InvocationCoordinate*): Path = apply(tokens.toIndexedSeq)
+
+  def apply(tokens: IndexedSeq[InvocationCoordinate]): Path = new Path:
+    override def apply(i: Int): InvocationCoordinate = tokens(i)
+
     override def length: Int = tokens.length
 
     override def equals(o: Any): Boolean = o match

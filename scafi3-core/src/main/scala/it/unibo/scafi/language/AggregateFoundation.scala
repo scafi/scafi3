@@ -63,5 +63,5 @@ trait AggregateFoundation:
    * @return
    *   an aligned computation
    */
-  def align[T](token: Any)(body: () => T): T
+  def align[T](token: String)(body: () => T): T
 end AggregateFoundation

@@ -10,6 +10,7 @@ import it.unibo.scafi.utils.AlignmentManager
 
 /**
  * @tparam ID
+ *   the type of the device identifier.
  */
 trait ExchangeAggregateContext[ID](
     override val localId: ID,
@@ -35,7 +36,7 @@ trait ExchangeAggregateContext[ID](
       writeValue(send.default, send.alignedValues)
       ret
 
-  override def align[T](token: Any)(body: () => T): T = alignmentScope(token.toString)(body)
+  override def align[T](token: String)(body: () => T): T = alignmentScope(token)(body)
 end ExchangeAggregateContext
 
 object ExchangeAggregateContext:
