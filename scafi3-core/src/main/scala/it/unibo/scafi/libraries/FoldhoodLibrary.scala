@@ -119,7 +119,7 @@ object FoldhoodLibrary:
     zippedNeighbouringValues.foldWithoutSelf(if withSelf then f(base, selfExprValue) else base): (acc, values) =>
       val iterator = values.iterator
       val context: FoldhoodContext[L] = new FoldhoodContext[L]:
-        override def current[X](expr: (lang: L) ?=> lang.SharedData[X]): X = iterator.next match
+        override def current[X](expr: (lang: L) ?=> lang.SharedData[X]): X = iterator.next() match
           case x: X @unchecked => x
           case _ => throw new ClassCastException("Type mismatch")
       val result = expr(using context)
