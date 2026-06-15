@@ -117,7 +117,6 @@ trait FieldBasedSharedData:
   override given sharedDataApplicative: Applicative[Field] = new Applicative[Field]:
     override def pure[A](x: A): Field[A] = Field(x)
     override def ap[A, B](ff: Field[A => B])(fa: Field[A]): Field[B] =
-      given [BB] => CanEqual[BB, BB] = CanEqual.derived
       val default = ff.defaultValue(fa.defaultValue)
       val allDevices = ff.devices ++ fa.devices
       val overrides = allDevices
@@ -132,7 +131,6 @@ trait FieldBasedSharedData:
   override given sharedDataOps: SharedDataOps[Field] = new SharedDataOps[Field]:
     extension [A](field: Field[A])
       override def withoutSelf: SafeIterable[A] =
-        given CanEqual[A, A] = CanEqual.derived
         SafeIterable(field.devices.toList.filterNot(_ == localId).map(field.apply))
       override def onlySelf: A = field(localId)
 
