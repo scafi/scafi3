@@ -1,3 +1,44 @@
+## [3.2.3](https://github.com/scafi/scafi3/compare/v3.2.2...v3.2.3) (2026-06-15)
+
+### Dependency updates
+
+* **core-deps:** update dependency scala to v3.8.1 ([3e8dcb7](https://github.com/scafi/scafi3/commit/3e8dcb7b76f4a879a82aca26a4a0199aebd92baf))
+* **deps:** update alchemistversion to v42.3.26 ([a518daa](https://github.com/scafi/scafi3/commit/a518daa1d62ab345fe1041ea7cbf41be8fcf9bd4))
+* **deps:** update alchemistversion to v42.3.27 ([d7be1d0](https://github.com/scafi/scafi3/commit/d7be1d07d5a5e78c91fe1140b5382221a11e9f9b))
+* **deps:** update alchemistversion to v42.3.28 ([a91dff8](https://github.com/scafi/scafi3/commit/a91dff8dcfbb1e412cd49b029ae6de6873bcbacc))
+* **deps:** update alchemistversion to v42.3.29 ([a2fd353](https://github.com/scafi/scafi3/commit/a2fd3535d5e3d55724afc60a519901465fb203bb))
+* **deps:** update alchemistversion to v42.3.30 ([ef1c73a](https://github.com/scafi/scafi3/commit/ef1c73ab86262e36945bc577ed74fc7f3298688f))
+* **deps:** update alchemistversion to v42.3.31 ([cd8f12f](https://github.com/scafi/scafi3/commit/cd8f12fd38d469241a4c7fe0c27b6a2350514b72))
+* **deps:** update alchemistversion to v42.3.32 ([ef560df](https://github.com/scafi/scafi3/commit/ef560df0c35fadd2d71e0d263ec5acde7291ead6))
+* **deps:** update dependency io.github.iltotore:iron to v3.2.3 ([d4214af](https://github.com/scafi/scafi3/commit/d4214afb2622dbaef490e084bffbdf8347d99eb4))
+* **deps:** update dependency sbt/sbt to v1.12.0 ([d058708](https://github.com/scafi/scafi3/commit/d058708e88853307a697cf53ab7c5bfcb3267975))
+* **deps:** update dependency scalafmt to v3.10.4 ([80454ea](https://github.com/scafi/scafi3/commit/80454ea6e3cb7cce5103de82afabbac81a866f31))
+* **deps:** update node.js to 24.13 ([d4274ec](https://github.com/scafi/scafi3/commit/d4274ec2b73a44a8bb69e1c8a47531eb5c17259a))
+
+### Tests
+
+* fix problem with code coverage ([82a9d8c](https://github.com/scafi/scafi3/commit/82a9d8cdb6934ce9af541ba8ea5477865749f03b))
+* remove explicit CanEqual as not needed ([e4bb89a](https://github.com/scafi/scafi3/commit/e4bb89ab3659ddbce4e44281963cf9f04e2a0638))
+
+### Build and continuous integration
+
+* **deps:** update actions/checkout action to v6.0.2 ([faa49e8](https://github.com/scafi/scafi3/commit/faa49e8699cd238277e1297c42f50beb1b1362e9))
+* **deps:** update actions/setup-node action to v6.2.0 ([c0d8aca](https://github.com/scafi/scafi3/commit/c0d8aca836489d78b200f7cccdeba58ac06d4111))
+* **deps:** update nicolasfara/build-check-deploy-sbt-action action to v1.0.37 ([bfba40b](https://github.com/scafi/scafi3/commit/bfba40b836c6a93a8f0c8c86b72f3d8d2f35d38c))
+* **deps:** update nicolasfara/build-check-deploy-sbt-action action to v1.0.38 ([141ea6c](https://github.com/scafi/scafi3/commit/141ea6c36fdfc2e2d2e2e55fae2dd28ce25e0a20))
+* **deps:** update nicolasfara/build-check-deploy-sbt-action action to v1.0.39 ([10f44de](https://github.com/scafi/scafi3/commit/10f44de041ea049b2fcbd20cd9173b1917732837))
+
+### Style improvements
+
+* code refactoring ([3dacc28](https://github.com/scafi/scafi3/commit/3dacc28367a5ef36795fb4e1bf617121201d10b7))
+* code refactoring ([74a53a5](https://github.com/scafi/scafi3/commit/74a53a5cda74a7071c1ac338406a2e7dabad886e))
+
+### Refactoring
+
+* removed unused given and removed deprecated App trait ([d228803](https://github.com/scafi/scafi3/commit/d22880311bea10534d8b90b8689cef2c257e65b1))
+* use () invoking next resolving the compiler warning ([06e9d7b](https://github.com/scafi/scafi3/commit/06e9d7ba665b98e63e32393e1072d027fd36f3ec))
+* use custom logic for compiling scala code as JSR223 no longer supported in scala3 ([d77b31a](https://github.com/scafi/scafi3/commit/d77b31ac9f6ffe0f62dd3773cd4c61fc33ebeeb0))
+
 ## [3.2.2](https://github.com/scafi/scafi3/compare/v3.2.1...v3.2.2) (2025-12-26)
 
 ### Dependency updates
