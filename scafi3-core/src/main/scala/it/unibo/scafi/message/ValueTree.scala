@@ -85,11 +85,12 @@ object ValueTree:
     override def equals(obj: Any): Boolean =
       obj match
         case that: ValueTree =>
-          try this.paths == that.paths && this.paths.forall(path => {
-            val a = this.apply[Any](path)
-            val b = that.apply[Any](path)
-            a.equals(b)
-          })
+          try
+            this.paths == that.paths && this.paths.forall(path =>
+              val a = this.apply[Any](path)
+              val b = that.apply[Any](path)
+              a.equals(b),
+            )
           catch case _: NoPathFoundException => false
         case _ => false
 
