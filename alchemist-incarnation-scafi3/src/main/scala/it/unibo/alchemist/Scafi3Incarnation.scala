@@ -3,7 +3,6 @@ package it.unibo.alchemist
 import java.io.File
 import java.net.URLClassLoader
 import java.nio.file.Files
-import javax.script.ScriptEngineManager
 
 import it.unibo.alchemist.Scafi3Incarnation.CACHE_SIZE
 import it.unibo.alchemist.actions.RunScafi3Program
@@ -171,17 +170,39 @@ class Scafi3Incarnation[T, Position <: AlchemistPosition[Position]] extends Inca
     (reporter.hasErrors, List(reporter.summary))
 
   private object ScalaScriptEngine:
-    private val engine = ScriptEngineManager().getEngineByName("scala").nn
-
-    val concentrationCache: LoadingCache[String, Any] =
-      Caffeine.newBuilder().nn.build[String, Any](engine.eval).nn
+    private var idCounter = 0
 
     @SuppressWarnings(Array("scalafix:DisableSyntax.asInstanceOf"))
+    private def eval[A](code: String): A =
+      code match
+        case "true" => true.asInstanceOf[A]
+        case "false" => false.asInstanceOf[A]
+        case s if s.toDoubleOption.isDefined =>
+          val d = s.toDouble
+          if d.isValidInt then d.toInt.asInstanceOf[A] else d.asInstanceOf[A]
+        case _ =>
+          idCounter += 1
+          val className = s"Eval_$idCounter"
+          val src = s"""class $className { def eval = $code }"""
+          val inputFolder = Files.createTempDirectory("scafi3-eval")
+          val outputFolder = Files.createTempDirectory("scafi3-eval-out")
+          val sourceFilePath = Files.writeString(inputFolder.resolve(s"$className.scala"), src)
+          val (hasErrors, errors) = compileWithOptions(sourceFilePath.toAbsolutePath.toString, outputFolder.toAbsolutePath.toString)
+          if hasErrors then throw new IllegalArgumentException(s"Could not compile $code: $errors")
+          val url = outputFolder.toFile.toURI.toURL
+          val cl = new URLClassLoader(Array(url), Thread.currentThread().getContextClassLoader)
+          val cls = cl.loadClass(className)
+          val instance = cls.getDeclaredConstructor().newInstance()
+          cls.getMethod("eval").invoke(instance).asInstanceOf[A]
+
+    val concentrationCache: LoadingCache[String, Any] =
+      Caffeine.newBuilder().nn.build[String, Any](eval[Any]).nn
+
     val propertyCache: LoadingCache[String, Any => Double] = Caffeine
       .newBuilder()
       .nn
       .build[String, Any => Double] { property =>
-        engine.eval(property).asInstanceOf[Any => Double]
+        eval[Any => Double](property)
       }
       .nn
   end ScalaScriptEngine
