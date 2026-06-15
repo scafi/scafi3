@@ -187,7 +187,8 @@ class Scafi3Incarnation[T, Position <: AlchemistPosition[Position]] extends Inca
           val inputFolder = Files.createTempDirectory("scafi3-eval")
           val outputFolder = Files.createTempDirectory("scafi3-eval-out")
           val sourceFilePath = Files.writeString(inputFolder.resolve(s"$className.scala"), src)
-          val (hasErrors, errors) = compileWithOptions(sourceFilePath.toAbsolutePath.toString, outputFolder.toAbsolutePath.toString)
+          val (hasErrors, errors) =
+            compileWithOptions(sourceFilePath.toAbsolutePath.toString, outputFolder.toAbsolutePath.toString)
           if hasErrors then throw new IllegalArgumentException(s"Could not compile $code: $errors")
           val url = outputFolder.toFile.toURI.toURL
           val cl = new URLClassLoader(Array(url), Thread.currentThread().getContextClassLoader)
