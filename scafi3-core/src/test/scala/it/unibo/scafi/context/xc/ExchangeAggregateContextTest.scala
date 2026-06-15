@@ -34,7 +34,6 @@ class ExchangeAggregateContextTest
 
   private val lang = exchangeContextFactory(NeighborsNetworkManager[Int](0, Set(1, 2, 4, 6)), ValueTree.empty)
   private given [A: Arbitrary] => Arbitrary[lang.SharedData[A]] = Arbitrary:
-    given CanEqual[A, A] = CanEqual.derived
     for
       default <- Arbitrary.arbitrary[A]
       // Generate a random set (non empty) of device IDs between 0 and 10
