@@ -20,3 +20,8 @@ node_modules/
 
 # macOS
 .DS_Store
+
+# Nix & direnv
+.direnv/
+result
+result-*
