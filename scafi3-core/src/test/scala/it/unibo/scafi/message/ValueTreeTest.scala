@@ -64,4 +64,17 @@ class ValueTreeTest extends AnyFlatSpecLike, should.Matchers:
   it should "not be equal to another ValueTree with different paths or values" in:
     val anotherValueTree = ValueTree(Map(Path("path1") -> "value1", Path("path2") -> "differentValue"))
     valueTree should not equal anotherValueTree
+
+  it should "distinguish paths by coordinates rather than string rendering" in:
+    val singleCoordinatePath = Path(InvocationCoordinate("alpha.0, beta", invocationCount = 1))
+    val multiCoordinatePath = Path(
+      InvocationCoordinate("alpha", invocationCount = 0),
+      InvocationCoordinate("beta", invocationCount = 1),
+    )
+    val valueTree = ValueTree(Map(singleCoordinatePath -> "single", multiCoordinatePath -> "multi"))
+
+    singleCoordinatePath should not equal multiCoordinatePath
+    valueTree.paths should contain theSameElementsAs Seq(singleCoordinatePath, multiCoordinatePath)
+    valueTree.apply[String](singleCoordinatePath) shouldBe "single"
+    valueTree.apply[String](multiCoordinatePath) shouldBe "multi"
 end ValueTreeTest
