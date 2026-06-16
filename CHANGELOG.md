@@ -1,3 +1,17 @@
+## [3.2.4](https://github.com/scafi/scafi3/compare/v3.2.3...v3.2.4) (2026-06-16)
+
+### Bug Fixes
+
+* fix equals on path validating InvocationCoordinate within it ([#243](https://github.com/scafi/scafi3/issues/243)) ([505b46d](https://github.com/scafi/scafi3/commit/505b46d0080b23768b6b20c32d348b878ff99f04))
+
+### General maintenance
+
+* add flake.nix file ([a02557c](https://github.com/scafi/scafi3/commit/a02557ccff20f695081140e3734a6060efa680b9))
+
+### Refactoring
+
+* make Path a sequence of InvocationCoordinate instead of Any ([#221](https://github.com/scafi/scafi3/issues/221)) ([0509db7](https://github.com/scafi/scafi3/commit/0509db718d0194e8de9a19ffc078be1828bea265))
+
 ## [3.2.3](https://github.com/scafi/scafi3/compare/v3.2.2...v3.2.3) (2026-06-15)
 
 ### Dependency updates
