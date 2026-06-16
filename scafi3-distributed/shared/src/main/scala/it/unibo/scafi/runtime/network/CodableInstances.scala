@@ -13,27 +13,9 @@ object CodableInstances:
 
   private given Codec[InvocationCoordinate] = deriveCodec
 
-  private given Codec[Any] = Codec(
-    Encoder: (writer, path) =>
-      path match
-        case coordinate: InvocationCoordinate =>
-          writer
-            .writeArrayOpen(2)
-            .write("InvocationCoordinate")
-            .write(coordinate)
-            .writeArrayClose()
-        case _ => throw IllegalArgumentException(s"Unsupported Path token type ${path.getClass.getName}"),
-    Decoder: reader =>
-      val unbounded = reader.readArrayOpen(2)
-      val value = reader.readString() match
-        case "InvocationCoordinate" => reader.read[InvocationCoordinate]()
-        case tag => throw IllegalArgumentException(s"Unsupported Path token type $tag.")
-      reader.readArrayClose(unbounded, value),
-  )
-
   private given Codec[Path] = Codec(
-    Encoder.forIndexedSeq[Any, IndexedSeq].contramap(identity),
-    Decoder.forArray[Any].map(Path.apply),
+    Encoder.forIndexedSeq[InvocationCoordinate, IndexedSeq].contramap(identity),
+    Decoder.forArray[InvocationCoordinate].map(coordinates => Path(coordinates.toIndexedSeq)),
   )
 
   /** A [[BinaryCodable]] for encoding and decoding [[Path]]s instances. */
