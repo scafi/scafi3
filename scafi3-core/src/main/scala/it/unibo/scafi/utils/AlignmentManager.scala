@@ -31,8 +31,8 @@ trait AlignmentManager:
     val currentPath = Path(stack.toSeq*)
     val invocationCount = trace.get(currentPath).map(_ + 1).getOrElse(0)
     stack.push(InvocationCoordinate(key, invocationCount))
-    val result = body()
-    val _ = stack.pop()
-    trace.update(currentPath, invocationCount)
-    result
+    try body()
+    finally
+      val _ = stack.pop()
+      trace.update(currentPath, invocationCount)
 end AlignmentManager
