@@ -13,7 +13,7 @@ object Path:
     override def length: Int = tokens.length
 
     override def equals(o: Any): Boolean = o match
-      case that: Path => this.toString == that.toString
+      case that: Path => this.length == that.length && this.zip(that).forall((left, right) => left.equals(right))
       case _ => false
 
     override def hashCode: Int = tokens.hashCode()
