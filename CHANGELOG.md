@@ -1,3 +1,13 @@
+## [3.2.5](https://github.com/scafi/scafi3/compare/v3.2.4...v3.2.5) (2026-06-16)
+
+### Bug Fixes
+
+* if an exception is thrown within an alignment block, the stack will be messed up as it will not pop the token ([#245](https://github.com/scafi/scafi3/issues/245)) ([5e2c2fd](https://github.com/scafi/scafi3/commit/5e2c2fd8cc131fed464397ac738ab13b841b0440))
+
+### Refactoring
+
+* move invocation coordinate within the path as it now is a direct dependency ([#244](https://github.com/scafi/scafi3/issues/244)) ([9a36a3b](https://github.com/scafi/scafi3/commit/9a36a3b25d5dfbaae4620fc21804e7499897171e))
+
 ## [3.2.4](https://github.com/scafi/scafi3/compare/v3.2.3...v3.2.4) (2026-06-16)
 
 ### Bug Fixes
