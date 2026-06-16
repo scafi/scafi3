@@ -2,10 +2,9 @@ package it.unibo.scafi.runtime.network
 
 import scala.concurrent.duration.{ Duration, DurationInt, SECONDS }
 
-import it.unibo.scafi.message.{ Export, Path, ValueTree }
+import it.unibo.scafi.message.{ Export, InvocationCoordinate, Path, ValueTree }
 import it.unibo.scafi.runtime.network.TimeRetention
 import it.unibo.scafi.test.AsyncSpec
-import it.unibo.scafi.utils.InvocationCoordinate
 
 trait TimeRetentionNetworkTest extends AsyncSpec:
 

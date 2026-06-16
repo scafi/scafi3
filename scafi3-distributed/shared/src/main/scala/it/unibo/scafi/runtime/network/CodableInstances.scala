@@ -1,7 +1,6 @@
 package it.unibo.scafi.runtime.network
 
-import it.unibo.scafi.message.{ BinaryCodable, Path, ValueTree }
-import it.unibo.scafi.utils.InvocationCoordinate
+import it.unibo.scafi.message.{ BinaryCodable, InvocationCoordinate, Path, ValueTree }
 
 import io.bullet.borer.{ Cbor, Codec, Decoder, Encoder }
 import io.bullet.borer.derivation.ArrayBasedCodecs.deriveCodec

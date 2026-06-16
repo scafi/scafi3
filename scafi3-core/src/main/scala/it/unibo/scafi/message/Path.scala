@@ -1,6 +1,15 @@
 package it.unibo.scafi.message
 
-import it.unibo.scafi.utils.InvocationCoordinate
+/**
+ * A coordinate in the alignment stack, representing a specific invocation.
+ *
+ * @param key
+ *   the key identifying the scope.
+ * @param invocationCount
+ *   the invocation index for the given key.
+ */
+case class InvocationCoordinate(key: String, invocationCount: Int):
+  override def toString: String = s"$key.$invocationCount"
 
 trait Path extends IndexedSeq[InvocationCoordinate]
 
