@@ -1,7 +1,6 @@
 package it.unibo.scafi.message
 
 import it.unibo.scafi.message.ValueTree.NoPathFoundException
-import it.unibo.scafi.utils.InvocationCoordinate
 
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should
