@@ -1,7 +1,7 @@
 package it.unibo.scafi.runtime.network
 
-import it.unibo.scafi.message.Codable.{ decode, encode }
 import it.unibo.scafi.message.{ InvocationCoordinate, Path, ValueTree }
+import it.unibo.scafi.message.Codable.{ decode, encode }
 import it.unibo.scafi.runtime.network.CodableInstances.given
 
 import org.scalatest.matchers.should
