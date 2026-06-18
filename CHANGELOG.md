@@ -1,3 +1,9 @@
+## [3.2.7](https://github.com/scafi/scafi3/compare/v3.2.6...v3.2.7) (2026-06-18)
+
+### Performance improvements
+
+* cache scafi program lookup via reflection avoiding reflect invocation on each node ([#246](https://github.com/scafi/scafi3/issues/246)) ([b463b08](https://github.com/scafi/scafi3/commit/b463b08a04716d0c24cae498563d95304e1fe4d3))
+
 ## [3.2.6](https://github.com/scafi/scafi3/compare/v3.2.5...v3.2.6) (2026-06-18)
 
 ### Performance improvements
