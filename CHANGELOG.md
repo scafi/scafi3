@@ -1,3 +1,13 @@
+## [3.2.6](https://github.com/scafi/scafi3/compare/v3.2.5...v3.2.6) (2026-06-18)
+
+### Performance improvements
+
+* avoid creating coordinates to determine the distance ([b2e9ade](https://github.com/scafi/scafi3/commit/b2e9adec99f307097029cbd715b2aa95b420db1a))
+
+### Refactoring
+
+* improve compilation and resource cleanup ([3cad753](https://github.com/scafi/scafi3/commit/3cad753ece6ceebf618dbde0ce0330a00c8834e4))
+
 ## [3.2.5](https://github.com/scafi/scafi3/compare/v3.2.4...v3.2.5) (2026-06-16)
 
 ### Bug Fixes
