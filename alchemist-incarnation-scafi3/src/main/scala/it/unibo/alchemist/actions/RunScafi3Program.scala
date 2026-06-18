@@ -29,25 +29,28 @@ class RunScafi3Program[T, Position <: AlchemistPosition[Position]](
     val method: java.lang.reflect.Method,
 ) extends AbstractAction[T](node):
 
-  def this(node: Node[T], environment: Environment[T, Position], programName: String, classLoader: Option[URLClassLoader]) =
+  def this(
+      node: Node[T],
+      environment: Environment[T, Position],
+      programName: String,
+      classLoader: Option[URLClassLoader],
+  ) =
     this(
       node,
       environment,
       programName,
-      classLoader,
-      {
+      classLoader, {
         val programPath = programName.split('.')
         val classPath = programPath.take(programPath.length - 1).mkString("", ".", "$")
         val clazz = classLoader.map(_.loadClass(classPath)).getOrElse(Class.forName(classPath))
         clazz.getField("MODULE$").nn.get(clazz)
-      },
-      {
+      }, {
         val programPath = programName.split('.')
         val classPath = programPath.take(programPath.length - 1).mkString("", ".", "$")
         val clazz = classLoader.map(_.loadClass(classPath)).getOrElse(Class.forName(classPath))
         val methods = clazz.getMethods.nn
         methods.toList.find(_.nn.getName.nn == programPath.last).get.nn
-      }
+      },
     )
 
   def this(node: Node[T], environment: Environment[T, Position], programName: String) =
