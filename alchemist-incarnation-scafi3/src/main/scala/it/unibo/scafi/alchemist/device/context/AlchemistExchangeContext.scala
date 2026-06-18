@@ -21,7 +21,7 @@ class AlchemistExchangeContext[T, P <: Position[P]](
   override def senseDistance: Field[Double] =
     val devicePosition = environment.getPosition(node)
     neighborValues(devicePosition)(using forInMemoryCommunications).map: (position: P) =>
-      devicePosition.distanceTo(environment.makePosition(position.getCoordinates))
+      devicePosition.distanceTo(position)
 
   @SuppressWarnings(Array("scalafix:DisableSyntax.asInstanceOf"))
   override def get[Value](name: String): Value = node.getConcentration(SimpleMolecule(name)).asInstanceOf[Value]
