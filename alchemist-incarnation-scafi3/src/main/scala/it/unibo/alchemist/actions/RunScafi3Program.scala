@@ -46,7 +46,7 @@ class RunScafi3Program[T, Position <: AlchemistPosition[Position]](
   override def getContext: Context = Context.NEIGHBORHOOD
 
   override def cloneAction(node: Node[T], reaction: Reaction[T]): Action[T] =
-    RunScafi3Program[T, Position](node, environment, programName)
+    RunScafi3Program[T, Position](node, environment, programName, classLoader)
 
   override def execute(): Unit =
     val result = scafiProgram.cycle()

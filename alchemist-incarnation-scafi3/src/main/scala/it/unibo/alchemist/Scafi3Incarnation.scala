@@ -4,7 +4,7 @@ import java.io.File
 import java.net.URLClassLoader
 import java.nio.file.Files
 
-import it.unibo.alchemist.Scafi3Incarnation.CACHE_SIZE
+import it.unibo.alchemist.Scafi3Incarnation.{ CACHE_SIZE, ProgramSource }
 import it.unibo.alchemist.actions.RunScafi3Program
 import it.unibo.alchemist.model.{ Position as AlchemistPosition, * }
 import it.unibo.alchemist.model.conditions.AbstractCondition
@@ -23,13 +23,19 @@ import org.slf4j.LoggerFactory
 
 class Scafi3Incarnation[T, Position <: AlchemistPosition[Position]] extends Incarnation[T, Position]:
   private val logger = LoggerFactory.getLogger(getClass)
-  private val classLoaders: LoadingCache[String, URLClassLoader] =
+  private val classLoaders: LoadingCache[ProgramSource, URLClassLoader] =
     Caffeine
       .newBuilder()
       .maximumSize(CACHE_SIZE)
-      .build: name =>
-        val outputFolder = Files.createTempDirectory(name).toFile
-        URLClassLoader(Array(outputFolder.toURI.toURL), Thread.currentThread().getContextClassLoader)
+      .build: ps =>
+        val outputFolder = Files.createTempDirectory(ps.name).toFile
+        val cl = URLClassLoader(Array(outputFolder.toURI.toURL), Thread.currentThread().getContextClassLoader)
+        val (hasErrors, errors) = compileScafiProgram(ps.code, cl)
+        if hasErrors then
+          throw IllegalArgumentException(
+            s"Could not compile Scafi3 program:\n${errors.mkString("\n")}",
+          )
+        cl
 
   override def createMolecule(s: String): Molecule = SimpleMolecule(s)
 
@@ -126,12 +132,7 @@ class Scafi3Incarnation[T, Position <: AlchemistPosition[Position]] extends Inca
         val code = params.get("code")
         val entrypoint = params.get("entrypoint")
         val name = params.getOrDefault("name", "Scafi3Program")
-        val classLoader = classLoaders.get(name)
-        val (hasErrors, errors) = compileScafiProgram(code, classLoader)
-        if hasErrors then
-          throw IllegalArgumentException(
-            s"Could not compile Scafi3 program:\n${errors.mkString("\n")}",
-          )
+        val classLoader = classLoaders.get(ProgramSource(name, code))
         RunScafi3Program[T, Position](node, environment, entrypoint, Some(classLoader))
       case params =>
         throw IllegalArgumentException(
@@ -149,8 +150,12 @@ class Scafi3Incarnation[T, Position <: AlchemistPosition[Position]] extends Inca
     )
     val inputFolder = Files.createTempDirectory("scafi3-src")
     val sourceFilePath = Files.writeString(inputFolder.resolve("Program.scala"), code)
-    // Compile file
-    compileWithOptions(sourceFilePath.toAbsolutePath.toString, outputFolder.toAbsolutePath.toString)
+    try
+      // Compile file
+      compileWithOptions(sourceFilePath.toAbsolutePath.toString, outputFolder.toAbsolutePath.toString)
+    finally
+      val _ = Files.deleteIfExists(sourceFilePath)
+      val _ = Files.deleteIfExists(inputFolder)
 
   private def compileWithOptions(sourceFile: String, outputDir: String): (Boolean, List[String]) =
     val cp = Thread.currentThread().getContextClassLoader match
@@ -211,3 +216,4 @@ end Scafi3Incarnation
 
 object Scafi3Incarnation:
   private val CACHE_SIZE = 1000
+  case class ProgramSource(name: String, code: String)
