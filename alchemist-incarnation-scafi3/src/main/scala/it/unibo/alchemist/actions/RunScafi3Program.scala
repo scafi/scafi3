@@ -24,15 +24,39 @@ class RunScafi3Program[T, Position <: AlchemistPosition[Position]](
     node: Node[T],
     environment: Environment[T, Position],
     val programName: String,
-    val classLoader: Option[URLClassLoader] = None,
+    val classLoader: Option[URLClassLoader],
+    val module: Any,
+    val method: java.lang.reflect.Method,
 ) extends AbstractAction[T](node):
+
+  def this(
+      node: Node[T],
+      environment: Environment[T, Position],
+      programName: String,
+      classLoader: Option[URLClassLoader],
+  ) =
+    this(
+      node,
+      environment,
+      programName,
+      classLoader, {
+        val programPath = programName.split('.')
+        val classPath = programPath.take(programPath.length - 1).mkString("", ".", "$")
+        val clazz = classLoader.map(_.loadClass(classPath)).getOrElse(Class.forName(classPath))
+        clazz.getField("MODULE$").nn.get(clazz)
+      }, {
+        val programPath = programName.split('.')
+        val classPath = programPath.take(programPath.length - 1).mkString("", ".", "$")
+        val clazz = classLoader.map(_.loadClass(classPath)).getOrElse(Class.forName(classPath))
+        val methods = clazz.getMethods.nn
+        methods.toList.find(_.nn.getName.nn == programPath.last).get.nn
+      },
+    )
+
+  def this(node: Node[T], environment: Environment[T, Position], programName: String) =
+    this(node, environment, programName, None)
+
   private val programIdentifier = SimpleMolecule(programName)
-  private val programPath: Array[String] = programName.split('.')
-  private val classPath: String = programPath.take(programPath.length - 1).mkString("", ".", "$")
-  private val clazz = classLoader.map(_.loadClass(classPath)).getOrElse(Class.forName(classPath))
-  private val module = clazz.getField("MODULE$").nn.get(clazz)
-  private val methods = clazz.getMethods.nn
-  private val method = methods.toList.find(_.nn.getName.nn == programPath.last).get.nn
 
   val localDevice: Scafi3Device[T, Position] = node.asProperty(classOf[Scafi3Device[T, Position]])
 
@@ -46,7 +70,7 @@ class RunScafi3Program[T, Position <: AlchemistPosition[Position]](
   override def getContext: Context = Context.NEIGHBORHOOD
 
   override def cloneAction(node: Node[T], reaction: Reaction[T]): Action[T] =
-    RunScafi3Program[T, Position](node, environment, programName, classLoader)
+    RunScafi3Program[T, Position](node, environment, programName, classLoader, module, method)
 
   override def execute(): Unit =
     val result = scafiProgram.cycle()
