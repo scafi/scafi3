@@ -15,7 +15,7 @@ class AlchemistExchangeContext[T, P <: Position[P]](
     inbox: Import[Int],
     state: ValueTree,
 ) extends ExchangeAggregateContext[Int](node.getId, inbox, state),
-      AbstractContextWithDistanceSensor,
+      AbstractContextWithDistanceSensor[P],
       AlchemistEnvironmentVariables:
 
   override def senseDistance: Field[Double] =
