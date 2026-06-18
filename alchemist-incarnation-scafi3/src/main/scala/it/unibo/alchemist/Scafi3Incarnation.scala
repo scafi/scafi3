@@ -37,6 +37,20 @@ class Scafi3Incarnation[T, Position <: AlchemistPosition[Position]] extends Inca
           )
         cl
 
+  private val reflectionCache: LoadingCache[(String, Option[URLClassLoader]), (Any, java.lang.reflect.Method)] =
+    Caffeine
+      .newBuilder()
+      .maximumSize(CACHE_SIZE)
+      .build:
+        case (programName, classLoader) =>
+          val programPath = programName.split('.')
+          val classPath = programPath.take(programPath.length - 1).mkString("", ".", "$")
+          val clazz = classLoader.map(_.loadClass(classPath)).getOrElse(Class.forName(classPath))
+          val module = clazz.getField("MODULE$").nn.get(clazz)
+          val methods = clazz.getMethods.nn
+          val method = methods.toList.find(_.nn.getName.nn == programPath.last).get.nn
+          (module, method)
+
   override def createMolecule(s: String): Molecule = SimpleMolecule(s)
 
   @SuppressWarnings(Array("scalafix:DisableSyntax.asInstanceOf", "scalafix:DisableSyntax.null"))
@@ -123,7 +137,9 @@ class Scafi3Incarnation[T, Position <: AlchemistPosition[Position]] extends Inca
   ): Action[T] =
     require(node != null, "Scafi3 requires a device and cannot execute in a Global Reaction") // scalafix:ok
     additionalParameters match
-      case params: String => RunScafi3Program[T, Position](node, environment, params)
+      case params: String =>
+        val (module, method) = reflectionCache.get((params, None)).nn
+        RunScafi3Program[T, Position](node, environment, params, None, module, method)
       case params: java.util.Map[String, String] @unchecked =>
         require(
           params.containsKey("code") && params.containsKey("entrypoint"),
@@ -133,7 +149,8 @@ class Scafi3Incarnation[T, Position <: AlchemistPosition[Position]] extends Inca
         val entrypoint = params.get("entrypoint")
         val name = params.getOrDefault("name", "Scafi3Program")
         val classLoader = classLoaders.get(ProgramSource(name, code))
-        RunScafi3Program[T, Position](node, environment, entrypoint, Some(classLoader))
+        val (module, method) = reflectionCache.get((entrypoint, Some(classLoader))).nn
+        RunScafi3Program[T, Position](node, environment, entrypoint, Some(classLoader), module, method)
       case params =>
         throw IllegalArgumentException(
           s"Invalid parameters for Scafi3. `String` required, but ${params.getClass} has been provided: $params",
