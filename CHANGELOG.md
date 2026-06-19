@@ -1,3 +1,9 @@
+## [3.3.0](https://github.com/scafi/scafi3/compare/v3.2.8...v3.3.0) (2026-06-19)
+
+### Features
+
+* add `default` property in Export trait and improve equals check avoiding cast. ([#248](https://github.com/scafi/scafi3/issues/248)) ([d83b4d5](https://github.com/scafi/scafi3/commit/d83b4d59d3ec8e6f932e58991db59ebae9772545))
+
 ## [3.2.8](https://github.com/scafi/scafi3/compare/v3.2.7...v3.2.8) (2026-06-19)
 
 ### Bug Fixes
