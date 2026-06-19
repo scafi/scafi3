@@ -1,3 +1,9 @@
+## [3.2.8](https://github.com/scafi/scafi3/compare/v3.2.7...v3.2.8) (2026-06-19)
+
+### Bug Fixes
+
+* set generic parameter avoiding warning ([#247](https://github.com/scafi/scafi3/issues/247)) ([e07f364](https://github.com/scafi/scafi3/commit/e07f36418ce4b426e01e6a4c380ad910bf3b3da2))
+
 ## [3.2.7](https://github.com/scafi/scafi3/compare/v3.2.6...v3.2.7) (2026-06-18)
 
 ### Performance improvements
