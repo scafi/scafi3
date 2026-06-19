@@ -25,6 +25,13 @@ trait Export[DeviceId]:
    */
   def devices: Set[DeviceId]
 
+  /**
+   * The default [[ValueTree]] of this [[Export]].
+   * @return
+   *   the default [[ValueTree]].
+   */
+  def default: ValueTree
+
   given CanEqual[DeviceId, DeviceId] = CanEqual.derived
 end Export
 
@@ -40,22 +47,23 @@ object Export:
    * @return
    *   an [[Export]] that retrieves the [[ValueTree]] associated to the given [[deviceId]] or the default.
    */
-  def apply[DeviceId](default: ValueTree, overrides: Map[DeviceId, ValueTree]): Export[DeviceId] = new Export[DeviceId]:
-    override def apply(deviceId: DeviceId): ValueTree = overrides.getOrElse(deviceId, default)
-    override def devices: Set[DeviceId] = overrides.keys.toSet
+  def apply[DeviceId](default: ValueTree, overrides: Map[DeviceId, ValueTree]): Export[DeviceId] =
+    val defaultVal = default
+    new Export[DeviceId]:
+      override def apply(deviceId: DeviceId): ValueTree = overrides.getOrElse(deviceId, defaultVal)
+      override def devices: Set[DeviceId] = overrides.keys.toSet
+      override def default: ValueTree = defaultVal
 
-    @SuppressWarnings(Array("DisableSyntax.asInstanceOf"))
-    override def equals(obj: Any): Boolean = obj match
-      case that: Export[DeviceId] @unchecked =>
-        this.devices == that.devices && this.devices.forall(deviceId => this(deviceId) == that(deviceId)) &&
-        // Retrieve the default ValueTree using a non-existing DeviceId
-        this.apply(Object().asInstanceOf[DeviceId]) == that.apply(Object().asInstanceOf[DeviceId])
-      case _ => false
+      override def equals(obj: Any): Boolean = obj match
+        case that: Export[DeviceId] @unchecked =>
+          this.devices == that.devices && this.devices.forall(deviceId => this(deviceId) == that(deviceId)) &&
+          this.default == that.default
+        case _ => false
 
-    override def hashCode(): Int = overrides.hashCode() + default.hashCode()
+      override def hashCode(): Int = overrides.hashCode() + defaultVal.hashCode()
 
-    override def toString: String =
-      s"Export(${overrides.map { case (k, v) => s"$k -> $v" }.mkString(", ")}, default = $default)"
+      override def toString: String =
+        s"Export(${overrides.map { case (k, v) => s"$k -> $v" }.mkString(", ")}, default = $defaultVal)"
 
   given exportCanEqual[T]: CanEqual[Export[T], Export[T]] = CanEqual.derived
 end Export
