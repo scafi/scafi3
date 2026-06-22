@@ -11,6 +11,7 @@ object All:
   export CommonLibrary.{ *, given }
   export ExchangeCalculusLibrary.{ *, given }
   export FieldCalculusLibrary.{ *, given }
+  export FieldUtilsLibrary.{ *, given }
   export FoldingLibrary.{ *, given }
   export GradientLibrary.{ *, given }
   export MathLibrary.{ *, given }
