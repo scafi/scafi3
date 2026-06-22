@@ -23,7 +23,7 @@ object Gradient:
 
   @main
   def run(): Unit =
-    val simulationFile = getClass.getResource("/it/unibo/scafi/gradient.yml").getPath
+    val simulationFile = getClass.getResource("/it/unibo/scafi/gradient.yml")
     val loader = LoadAlchemist.from(simulationFile)
     val simulation = loader.getDefault[Any, Nothing]()
     simulation.run()
