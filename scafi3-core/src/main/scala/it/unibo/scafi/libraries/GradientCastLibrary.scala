@@ -10,7 +10,6 @@ import it.unibo.scafi.utils.boundaries.UpperBounded
 
 import cats.syntax.all.catsSyntaxTuple2Semigroupal
 
-import CommonLibrary.mux
 import FieldCalculusLibrary.{ neighborValues, share }
 import FieldUtilsLibrary.minHoodSelector
 import GradientLibrary.distanceTo
@@ -27,6 +26,28 @@ import GradientLibrary.distanceTo
  *   [[GradientLibrary.distanceTo]] for the gradient potential
  */
 object GradientCastLibrary:
+
+  // Single-overload private impl: all public overloads delegate here, avoiding
+  // Scala 3 overload-resolution failures on path-dependent SharedData types.
+  private def castImpl[Format, V: CodableFromTo[Format], D: {Numeric as num, UpperBounded as bound}](using
+      language: AggregateFoundation & FieldCalculusSyntax,
+  )(using
+      Ordering[language.DeviceId],
+      Codable[D, D],
+  )(
+      source: Boolean,
+      field: V,
+      metric: language.SharedData[D],
+      accumulate: V => V,
+  ): V =
+    val pot = distanceTo[D, D](source, metric)
+    val nbrPots = neighborValues[D, D](pot)
+    share[Format, V](field): nbrVals =>
+      if source then field
+      else
+        val key = (nbrPots, metric).mapN(_ + _)
+        if key.withoutSelf.nonEmpty then accumulate(minHoodSelector(key, nbrVals, field))
+        else field
 
   /**
    * Gradient-cast: propagates `field` outward from `source` along the gradient induced by `metric`, applying
@@ -56,33 +77,32 @@ object GradientCastLibrary:
    */
   def gradientCast[Format, V: CodableFromTo[Format], D: {Numeric as num, UpperBounded as bound}](using
       language: AggregateFoundation & FieldCalculusSyntax,
-  )(using Ordering[language.DeviceId], Codable[D, D])(
+  )(using
+      Ordering[language.DeviceId],
+      Codable[D, D],
+  )(
       source: Boolean,
       field: V,
       metric: language.SharedData[D],
       accumulate: V => V,
-  ): V =
-    val pot = distanceTo[D, D](source, metric)
-    val nbrPots = neighborValues[D, D](pot)
-    share(field): nbrVals =>
-      mux(source)(field):
-        val key = (nbrPots, metric).mapN(_ + _)
-        if key.withoutSelf.nonEmpty then accumulate(minHoodSelector(key, nbrVals, field))
-        else field
+  ): V = castImpl(source, field, metric, accumulate)
 
   /**
-   * Sensor-based variant of [[gradientCast]]; derives `metric` from [[DistanceSensor.senseDistance]].
+   * Sensor-based overload of [[gradientCast]]; derives `metric` from [[DistanceSensor.senseDistance]].
    *
    * @see
    *   [[gradientCast]] for parameter documentation
    */
-  def sensorGradientCast[Format, V: CodableFromTo[Format], D: {Numeric, UpperBounded}](using
+  def gradientCast[Format, V: CodableFromTo[Format], D: {Numeric, UpperBounded}](using
       language: AggregateFoundation & FieldCalculusSyntax & DistanceSensor[D],
-  )(using Ordering[language.DeviceId], Codable[D, D])(
+  )(using
+      Ordering[language.DeviceId],
+      Codable[D, D],
+  )(
       source: Boolean,
       field: V,
       accumulate: V => V,
-  ): V = gradientCast(source, field, DistanceSensor.senseDistance[D], accumulate)
+  ): V = castImpl(source, field, DistanceSensor.senseDistance[D], accumulate)
 
   /**
    * Broadcasts `field`'s value from the source(s) outward unchanged (`accumulate = identity`).
@@ -106,24 +126,30 @@ object GradientCastLibrary:
    */
   def broadcast[Format, V: CodableFromTo[Format], D: {Numeric, UpperBounded}](using
       language: AggregateFoundation & FieldCalculusSyntax,
-  )(using Ordering[language.DeviceId], Codable[D, D])(
+  )(using
+      Ordering[language.DeviceId],
+      Codable[D, D],
+  )(
       source: Boolean,
       field: V,
       metric: language.SharedData[D],
-  ): V = gradientCast(source, field, metric, identity)
+  ): V = castImpl(source, field, metric, identity)
 
   /**
-   * Sensor-based variant of [[broadcast]]; derives `metric` from [[DistanceSensor.senseDistance]].
+   * Sensor-based overload of [[broadcast]]; derives `metric` from [[DistanceSensor.senseDistance]].
    *
    * @see
    *   [[broadcast]] for parameter documentation
    */
-  def sensorBroadcast[Format, V: CodableFromTo[Format], D: {Numeric, UpperBounded}](using
+  def broadcast[Format, V: CodableFromTo[Format], D: {Numeric, UpperBounded}](using
       language: AggregateFoundation & FieldCalculusSyntax & DistanceSensor[D],
-  )(using Ordering[language.DeviceId], Codable[D, D])(
+  )(using
+      Ordering[language.DeviceId],
+      Codable[D, D],
+  )(
       source: Boolean,
       field: V,
-  ): V = broadcast(source, field, DistanceSensor.senseDistance[D])
+  ): V = castImpl(source, field, DistanceSensor.senseDistance[D], identity)
 
   /**
    * Distance from `source` to `target` measured along `metric`. Equivalent to broadcasting `distanceTo(target)` from
@@ -144,11 +170,32 @@ object GradientCastLibrary:
    */
   def distanceBetween[D: {Numeric, UpperBounded}](using
       language: AggregateFoundation & FieldCalculusSyntax,
-  )(using Ordering[language.DeviceId], Codable[D, D])(
+  )(using
+      Ordering[language.DeviceId],
+      Codable[D, D],
+  )(
       source: Boolean,
       target: Boolean,
       metric: language.SharedData[D],
-  ): D = broadcast[D, D, D](source, distanceTo[D, D](target, metric), metric)
+  ): D = castImpl[D, D, D](source, distanceTo[D, D](target, metric), metric, identity)
+
+  /**
+   * Sensor-based overload of [[distanceBetween]]; derives `metric` from [[DistanceSensor.senseDistance]].
+   *
+   * @see
+   *   [[distanceBetween]] for parameter documentation
+   */
+  def distanceBetween[D: {Numeric, UpperBounded}](using
+      language: AggregateFoundation & FieldCalculusSyntax & DistanceSensor[D],
+  )(using
+      Ordering[language.DeviceId],
+      Codable[D, D],
+  )(
+      source: Boolean,
+      target: Boolean,
+  ): D =
+    val metric = DistanceSensor.senseDistance[D]
+    castImpl[D, D, D](source, distanceTo[D, D](target, metric), metric, identity)
 
   /**
    * Boolean channel of width `width` connecting `source` to `target`: `true` on devices that lie close to a minimal
@@ -174,7 +221,10 @@ object GradientCastLibrary:
    */
   def channel[D: {Numeric as num, UpperBounded as bound}](using
       language: AggregateFoundation & FieldCalculusSyntax,
-  )(using Ordering[language.DeviceId], Codable[D, D])(
+  )(using
+      Ordering[language.DeviceId],
+      Codable[D, D],
+  )(
       source: Boolean,
       target: Boolean,
       metric: language.SharedData[D],
@@ -184,22 +234,33 @@ object GradientCastLibrary:
     val inf = bound.upperBound
     val distSource = distanceTo[D, D](source, metric)
     val distTarget = distanceTo[D, D](target, metric)
-    val db = distanceBetween(source, target, metric)
+    val db = castImpl[D, D, D](source, distanceTo[D, D](target, metric), metric, identity)
     ord.lt(distSource, inf) && ord.lt(distTarget, inf) &&
-      ord.lteq(distSource + distTarget, db + width)
+    ord.lteq(distSource + distTarget, db + width)
 
   /**
-   * Sensor-based variant of [[channel]]; derives `metric` from [[DistanceSensor.senseDistance]].
+   * Sensor-based overload of [[channel]]; derives `metric` from [[DistanceSensor.senseDistance]].
    *
    * @see
    *   [[channel]] for parameter documentation
    */
-  def sensorChannel[D: {Numeric, UpperBounded}](using
+  def channel[D: {Numeric as num, UpperBounded as bound}](using
       language: AggregateFoundation & FieldCalculusSyntax & DistanceSensor[D],
-  )(using Ordering[language.DeviceId], Codable[D, D])(
+  )(using
+      Ordering[language.DeviceId],
+      Codable[D, D],
+  )(
       source: Boolean,
       target: Boolean,
       width: D,
-  ): Boolean = channel(source, target, DistanceSensor.senseDistance[D], width)
+  ): Boolean =
+    val metric = DistanceSensor.senseDistance[D]
+    val ord = summon[Ordering[D]]
+    val inf = bound.upperBound
+    val distSource = distanceTo[D, D](source, metric)
+    val distTarget = distanceTo[D, D](target, metric)
+    val db = castImpl[D, D, D](source, distanceTo[D, D](target, metric), metric, identity)
+    ord.lt(distSource, inf) && ord.lt(distTarget, inf) &&
+    ord.lteq(distSource + distTarget, db + width)
 
 end GradientCastLibrary

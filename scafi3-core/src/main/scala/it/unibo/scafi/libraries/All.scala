@@ -17,5 +17,6 @@ object All:
   export GradientLibrary.{ *, given }
   export MathLibrary.{ *, given }
   export StateLibrary.{ *, given }
+  export TimeLibrary.{ *, given }
   export CommonBoundaries.{ *, given }
   export cats.syntax.all.*

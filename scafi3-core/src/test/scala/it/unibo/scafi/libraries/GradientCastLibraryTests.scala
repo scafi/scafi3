@@ -4,12 +4,7 @@ import it.unibo.scafi.UnitTest
 import it.unibo.scafi.context.xc.ExchangeAggregateContext
 import it.unibo.scafi.context.xc.ExchangeAggregateContext.exchangeContextFactory
 import it.unibo.scafi.libraries.All.{ distanceTo, localId, neighborValues }
-import it.unibo.scafi.libraries.GradientCastLibrary.{
-  broadcast,
-  channel,
-  distanceBetween,
-  gradientCast,
-}
+import it.unibo.scafi.libraries.GradientCastLibrary.{ broadcast, channel, distanceBetween, gradientCast }
 import it.unibo.scafi.message.{ Codable, Codables }
 import it.unibo.scafi.runtime.ScafiEngine
 import it.unibo.scafi.test.environment.Grids.mooreGrid
