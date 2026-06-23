@@ -27,7 +27,9 @@ object StateLibrary:
     language.evolve(false)(old => old || expr)
 
   /** True exactly on rounds where `x` differs from the previous round; defaults `initially` to `true`. */
-  def captureChange[T](x: T)(using language: AggregateFoundation & FieldCalculusSyntax)(using
+  def captureChange[T](x: T)(using
+      language: AggregateFoundation & FieldCalculusSyntax,
+  )(using
       CanEqual[T, T],
   ): Boolean =
     captureChange(x, true)
@@ -37,15 +39,21 @@ object StateLibrary:
    * @param initially
    *   value to return on the very first round (no previous value exists)
    */
-  def captureChange[T](x: T, initially: Boolean)(using language: AggregateFoundation & FieldCalculusSyntax)(using
+  def captureChange[T](x: T, initially: Boolean)(using
+      language: AggregateFoundation & FieldCalculusSyntax,
+  )(using
       CanEqual[T, T],
   ): Boolean =
-    language.evolve((Option.empty[T], initially)) { case (prev, _) =>
-      (Some(x), prev.fold(initially)(_ != x))
-    }._2
+    language
+      .evolve((Option.empty[T], initially)) { case (prev, _) =>
+        (Some(x), prev.fold(initially)(_ != x))
+      }
+      ._2
 
   /** `(#changes so far, changed-this-round)`; defaults `initially` to `true`. */
-  def countChanges[T](x: T)(using language: AggregateFoundation & FieldCalculusSyntax)(using
+  def countChanges[T](x: T)(using
+      language: AggregateFoundation & FieldCalculusSyntax,
+  )(using
       CanEqual[T, T],
   ): (Long, Boolean) =
     countChanges(x, true)
@@ -55,7 +63,9 @@ object StateLibrary:
    * @param initially
    *   whether the first round is counted as a change
    */
-  def countChanges[T](x: T, initially: Boolean)(using language: AggregateFoundation & FieldCalculusSyntax)(using
+  def countChanges[T](x: T, initially: Boolean)(using
+      language: AggregateFoundation & FieldCalculusSyntax,
+  )(using
       CanEqual[T, T],
   ): (Long, Boolean) =
     val state = language.evolve((Option.empty[T], 0L, initially)) { case (prev, count, _) =>
@@ -78,8 +88,10 @@ object StateLibrary:
 
   /** `Some(expr)` on the very first round, `None` thereafter. */
   def once[T](expr: => T)(using language: AggregateFoundation & FieldCalculusSyntax): Option[T] =
-    language.evolve((true, Option.empty[T])) { case (isFirst, _) =>
-      (false, if isFirst then Some(expr) else None)
-    }._2
+    language
+      .evolve((true, Option.empty[T])) { case (isFirst, _) =>
+        (false, if isFirst then Some(expr) else None)
+      }
+      ._2
 
 end StateLibrary
