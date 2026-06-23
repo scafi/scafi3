@@ -1,6 +1,6 @@
 package it.unibo.scafi.language.sensors
 
-import scala.concurrent.duration.*
+import scala.concurrent.duration.{ DurationInt, FiniteDuration }
 
 import it.unibo.scafi.UnitTest
 import it.unibo.scafi.language.AggregateFoundation

@@ -15,5 +15,6 @@ object All:
   export FoldingLibrary.{ *, given }
   export GradientLibrary.{ *, given }
   export MathLibrary.{ *, given }
+  export StateLibrary.{ *, given }
   export CommonBoundaries.{ *, given }
   export cats.syntax.all.*

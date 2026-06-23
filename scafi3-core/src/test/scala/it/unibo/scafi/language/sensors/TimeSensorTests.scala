@@ -1,6 +1,6 @@
 package it.unibo.scafi.language.sensors
 
-import scala.concurrent.duration.*
+import scala.concurrent.duration.{ DurationInt, FiniteDuration }
 
 import it.unibo.scafi.UnitTest
 import it.unibo.scafi.language.AggregateFoundation
@@ -28,3 +28,4 @@ class TimeSensorTests extends UnitTest:
 
   "TimeSensor.timestamp" should "return the expected Long" in:
     TimeSensor.timestamp shouldBe 42L
+end TimeSensorTests
