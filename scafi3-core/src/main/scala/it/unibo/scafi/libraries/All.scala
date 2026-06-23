@@ -8,6 +8,7 @@ import it.unibo.scafi.utils.boundaries.CommonBoundaries
  */
 object All:
   export BranchingLibrary.{ *, given }
+  export CollectionLibrary.{ *, given }
   export CommonLibrary.{ *, given }
   export ExchangeCalculusLibrary.{ *, given }
   export FieldCalculusLibrary.{ *, given }
