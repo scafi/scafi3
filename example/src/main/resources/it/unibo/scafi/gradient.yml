@@ -2,7 +2,7 @@ incarnation: scafi3
 
 network-model:
   type: ConnectWithinDistance
-  parameters: [ 5 ]
+  parameters: [ 0.2 ]
 
 _pool: &program
   - time-distribution: 1
@@ -20,14 +20,14 @@ launcher:
 
 deployments:
   - type: Point
-    parameters: [ -1, -1 ]
+    parameters: [ 0.1, -0.1 ]
     programs:
       - *program
     contents:
       - molecule: source
         concentration: true
   - type: Grid
-    parameters: [ 0, 0, 3, 3, 1, 1 ]
+    parameters: [ 0, 0, 3, 3, 0.1, 0.1 ]
     programs:
       - *program
     contents:

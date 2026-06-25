@@ -27,6 +27,23 @@ trait OutboundMessage:
     registeredSelfMessages.update(path, encode(overrides.getOrElse(localId, default)))
     registeredMessages.update(path, MapWithDefault(overrides.view.mapValues(encode).toMap, encode(default)))
 
+  /**
+   * Runs `body`, then rolls back every exchange write made during `body` if `keep(result)` is `false`. The result is
+   * returned regardless.
+   *
+   * Used by [[it.unibo.scafi.context.common.ConditionalExportContext]] to implement conditional export.
+   */
+  protected def withRollbackUnless[T](keep: T => Boolean)(body: => T): T =
+    val snapMessages = registeredMessages.toMap
+    val snapSelfMessages = registeredSelfMessages.toMap
+    val result = body
+    if !keep(result) then
+      registeredMessages.clear()
+      registeredMessages.addAll(snapMessages)
+      registeredSelfMessages.clear()
+      registeredSelfMessages.addAll(snapSelfMessages)
+    result
+
   override def selfMessagesForNextRound: ValueTree = ValueTree(registeredSelfMessages.toMap)
 
   override def exportFromOutboundMessages: Export[DeviceId] =

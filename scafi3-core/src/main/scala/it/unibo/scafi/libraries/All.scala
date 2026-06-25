@@ -8,11 +8,18 @@ import it.unibo.scafi.utils.boundaries.CommonBoundaries
  */
 object All:
   export BranchingLibrary.{ *, given }
+  export CollectionLibrary.{ *, given }
   export CommonLibrary.{ *, given }
   export ExchangeCalculusLibrary.{ *, given }
   export FieldCalculusLibrary.{ *, given }
+  export FieldUtilsLibrary.{ *, given }
   export FoldingLibrary.{ *, given }
+  export GradientCastLibrary.{ *, given }
   export GradientLibrary.{ *, given }
   export MathLibrary.{ *, given }
+  export ProcessLibrary.{ *, given }
+  export SparseChoiceLibrary.{ *, given }
+  export StateLibrary.{ *, given }
+  export TimeLibrary.{ *, given }
   export CommonBoundaries.{ *, given }
   export cats.syntax.all.*
