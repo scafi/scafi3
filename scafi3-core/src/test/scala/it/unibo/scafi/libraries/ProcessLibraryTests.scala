@@ -6,7 +6,7 @@ import it.unibo.scafi.UnitTest
 import it.unibo.scafi.context.xc.ExchangeAggregateContext
 import it.unibo.scafi.context.xc.ExchangeAggregateContext.exchangeContextFactory
 import it.unibo.scafi.libraries.All.localId
-import it.unibo.scafi.libraries.ProcessLibrary.{replicated, sspawn, ProcessOutput, ProcessStatus}
+import it.unibo.scafi.libraries.ProcessLibrary.{ replicated, spawn, ProcessOutput }
 import it.unibo.scafi.libraries.ProcessLibrary.ProcessStatus.{ Bubble, External, Output, Terminated }
 import it.unibo.scafi.message.{ Codable, Codables, ValueTree }
 import it.unibo.scafi.runtime.ScafiEngine
@@ -53,53 +53,47 @@ class ProcessLibraryTests extends UnitTest, Inspectors:
     val out: ProcessOutput[Any] = ProcessOutput(42, Bubble)
     out.status shouldBe Bubble
 
-  // ── sspawn single-device tests ─────────────────────────────────────────────
+  // ── spawn single-device tests ──────────────────────────────────────────────
 
-  "sspawn" should "return empty map when no keys are generated" in:
+  "spawn" should "return empty map when no keys are generated" in:
     val engine = ScafiEngine(NoNeighborsNetworkManager(localId = 0), exchangeContextFactory):
-      sspawn[String, Unit, Int](_ => _ => ProcessOutput(0, Output), Set.empty, ())
+      spawn[String, Unit, Int](Set.empty, ())(_ => _ => ProcessOutput.output(0))
     (0 until 5).map(_ => engine.cycle()).last shouldBe Map.empty[String, Int]
 
   it should "include Output keys in the result" in:
     val engine = ScafiEngine(NoNeighborsNetworkManager(localId = 0), exchangeContextFactory):
-      sspawn[String, Unit, Int](_ => _ => ProcessOutput(42, Output), Set("k"), ())
+      spawn[String, Unit, Int](Set("k"), ())(_ => _ => ProcessOutput.output(42))
     engine.cycle() shouldBe Map("k" -> 42)
 
   it should "exclude External keys from the result" in:
     val engine = ScafiEngine(NoNeighborsNetworkManager(localId = 0), exchangeContextFactory):
-      sspawn[String, Unit, Int](
-        k => _ => if k == "on" then ProcessOutput(1, Output) else ProcessOutput(0, External),
-        Set("on", "off"),
-        (),
-      )
+      spawn[String, Unit, Int](Set("on", "off"), ()): key =>
+        _ => if key == "on" then ProcessOutput.output(1) else ProcessOutput.external(0)
     engine.cycle() shouldBe Map("on" -> 1)
 
   it should "exit immediately when process returns Terminated on an isolated node" in:
     // Vacuous ∀ on an empty neighbourhood ⇒ mustExit is true from round 0, so
     // Terminated + mustTerminate ∧ mustExit ⇒ External right away.
     val engine = ScafiEngine(NoNeighborsNetworkManager(localId = 0), exchangeContextFactory):
-      sspawn[String, Unit, Int](_ => _ => ProcessOutput(0, Terminated), Set("k"), ())
+      spawn[String, Unit, Int](Set("k"), ())(_ => _ => ProcessOutput.terminated(0))
     engine.cycle() shouldBe Map.empty[String, Int]
 
   it should "pass arguments to the process function" in:
     val engine = ScafiEngine(NoNeighborsNetworkManager(localId = 0), exchangeContextFactory):
-      sspawn[String, Int, Int](_ => n => ProcessOutput(n * 2, Output), Set("k"), 21)
+      spawn[String, Int, Int](Set("k"), 21)(_ => n => ProcessOutput.output(n * 2))
     engine.cycle() shouldBe Map("k" -> 42)
 
-  // ── sspawn bubble expansion ────────────────────────────────────────────────
+  // ── spawn bubble expansion ─────────────────────────────────────────────────
 
-  "sspawn" should "propagate a key from the source to all grid devices" in:
+  "spawn" should "propagate a key from the source to all grid devices" in:
     val env = mooreGrid[Map[Int, Int], ExchangeAggregateContext[Int], IntNetworkManager](
       3,
       3,
       exchangeContextFactory,
       inMemoryNetwork,
     ):
-      sspawn[Int, Unit, Int](
-        k => _ => ProcessOutput(k, Output),
-        if localId == 0 then Set(42) else Set.empty,
-        (),
-      )
+      spawn[Int, Unit, Int](if localId == 0 then Set(42) else Set.empty, ()): key =>
+        _ => ProcessOutput.output(key)
     (0 until 10).foreach(_ => env.cycleInOrder())
     forAll(env.status.values.toSeq): result =>
       result should contain key 42
@@ -111,11 +105,8 @@ class ProcessLibraryTests extends UnitTest, Inspectors:
       exchangeContextFactory,
       inMemoryNetwork,
     ):
-      sspawn[Int, Unit, Int](
-        k => _ => ProcessOutput(k * 10, Output),
-        if localId == 0 then Set(7) else Set.empty,
-        (),
-      )
+      spawn[Int, Unit, Int](if localId == 0 then Set(7) else Set.empty, ()): key =>
+        _ => ProcessOutput.output(key * 10)
     (0 until 10).foreach(_ => env.cycleInOrder())
     forAll(env.status.values.toSeq): result =>
       result.get(7) shouldBe Some(70)
@@ -130,11 +121,8 @@ class ProcessLibraryTests extends UnitTest, Inspectors:
       exchangeContextFactory,
       inMemoryNetwork,
     ):
-      sspawn[Int, Unit, Int](
-        k => _ => ProcessOutput(k, if terminate then Terminated else Output),
-        if localId == 0 then Set(42) else Set.empty,
-        (),
-      )
+      spawn[Int, Unit, Int](if localId == 0 then Set(42) else Set.empty, ()): key =>
+        _ => if terminate then ProcessOutput.terminated(key) else ProcessOutput.output(key)
     // Phase 1: let the bubble fill the grid
     (0 until 10).foreach(_ => env.cycleInOrder())
     forAll(env.status.values.toSeq): result =>
@@ -151,7 +139,7 @@ class ProcessLibraryTests extends UnitTest, Inspectors:
     // period = 0.5 s, dt = 100 ms → cyclicTimerWithDecay fires every 6 rounds.
     // After 3 periods (≈18 rounds) all devices hold replicas [lastPid-2, lastPid-1, lastPid].
     val env = mooreGrid[Map[Long, Int], ProcCtx, IntNetworkManager](3, 3, timerFactory, inMemoryNetwork):
-      replicated[Unit, Int](_ => 42, (), period = 0.5, replicates = 3)
+      replicated[Unit, Int](period = 0.5, replicates = 3, argument = ())(_ => 42)
     (0 until 30).foreach(_ => env.cycleInOrder())
     forAll(env.status.values.toSeq): result =>
       result should have size 3
@@ -162,7 +150,7 @@ class ProcessLibraryTests extends UnitTest, Inspectors:
     // Run 25 rounds (≥3 timer ticks → lastPid≥3) to let the window stabilise, then run 8 more to
     // guarantee at least one additional tick; check the global max pid across all devices advances.
     val env = mooreGrid[Map[Long, Int], ProcCtx, IntNetworkManager](3, 3, timerFactory, inMemoryNetwork):
-      replicated[Unit, Int](_ => 0, (), period = 0.5, replicates = 2)
+      replicated[Unit, Int](period = 0.5, replicates = 2, argument = ())(_ => 0)
     (0 until 25).foreach(_ => env.cycleInOrder())
     val maxPid1 = env.status.values.toSeq.flatMap(_.keySet).max
     (0 until 8).foreach(_ => env.cycleInOrder())
