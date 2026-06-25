@@ -122,6 +122,7 @@ object CollectionLibrary:
       // Fold neighbours only (`withoutSelf`): a device is never its own parent, so self contributes `zero`;
       // we also avoid the full-field iterator, which reflects the live alignment scope rather than this field.
       accumulate(local, contributions.withoutSelf.foldLeft(zero)(accumulate))
+  end collect
 
   /**
    * Counts the devices (optionally satisfying `predicate`) collected to the sink.
@@ -237,7 +238,12 @@ object CollectionLibrary:
       potential: language.SharedData[P],
       local: Map[K, V],
   ): Map[K, V] =
-    collect[Map[K, V], P, Map[K, V]](potential, local, mergeMaps((_: K, accumulated: V, _: V) => accumulated), Map.empty)
+    collect[Map[K, V], P, Map[K, V]](
+      potential,
+      local,
+      mergeMaps((_: K, accumulated: V, _: V) => accumulated),
+      Map.empty,
+    )
 
   /**
    * Collects the union of all `local` sets at the sink.

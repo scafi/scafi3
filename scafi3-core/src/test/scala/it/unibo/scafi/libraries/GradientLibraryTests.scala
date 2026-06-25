@@ -6,7 +6,16 @@ import it.unibo.scafi.UnitTest
 import it.unibo.scafi.context.xc.ExchangeAggregateContext
 import it.unibo.scafi.context.xc.ExchangeAggregateContext.exchangeContextFactory
 import it.unibo.scafi.libraries.All.{ localId, neighborValues }
-import it.unibo.scafi.libraries.GradientLibrary.{bisGradient, crfGradient, distanceTo, flexGradient, hopGradient, DEFAULT_CRF_RAISING_SPEED, DEFAULT_FLEX_CHANGE_TOLERANCE_EPSILON, DEFAULT_FLEX_DELTA}
+import it.unibo.scafi.libraries.GradientLibrary.{
+  bisGradient,
+  crfGradient,
+  distanceTo,
+  flexGradient,
+  hopGradient,
+  DEFAULT_CRF_RAISING_SPEED,
+  DEFAULT_FLEX_CHANGE_TOLERANCE_EPSILON,
+  DEFAULT_FLEX_DELTA,
+}
 import it.unibo.scafi.message.{ Codable, Codables, ValueTree }
 import it.unibo.scafi.runtime.ScafiEngine
 import it.unibo.scafi.sensors.{ LagSensor, TimeSensor }
@@ -18,7 +27,7 @@ import it.unibo.scafi.utils.boundaries.CommonBoundaries.given
 
 import org.scalatest.Inspectors
 
-class   GradientLibraryTests extends UnitTest, Inspectors:
+class GradientLibraryTests extends UnitTest, Inspectors:
 
   given [V]: Codable[V, V] = Codables.forInMemoryCommunications
 
@@ -29,9 +38,7 @@ class   GradientLibraryTests extends UnitTest, Inspectors:
   private val fixedLag: FiniteDuration = 10.millis
 
   private def timeLagFactory(net: IntNetworkManager, vt: ValueTree): TimeLagCtx =
-    new ExchangeAggregateContext[Int](net.localId, net.receive, vt)
-      with TimeSensor
-      with LagSensor[FiniteDuration]:
+    new ExchangeAggregateContext[Int](net.localId, net.receive, vt) with TimeSensor with LagSensor[FiniteDuration]:
       override def deltaTime: FiniteDuration = fixedDelta
       override def timestamp: Long = 0L
       override def senseLag: SharedData[FiniteDuration] =
@@ -90,8 +97,7 @@ class   GradientLibraryTests extends UnitTest, Inspectors:
       distanceTo[Double, Double](localId == 0, neighborValues[Double, Double](1.0))
     (0 until 30).foreach(_ => envCrf.cycleInOrder())
     (0 until 10).foreach(_ => envRef.cycleInOrder())
-    for id <- 0 until 9 do
-      envCrf.status(id) shouldBe (envRef.status(id) +- 0.05)
+    for id <- 0 until 9 do envCrf.status(id) shouldBe (envRef.status(id) +- 0.05)
 
   it should "re-converge to new distances after source moves" in:
     var sourceId = 0
@@ -115,8 +121,7 @@ class   GradientLibraryTests extends UnitTest, Inspectors:
       distanceTo[Double, Double](localId == 0, neighborValues[Double, Double](1.0))
     (0 until 30).foreach(_ => envBis.cycleInOrder())
     (0 until 10).foreach(_ => envRef.cycleInOrder())
-    for id <- 0 until 9 do
-      envBis.status(id) shouldBe (envRef.status(id) +- 0.05)
+    for id <- 0 until 9 do envBis.status(id) shouldBe (envRef.status(id) +- 0.05)
 
   // ── flexGradient convergence parity and tolerance ───────────────────────────
 

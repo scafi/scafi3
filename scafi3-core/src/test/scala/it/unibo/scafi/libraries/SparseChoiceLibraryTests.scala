@@ -53,8 +53,9 @@ class SparseChoiceLibraryTests extends UnitTest, Inspectors:
     (0 until 5).map(_ => engine.cycle()).last shouldBe 0
 
   it should "gossip the global minimum id over a connected grid" in:
-    val env = mooreGrid[Int, ExchangeAggregateContext[Int], IntNetworkManager](3, 3, exchangeContextFactory, inMemoryNetwork):
-      minId[Int]
+    val env =
+      mooreGrid[Int, ExchangeAggregateContext[Int], IntNetworkManager](3, 3, exchangeContextFactory, inMemoryNetwork):
+        minId[Int]
     (0 until 10).foreach(_ => env.cycleInOrder())
     forAll(env.status.toSeq): (_, minimumId) =>
       minimumId shouldBe 0

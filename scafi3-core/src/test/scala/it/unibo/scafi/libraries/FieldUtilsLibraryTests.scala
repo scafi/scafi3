@@ -8,8 +8,8 @@ import it.unibo.scafi.libraries.All.{ localId, neighborValues }
 import it.unibo.scafi.libraries.FieldUtilsLibrary.{ maxHoodSelector, mergeHood, minHoodSelector }
 import it.unibo.scafi.message.{ Codable, Codables }
 import it.unibo.scafi.test.environment.Grids.mooreGrid
-import it.unibo.scafi.test.environment.Node.inMemoryNetwork
 import it.unibo.scafi.test.environment.IntNetworkManager
+import it.unibo.scafi.test.environment.Node.inMemoryNetwork
 
 import org.scalatest.Inspectors
 

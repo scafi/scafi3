@@ -19,15 +19,15 @@ import GradientLibrary.distanceTo
  * roughly `grain` apart — the basis for partitioning a network into regions, multi-leader coordination, and so on.
  *
  * Every device starts as a candidate leader carrying a unique id `uid = (randomSeed, deviceId)`. Devices then
- * **compete**: a device abdicates in favour of a nearby device with a lower UID, where "nearby" is decided by a gradient
- * distance measured against `grain`. The surviving leaders form a Poisson-disc-like sparse set with mean spacing
- * `grain`.
+ * **compete**: a device abdicates in favour of a nearby device with a lower UID, where "nearby" is decided by a
+ * gradient distance measured against `grain`. The surviving leaders form a Poisson-disc-like sparse set with mean
+ * spacing `grain`.
  *
  * '''Design choices for the abstract [[AggregateFoundation.DeviceId]]''':
  *   - UIDs are ordered '''lexicographically''': by the random seed first, then by device id as a deterministic
  *     tie-break. This requires only an `Ordering[DeviceId]`.
- *   - [[minId]] gossips the minimum id over a connected component and therefore needs an
- *     [[UpperBounded]] `DeviceId` for the empty-neighbourhood case.
+ *   - [[minId]] gossips the minimum id over a connected component and therefore needs an [[UpperBounded]] `DeviceId`
+ *     for the empty-neighbourhood case.
  *
  * @see
  *   [[GradientLibrary.distanceTo]] for the distance gradient driving the competition
@@ -101,8 +101,9 @@ object SparseChoiceLibrary:
    * Symmetry-breaking competition driving [[sparseChoice]], exposed because it is a reusable building block: it elects
    * leaders given an arbitrary, externally-provided `uid` field rather than [[randomUid]].
    *
-   * Each device shares the UID of the leader it currently follows. It measures the gradient distance to that leader and,
-   * via [[distanceCompetition]], either keeps following it, abdicates, or re-stands as a candidate for a new region.
+   * Each device shares the UID of the leader it currently follows. It measures the gradient distance to that leader
+   * and, via [[distanceCompetition]], either keeps following it, abdicates, or re-stands as a candidate for a new
+   * region.
    *
    * @param uid
    *   this device's unique id (lower wins ties)
@@ -185,6 +186,7 @@ object SparseChoiceLibrary:
           else neighbourLead
         .withoutSelf
       (nearbyLeaders.toList :+ leadField.onlySelf).min(using uidOrdering)
+  end distanceCompetition
 
   /** Lexicographic ordering on UIDs: by random seed first, then by device id as a deterministic tie-break. */
   private def uidLexicographicOrdering[Id](using idOrdering: Ordering[Id]): Ordering[(Double, Id)] =

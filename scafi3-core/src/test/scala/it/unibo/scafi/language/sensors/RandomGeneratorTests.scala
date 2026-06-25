@@ -30,3 +30,4 @@ class RandomGeneratorTests extends UnitTest:
     val a = RandomGenerator.nextRandom
     val b = RandomGenerator.nextRandom
     a should not equal b
+end RandomGeneratorTests

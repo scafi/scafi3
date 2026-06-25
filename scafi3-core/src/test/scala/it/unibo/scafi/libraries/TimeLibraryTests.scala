@@ -55,7 +55,9 @@ class TimeLibraryTests extends UnitTest:
       program: TimeSensorCtx ?=> A,
   ): Seq[A] =
     var idx = 0
-    val factory = timeSensorFactory(() => { val d = deltaPerRound(idx); idx += 1; d })
+    val factory = timeSensorFactory(() =>
+      val d = deltaPerRound(idx); idx += 1; d,
+    )
     val engine = ScafiEngine(network, factory)(program)
     (0 until rounds).map(_ => engine.cycle())
 
