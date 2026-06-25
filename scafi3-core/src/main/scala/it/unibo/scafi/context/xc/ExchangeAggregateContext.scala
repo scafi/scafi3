@@ -1,7 +1,7 @@
 package it.unibo.scafi.context.xc
 
 import it.unibo.scafi.context.AggregateContext
-import it.unibo.scafi.context.common.BranchingContext
+import it.unibo.scafi.context.common.{ BranchingContext, ConditionalExportContext }
 import it.unibo.scafi.language.xc.{ ExchangeLanguage, FieldBasedSharedData }
 import it.unibo.scafi.language.xc.calculus.ExchangeCalculus
 import it.unibo.scafi.message.{ CodableFromTo, Import, InboundMessage, OutboundMessage, ValueTree }
@@ -18,6 +18,7 @@ trait ExchangeAggregateContext[ID](
     override val selfMessagesFromPreviousRound: ValueTree,
 ) extends AggregateContext,
       BranchingContext,
+      ConditionalExportContext,
       ExchangeLanguage,
       ExchangeCalculus,
       FieldBasedSharedData,
