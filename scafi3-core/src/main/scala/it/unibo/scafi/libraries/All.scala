@@ -17,6 +17,7 @@ object All:
   export GradientCastLibrary.{ *, given }
   export GradientLibrary.{ *, given }
   export MathLibrary.{ *, given }
+  export SparseChoiceLibrary.{ *, given }
   export StateLibrary.{ *, given }
   export TimeLibrary.{ *, given }
   export CommonBoundaries.{ *, given }
